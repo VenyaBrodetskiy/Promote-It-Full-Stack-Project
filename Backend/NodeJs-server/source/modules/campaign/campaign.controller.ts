@@ -22,7 +22,8 @@ class CampaignController {
             landing_page: body.landing_page
         };
 
-        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userData.userId)
+        // TODO: АХТУНГ АДЫНАДЫН!!!11111!!!
+        CampaignService.addCampaign(inputCampaign, 1) //(req as AuthenticatedRequest).userData.userId
             .then((result: campaign) => {
                 return res.status(200).json(result);
             })
