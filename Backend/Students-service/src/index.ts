@@ -11,6 +11,8 @@ import LoggerService from "./core/logger.service";
 
 LoggerService.initialize();
 
+// i just make some change
+
 const routes: Array<RouteConfig> = [];
 const app: Express = express();
 
@@ -29,14 +31,14 @@ routes.push(new SchoolRoutes(app));
 routes.push(new AuthenticationRoutes(app));
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome world")
+    res.send("Welcome world")
 });
 
 const server: http.Server = http.createServer(app);
 
 server.listen(Environment.serverPort, () => {
-  LoggerService.info(`Server is running on ${Environment.serverPort}`);
-  routes.forEach((route: RouteConfig) => {
-    LoggerService.info(`Routes configured for ${route.getName()}`)
-  })
+    LoggerService.info(`Server is running on ${Environment.serverPort}`);
+    routes.forEach((route: RouteConfig) => {
+        LoggerService.info(`Routes configured for ${route.getName()}`)
+    })
 })
