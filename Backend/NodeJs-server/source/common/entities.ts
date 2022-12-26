@@ -3,6 +3,11 @@ import { Request } from "express";
 export interface entityWithId{
     id: number;
 }
+
+export interface campaign extends entityWithId {
+    hashtag: string;
+    landing_page: string;
+}
 export interface user extends entityWithId {
     firstName: string;
     lastName: string;
