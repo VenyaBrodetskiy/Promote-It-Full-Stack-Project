@@ -22,4 +22,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+// change in WebApp1
+
 app.Run();
