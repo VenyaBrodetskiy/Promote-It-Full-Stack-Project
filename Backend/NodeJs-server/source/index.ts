@@ -9,6 +9,7 @@ import { AuthenticationRoutes } from "./core/authentication/authentication.route
 import { UserRoutes } from "./modules/user/user.routes";
 import { RoleRoutes } from "./modules/role/role.routes";
 import { EmployeeRoutes } from "./modules/employee/employee.routes";
+import { CampaignRoutes } from "./modules/campaign/campaign.routes";
 import LoggerService from "./core/logger.service";
 
 LoggerService.init();
@@ -28,6 +29,7 @@ routes.push(new UserRoutes(app));
 routes.push(new RoleRoutes(app));
 routes.push(new StoreRoutes(app));
 routes.push(new EmployeeRoutes(app));
+routes.push(new CampaignRoutes(app));
 
 const server: http.Server = http.createServer(app);
 

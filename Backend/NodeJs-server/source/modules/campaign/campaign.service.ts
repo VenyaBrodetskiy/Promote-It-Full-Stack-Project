@@ -22,7 +22,7 @@ class CampaignService implements ICampaignService {
 
             SqlHelper.createNew(
                 CampaignQueries.AddCampaign, campaign,
-                campaign.hashtag, campaign.landing_page, 
+                campaign.hashtag, campaign.landing_page, userId, 
                 createDate, createDate,
                 userId, userId,
                 Statuses.Active
