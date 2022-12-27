@@ -9,6 +9,16 @@ class CampaignController {
 
     constructor() { }
 
+    public getAllCampaigns(req: Request, res: Response, next: NextFunction) {
+        CampaignService.getAllCampaigns()
+            .then((result: campaign[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
     public addCampaign(req: Request, res: Response, next: NextFunction) {
 
         // ?? add validation, that userId is type of non_profit organization
