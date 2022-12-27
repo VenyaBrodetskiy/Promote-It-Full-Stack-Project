@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { NON_EXISTING_ID } from "../../common/constants";
-import { campaign, AuthenticatedRequest, systemError } from "../../common/entities";
+import { campaign, AuthenticatedRequest, systemError, campaignsWitnProducts } from "../../common/entities";
 import { ResponseHelper } from "../../core/helpers/response.helper";
 import CampaignService from "./campaign.service";
 
@@ -12,6 +12,16 @@ class CampaignController {
     public getAllCampaigns(req: Request, res: Response, next: NextFunction) {
         CampaignService.getAllCampaigns()
             .then((result: campaign[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
+    public getAllCampaignsWitnProducts(req: Request, res: Response, next: NextFunction) {
+        CampaignService.getAllCampaignsWitnProducts()
+            .then((result: campaignsWitnProducts[]) => {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
