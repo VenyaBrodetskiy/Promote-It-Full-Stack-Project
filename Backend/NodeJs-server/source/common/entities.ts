@@ -9,6 +9,15 @@ export interface campaign extends entityWithId {
     landing_page: string;
     name?: string;
 }
+
+export interface campaignsWitnProducts extends campaign {
+    non_profit_organization_name: string;
+    product_title: string;
+    business_owner_name: string;
+    product_qty: number;
+
+}
+
 export interface user extends entityWithId {
     firstName: string;
     lastName: string;
