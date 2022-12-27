@@ -12,6 +12,9 @@ export class CampaignRoutes extends RouteConfig {
 
         this.app.route(`/${this.baseUrl}`).get(
             CampaignController.getAllCampaigns);
+        
+        this.app.route(`/${this.baseUrl}/product`).get(
+            CampaignController.getAllCampaignsWitnProducts);
 
         this.app.route(`/${this.baseUrl}`).post(
             CampaignController.addCampaign);
