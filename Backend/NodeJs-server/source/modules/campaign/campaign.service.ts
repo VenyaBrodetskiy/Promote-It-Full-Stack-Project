@@ -5,6 +5,7 @@ import { CampaignQueries } from "./campaign.queries";
 import { Statuses } from "../../common/enums";
 
 interface ICampaignService {
+    getAllCampaigns(): Promise<campaign[]>;
     addCampaign(campaign: campaign, userId: number): Promise<campaign>;
 }
 
@@ -14,6 +15,20 @@ class CampaignService implements ICampaignService {
     constructor() {
     }
 
+    public getAllCampaigns(): Promise<campaign[]> {
+        return new Promise<campaign[]>((resolve, reject) => {
+            const result: campaign[] = [];
+
+            SqlHelper.executeQueryArrayResult<campaign>(CampaignQueries.GetAllCampaigns, Statuses.Active)
+                .then((queryResult: campaign[]) => {
+                    queryResult.forEach((campaign: campaign) => {
+                        result.push(campaign)
+                    });
+                    resolve(result);
+                })
+                .catch((error: systemError) => reject(error));
+        });
+    }
    
     public addCampaign(campaign: campaign, userId: number): Promise<campaign> {
         return new Promise<campaign>((resolve, reject) => {

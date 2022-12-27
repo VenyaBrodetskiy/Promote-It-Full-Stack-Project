@@ -7,6 +7,7 @@ export interface entityWithId{
 export interface campaign extends entityWithId {
     hashtag: string;
     landing_page: string;
+    name?: string;
 }
 export interface user extends entityWithId {
     firstName: string;
