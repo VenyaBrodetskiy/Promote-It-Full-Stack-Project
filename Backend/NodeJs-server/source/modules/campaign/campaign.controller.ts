@@ -31,6 +31,8 @@ class CampaignController {
 
     public addCampaign(req: Request, res: Response, next: NextFunction) {
 
+        
+
         // TODO: (high priority) add validation, that userId is type of non_profit organization
 
         // TODO: (very low priority) add validation, that landing page is working one 
@@ -42,8 +44,7 @@ class CampaignController {
             landingPage: body.landingPage
         };
 
-        // TODO: АХТУНГ АДЫНАДЫН!!!11111!!!
-        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userData.userId) //(req as AuthenticatedRequest).userData.userId
+        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userData.userId) 
             .then((result: campaign) => {
                 return res.status(200).json(result);
             })

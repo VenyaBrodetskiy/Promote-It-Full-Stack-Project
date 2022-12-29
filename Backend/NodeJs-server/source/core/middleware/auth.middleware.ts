@@ -12,7 +12,7 @@ interface jwtBase {
 
 class AuthMiddleware {
     
-    public verifyToken = (userTypeId: UserType) => (req: Request, res: Response, next: NextFunction) => {
+    public verifyToken = (userTypes: UserType[]) => (req: Request, res: Response, next: NextFunction) => {
         let token: string | undefined = req.headers["authorization"]?.toString(); 
     
         if (!token) {
@@ -23,7 +23,7 @@ class AuthMiddleware {
             token = token.substring("Bearer ".length);
             const decoded: string | JwtPayload = jwt.verify(token, Environment.TOKEN_SECRET);
 
-            if ((decoded as jwtBase).userData.userTypeId !== userTypeId) {
+            if (userTypes.indexOf((decoded as jwtBase).userData.userTypeId) === -1) {
                 return res.sendStatus(401);
             }
             (req as AuthenticatedRequest).userData = (decoded as jwtBase).userData;

@@ -5,9 +5,7 @@ import AuthenticationController from "./authentication.controller"
 export class AuthenticationRoutes extends RouteConfig {
     
     constructor(app: Application) {
-        // TODO: change baseUrl to "api/[controller]"
-
-        super(app, "AuthenticationRoutes", "auth");
+        super(app, "AuthenticationRoutes", "api/auth");
     }
 
     public configureRoutes() {
