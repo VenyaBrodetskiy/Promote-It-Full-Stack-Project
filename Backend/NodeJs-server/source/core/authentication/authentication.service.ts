@@ -5,9 +5,9 @@ import { SqlHelper } from '../helpers/sql.helper';
 import ErrorService from "../../core/error.service";
 import { AuthenticationQueries } from './authentication.queries';
 
-interface localUser extends entityWithId{
+interface  localUser extends entityWithId{
     password: string;
-    userTypeId: UserType;
+    user_type_id: UserType;
 }
 
 interface IAuthenticationService {
@@ -29,7 +29,7 @@ export class AuthenticationService implements IAuthenticationService {
                 if (bcrypt.compareSync(password, user.password)) {
                     const result: jwtUserData = {
                         userId: user.id,
-                        userTypeId: user.userTypeId
+                        userTypeId: user.user_type_id
                     }
                     resolve(result);
                 } 

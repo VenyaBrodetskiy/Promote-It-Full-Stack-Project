@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { NON_EXISTING_ID } from "../../common/constants";
-import { campaign, AuthenticatedRequest, systemError, campaignsWitnProducts } from "../../common/entities";
+import { campaign, AuthenticatedRequest, systemError, campaignWitnProducts } from "../../common/entities";
 import { ResponseHelper } from "../../core/helpers/response.helper";
 import CampaignService from "./campaign.service";
 
@@ -20,8 +20,8 @@ class CampaignController {
     }
 
     public getAllCampaignsWitnProducts(req: Request, res: Response, next: NextFunction) {
-        CampaignService.getAllCampaignsWitnProducts()
-            .then((result: campaignsWitnProducts[]) => {
+        CampaignService.getAllCampaignsWithProducts()
+            .then((result: campaignWitnProducts[]) => {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
@@ -31,15 +31,15 @@ class CampaignController {
 
     public addCampaign(req: Request, res: Response, next: NextFunction) {
 
-        // ?? add validation, that userId is type of non_profit organization
-        // ?? add validation, that landing page is working one 
+        // TODO: (high priority) add validation, that userId is type of non_profit organization
 
-        
+        // TODO: (very low priority) add validation, that landing page is working one 
+
         const body: campaign = req.body;
         const inputCampaign = {
             id: NON_EXISTING_ID,
             hashtag: body.hashtag,
-            landing_page: body.landing_page
+            landingPage: body.landingPage
         };
 
         // TODO: АХТУНГ АДЫНАДЫН!!!11111!!!

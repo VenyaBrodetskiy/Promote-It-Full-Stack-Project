@@ -5,7 +5,7 @@ import CampaignController from "./campaign.controller"
 export class CampaignRoutes extends RouteConfig {
 
     constructor(app: Application) {
-        super(app, "CampaignRoutes", "campaign");
+        super(app, "CampaignRoutes", "api/campaign");
     }
 
     configureRoutes() {
