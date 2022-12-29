@@ -6,18 +6,18 @@ export interface entityWithId{
 
 export interface campaign extends entityWithId {
     hashtag: string;
-    landing_page: string;
-    name?: string;
+    landingPage: string;
+    nonProfitOrganizationName?: string;
 }
 
-export interface campaignsWitnProducts extends campaign {
-    non_profit_organization_name: string;
-    product_title: string;
-    business_owner_name: string;
-    product_qty: number;
+export interface campaignWitnProducts extends campaign {
+    productTitle: string;
+    businessOwnerName: string;
+    productQty: number;
 
 }
 
+// TODO: remove rolesId
 export interface jwtUserData {
     userId: number;
     userTypeId: UserType;

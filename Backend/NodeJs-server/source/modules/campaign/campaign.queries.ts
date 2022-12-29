@@ -1,7 +1,7 @@
 export class CampaignQueries {
 
     public static GetAllCampaigns: string = `
-        SELECT [id], [hashtag], [landing_page], [name]
+        SELECT [id], [hashtag], [landing_page], [non_profit_organization].[name] as non_profit_organization_name
         FROM [dbo].[campaign]
         INNER JOIN [non_profit_organization] ON [campaign].[user_id] = [non_profit_organization].[user_id]
         WHERE [campaign].[status_id] = ?`;

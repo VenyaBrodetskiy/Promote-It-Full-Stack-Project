@@ -1,12 +1,25 @@
 import { DateHelper } from "../../framework/date.helpers";
-import { campaign, campaignsWitnProducts, entityWithId, systemError } from "../../common/entities";
+import { campaign, campaignWitnProducts, entityWithId, systemError } from "../../common/entities";
 import { SqlHelper } from "../../core/helpers/sql.helper";
 import { CampaignQueries } from "./campaign.queries";
 import { Statuses } from "../../common/enums";
 
+interface localCampaign extends entityWithId {
+    hashtag: string;
+    landing_page: string;
+    non_profit_organization_name?: string;
+}
+
+export interface localCampaignWitnProducts extends localCampaign {
+    product_title: string;
+    business_owner_name: string;
+    product_qty: number;
+
+}
+
 interface ICampaignService {
     getAllCampaigns(): Promise<campaign[]>;
-    getAllCampaignsWitnProducts(): Promise<campaignsWitnProducts[]>;
+    getAllCampaignsWithProducts(): Promise<campaignWitnProducts[]>;
     addCampaign(campaign: campaign, userId: number): Promise<campaign>;
 }
 
@@ -16,14 +29,19 @@ class CampaignService implements ICampaignService {
     constructor() {
     }
 
+    // TODO: need (must) to create DTO and parse all data from DB to it
+    // in order to do, please create file Models and file ModelsDTO
+    // or do like Ilya - just create local interface (which is Model), in entities will be ModelsDTO
+
+
     public getAllCampaigns(): Promise<campaign[]> {
         return new Promise<campaign[]>((resolve, reject) => {
             const result: campaign[] = [];
 
-            SqlHelper.executeQueryArrayResult<campaign>(CampaignQueries.GetAllCampaigns, Statuses.Active)
-                .then((queryResult: campaign[]) => {
-                    queryResult.forEach((campaign: campaign) => {
-                        result.push(campaign)
+            SqlHelper.executeQueryArrayResult<localCampaign>(CampaignQueries.GetAllCampaigns, Statuses.Active)
+                .then((queryResult: localCampaign[]) => {
+                    queryResult.forEach((campaign: localCampaign) => {
+                        result.push(this.parseLocalCampaign(campaign))
                     });
                     resolve(result);
                 })
@@ -31,14 +49,14 @@ class CampaignService implements ICampaignService {
         });
     }
 
-    public getAllCampaignsWitnProducts(): Promise<campaignsWitnProducts[]> {
-        return new Promise<campaignsWitnProducts[]>((resolve, reject) => {
-            const result: campaignsWitnProducts[] = [];
+    public getAllCampaignsWithProducts(): Promise<campaignWitnProducts[]> {
+        return new Promise<campaignWitnProducts[]>((resolve, reject) => {
+            const result: campaignWitnProducts[] = [];
 
-            SqlHelper.executeQueryArrayResult<campaignsWitnProducts>(CampaignQueries.GetAllCampaignsWitnProducts, Statuses.Active)
-                .then((queryResult: campaignsWitnProducts[]) => {
-                    queryResult.forEach((campaign: campaignsWitnProducts) => {
-                        result.push(campaign)
+            SqlHelper.executeQueryArrayResult<localCampaignWitnProducts>(CampaignQueries.GetAllCampaignsWitnProducts, Statuses.Active)
+                .then((queryResult: localCampaignWitnProducts[]) => {
+                    queryResult.forEach((campaign: localCampaignWitnProducts) => {
+                        result.push(this.localCampaignWitnProducts(campaign))
                     });
                     resolve(result);
                 })
@@ -53,11 +71,10 @@ class CampaignService implements ICampaignService {
 
             SqlHelper.createNew(
                 CampaignQueries.AddCampaign, campaign,
-                campaign.hashtag, campaign.landing_page, userId, 
+                campaign.hashtag, campaign.landingPage, userId, 
                 createDate, createDate,
                 userId, userId,
-                Statuses.Active
-            )
+                Statuses.Active)
                 .then((result: entityWithId) => {
                     resolve(result as campaign);
                 })
@@ -66,7 +83,28 @@ class CampaignService implements ICampaignService {
     }
 
     
+    private parseLocalCampaign(campaign: localCampaign): campaign {
+        return {
+            id: campaign.id,
+            hashtag: campaign.hashtag,
+            landingPage: campaign.landing_page,
+            nonProfitOrganizationName: campaign.non_profit_organization_name,
+        }
+    }
 
+    private localCampaignWitnProducts(campaign: localCampaignWitnProducts): campaignWitnProducts {
+        return {
+            id: campaign.id,
+            hashtag: campaign.hashtag,
+            landingPage: campaign.landing_page,
+            nonProfitOrganizationName: campaign.non_profit_organization_name,
+            productTitle: campaign.product_title,
+            businessOwnerName: campaign.business_owner_name,
+            productQty: campaign.product_qty
+        }
+    }
+
+    
 
 }
 
