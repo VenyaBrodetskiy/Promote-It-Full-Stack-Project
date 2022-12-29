@@ -3,7 +3,13 @@ export enum Statuses {
     NotActive = 2,
 }
 
-// TODO: refactor to use Roles from DB automatically
+export enum UserType {
+    businessOwner = 1,
+    socialActivist,
+    nonProfitOrganization,
+    prolobbyOwner
+}
+
 export enum Role {
     AccessAdministrator = 1,
     RegularUser,

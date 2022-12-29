@@ -1,4 +1,4 @@
-import { AppError, Role } from "./enums";
+import { AppError, Role, UserType } from "./enums";
 import { Request } from "express";
 export interface entityWithId{
     id: number;
@@ -16,6 +16,11 @@ export interface campaignsWitnProducts extends campaign {
     business_owner_name: string;
     product_qty: number;
 
+}
+
+export interface jwtUserData {
+    userId: number;
+    userTypeId: UserType;
 }
 
 export interface user extends entityWithId {
@@ -67,7 +72,4 @@ export interface authenticationToken {
 export interface AuthenticatedRequest extends Request, authenticationToken {}
 
 export type RoleType = keyof typeof Role;
-export interface jwtUserData {
-    userId: number;
-    rolesId: Role[];
-}
+

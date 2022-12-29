@@ -1,13 +1,13 @@
 import bcrypt from 'bcryptjs';
-import { Queries } from '../../common/constants';
 import { entityWithId, jwtUserData, systemError } from '../../common/entities';
-import { AppError, Role, Statuses } from '../../common/enums';
+import { AppError, Statuses, UserType } from '../../common/enums';
 import { SqlHelper } from '../helpers/sql.helper';
 import ErrorService from "../../core/error.service";
+import { AuthenticationQueries } from './authentication.queries';
 
 interface localUser extends entityWithId{
     password: string;
-    role_id: Role;
+    userTypeId: UserType;
 }
 
 interface IAuthenticationService {
@@ -21,17 +21,14 @@ export class AuthenticationService implements IAuthenticationService {
 
     public login(login: string, password: string):Promise<jwtUserData> {
         return new Promise<jwtUserData>((resolve, reject) => {
-            SqlHelper.executeQueryArrayResult<localUser>(
-                Queries.GetUserByLogin, login, 
+            SqlHelper.executeQuerySingleResult<localUser>(
+                AuthenticationQueries.GetUserByLogin, login, 
                 Statuses.Active, Statuses.Active)
-            .then((user: localUser[]) => {
-                if (bcrypt.compareSync(password, user[0].password)) {
-                    let roles : number[] = [];
-                    // user.forEach(user => roles.push(user.role_id)); // check if is makes same as map
-                    roles = user.map(user => user.role_id);
+            .then((user: localUser) => {
+                if (bcrypt.compareSync(password, user.password)) {
                     const result: jwtUserData = {
-                        userId: user[0].id,
-                        rolesId: roles
+                        userId: user.id,
+                        userTypeId: user.userTypeId
                     }
                     resolve(result);
                 } 
