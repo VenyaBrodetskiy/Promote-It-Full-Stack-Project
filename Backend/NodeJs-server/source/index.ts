@@ -4,9 +4,11 @@ import cors from "cors";
 import morgan from "morgan";
 import express, { Express } from "express";
 import { RouteConfig } from "./framework/routes.config";
+import { UserRoutes } from "./modules/user/user.routes";
 import { AuthenticationRoutes } from "./core/authentication/authentication.routes";
 import { CampaignRoutes } from "./modules/campaign/campaign.routes";
 import LoggerService from "./core/logger.service";
+
 
 LoggerService.init();
 
@@ -20,6 +22,7 @@ app.use(express.json());
 
 app.use(cors());
 
+routes.push(new UserRoutes(app));
 routes.push(new AuthenticationRoutes(app));
 routes.push(new CampaignRoutes(app));
 

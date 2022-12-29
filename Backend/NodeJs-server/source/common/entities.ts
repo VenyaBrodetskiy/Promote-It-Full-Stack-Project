@@ -17,17 +17,13 @@ export interface campaignWitnProducts extends campaign {
 
 }
 
-// TODO: remove rolesId
 export interface jwtUserData {
     userId: number;
     userTypeId: UserType;
-    rolesId?: Role[];
 }
 
 export interface user extends entityWithId {
-    firstName: string;
-    lastName: string;
-    roles: string[];
+    userTypeId: number;
     login?: string;
     password?: string;
   

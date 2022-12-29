@@ -24,17 +24,5 @@ export class RequestHelper {
         return result;
     }
 
-    /** 
-     * Function checks if Roles from request exists in DB-roles-table
-     * */  
-    public static checkInputRoles(roles: string[]) : boolean {
-        for (const role of roles) {
-            if (Role[role as RoleType] === undefined) { 
-                return false;
-            }
-        }
-        // else
-        return true;
-    }
     
 }
