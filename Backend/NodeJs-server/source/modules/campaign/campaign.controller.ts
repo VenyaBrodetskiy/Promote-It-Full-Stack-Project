@@ -43,7 +43,7 @@ class CampaignController {
         };
 
         // TODO: АХТУНГ АДЫНАДЫН!!!11111!!!
-        CampaignService.addCampaign(inputCampaign, 1) //(req as AuthenticatedRequest).userData.userId
+        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userData.userId) //(req as AuthenticatedRequest).userData.userId
             .then((result: campaign) => {
                 return res.status(200).json(result);
             })

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { Role } from "../../common/enums";
+import { UserType } from "../../common/enums";
 import { AuthenticatedRequest, jwtUserData } from "../../common/entities";
 import { Environment } from "../helpers/env.helper";
 
@@ -12,7 +12,7 @@ interface jwtBase {
 
 class AuthMiddleware {
     
-    public verifyToken = (roles: Role[]) => (req: Request, res: Response, next: NextFunction) => {
+    public verifyToken = (userTypeId: UserType) => (req: Request, res: Response, next: NextFunction) => {
         let token: string | undefined = req.headers["authorization"]?.toString(); 
     
         if (!token) {
@@ -22,8 +22,8 @@ class AuthMiddleware {
         try {
             token = token.substring("Bearer ".length);
             const decoded: string | JwtPayload = jwt.verify(token, Environment.TOKEN_SECRET);
-            const intersectionRoles: number[] = (decoded as jwtBase).userData.rolesId!.filter(role => roles.includes(role)); 
-            if (intersectionRoles.length === 0) {
+
+            if ((decoded as jwtBase).userData.userTypeId !== userTypeId) {
                 return res.sendStatus(401);
             }
             (req as AuthenticatedRequest).userData = (decoded as jwtBase).userData;
