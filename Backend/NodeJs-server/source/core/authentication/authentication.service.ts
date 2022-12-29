@@ -19,7 +19,8 @@ export class AuthenticationService implements IAuthenticationService {
     constructor() {
     }
 
-    public login(login: string, password: string):Promise<jwtUserData> {
+    public login(login: string, password: string): Promise<jwtUserData> {
+
         return new Promise<jwtUserData>((resolve, reject) => {
             SqlHelper.executeQuerySingleResult<localUser>(
                 AuthenticationQueries.GetUserByLogin, login, 
@@ -43,10 +44,22 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     // private static createPassword() {
-    //     const temp_pass: string = bcrypt.hashSync('password');
-    //     console.log(temp_pass);
-    //     console.log(bcrypt.compareSync('password', '$2a$10$nk.AB39zLdPrYLhtyP6o7u93Vk7SmGVTYqgMhh8l6YlQjb8xaLU9u'));
-    // }
+        // const temp_pass: string = bcrypt.hashSync('password');
+        // console.log(temp_pass);
+        // console.log(bcrypt.compareSync('password', '$2a$10$nk.AB39zLdPrYLhtyP6o7u93Vk7SmGVTYqgMhh8l6YlQjb8xaLU9u'));
+
+        // const temp_pass1: string = bcrypt.hashSync('prolobbyowner');
+        // const temp_pass2: string = bcrypt.hashSync('nonprofitorganization');
+        // const temp_pass3: string = bcrypt.hashSync('socialactivist');
+        // const temp_pass4: string = bcrypt.hashSync('businessowner');
+        // const temp_pass5: string = bcrypt.hashSync('socialactivist2');
+        // console.log(temp_pass1);
+        // console.log(temp_pass2);
+        // console.log(temp_pass3);
+        // console.log(temp_pass4);
+        // console.log(temp_pass5);
+
+//     }
 }
 
 export default new AuthenticationService();

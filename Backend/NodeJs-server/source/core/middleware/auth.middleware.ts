@@ -22,7 +22,7 @@ class AuthMiddleware {
         try {
             token = token.substring("Bearer ".length);
             const decoded: string | JwtPayload = jwt.verify(token, Environment.TOKEN_SECRET);
-            const intersectionRoles: number[] = (decoded as jwtBase).userData.rolesId.filter(role => roles.includes(role)); 
+            const intersectionRoles: number[] = (decoded as jwtBase).userData.rolesId!.filter(role => roles.includes(role)); 
             if (intersectionRoles.length === 0) {
                 return res.sendStatus(401);
             }

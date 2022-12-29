@@ -21,6 +21,7 @@ export interface campaignsWitnProducts extends campaign {
 export interface jwtUserData {
     userId: number;
     userTypeId: UserType;
+    rolesId?: Role[];
 }
 
 export interface user extends entityWithId {

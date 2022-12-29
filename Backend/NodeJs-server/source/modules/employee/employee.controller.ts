@@ -75,10 +75,10 @@ class EmployeeController {
         if (typeof numericParamOrError === "number") {
             const employeeId = numericParamOrError; // just alias for better reading
             const userId = (req as AuthenticatedRequest).userData.userId;
-            const userRoles: Role[] = (req as AuthenticatedRequest).userData.rolesId;
+            const userRoles: Role[] | undefined = (req as AuthenticatedRequest).userData.rolesId;
             
             const isUserHasAccess: boolean = await AcessHelper.isUserHasAccessToEmployee(
-                res, userId, userRoles, employeeId)
+                res, userId, userRoles!, employeeId)
             
             if (!isUserHasAccess) {
                     return res.sendStatus(401);
@@ -136,10 +136,10 @@ class EmployeeController {
         if (typeof numericParamOrError === "number") {
             const employeeId = numericParamOrError; // just alias for better reading
             const userId = (req as AuthenticatedRequest).userData.userId;
-            const userRoles: Role[] = (req as AuthenticatedRequest).userData.rolesId;
+            const userRoles: Role[] | undefined = (req as AuthenticatedRequest).userData.rolesId;
             
             const isUserHasAccess: boolean = await AcessHelper.isUserHasAccessToEmployee(
-                res, userId, userRoles, employeeId)
+                res, userId, userRoles!, employeeId)
             
             if (!isUserHasAccess) {
                     return res.sendStatus(401);
