@@ -13,16 +13,17 @@ export class CampaignRoutes extends RouteConfig {
     configureRoutes() {
 
         this.app.route(`/${this.baseUrl}`).get([
-            AuthMiddleware.verifyToken(UserType.businessOwner),
+            AuthMiddleware.verifyToken([UserType.businessOwner, UserType.socialActivist]),
             CampaignController.getAllCampaigns]);
         
-        this.app.route(`/${this.baseUrl}/product`).get(
-            CampaignController.getAllCampaignsWitnProducts);
+        this.app.route(`/${this.baseUrl}/product`).get([
+            AuthMiddleware.verifyToken([UserType.socialActivist]),
+            CampaignController.getAllCampaignsWitnProducts]);
 
-        this.app.route(`/${this.baseUrl}`).post(
-            CampaignController.addCampaign);
+        this.app.route(`/${this.baseUrl}`).post([
+            AuthMiddleware.verifyToken([UserType.nonProfitOrganization]),
+            CampaignController.addCampaign]);
         
-
         return this.app;
     }
 }
