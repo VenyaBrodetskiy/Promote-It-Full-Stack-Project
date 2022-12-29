@@ -29,11 +29,6 @@ class CampaignService implements ICampaignService {
     constructor() {
     }
 
-    // TODO: need (must) to create DTO and parse all data from DB to it
-    // in order to do, please create file Models and file ModelsDTO
-    // or do like Ilya - just create local interface (which is Model), in entities will be ModelsDTO
-
-
     public getAllCampaigns(): Promise<campaign[]> {
         return new Promise<campaign[]>((resolve, reject) => {
             const result: campaign[] = [];
@@ -104,7 +99,6 @@ class CampaignService implements ICampaignService {
         }
     }
 
-    
 
 }
 
