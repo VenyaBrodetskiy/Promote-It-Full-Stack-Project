@@ -65,10 +65,10 @@ class StoreController {
         if (typeof numericParamOrError === "number") {
             const storeId = numericParamOrError; // just alias for better reading
             const userId = (req as AuthenticatedRequest).userData.userId;
-            const userRoles: Role[] = (req as AuthenticatedRequest).userData.rolesId;
+            const userRoles: Role[] | undefined = (req as AuthenticatedRequest).userData.rolesId;
     
             const isUserHasAccess: boolean = await AcessHelper.isUserHasAccessToStore(
-                userId, userRoles, storeId)
+                userId, userRoles!, storeId)
             
             if (!isUserHasAccess) {
                     return res.sendStatus(401);
@@ -128,10 +128,10 @@ class StoreController {
         if (typeof numericParamOrError === "number") {
             const storeId = numericParamOrError; // just alias for better reading
             const userId = (req as AuthenticatedRequest).userData.userId;
-            const userRoles: Role[] = (req as AuthenticatedRequest).userData.rolesId;
+            const userRoles: Role[] | undefined = (req as AuthenticatedRequest).userData.rolesId;
     
             const isUserHasAccess: boolean = await AcessHelper.isUserHasAccessToStore(
-                userId, userRoles, storeId)
+                userId, userRoles!, storeId)
             
             if (!isUserHasAccess) {
                     return res.sendStatus(401);

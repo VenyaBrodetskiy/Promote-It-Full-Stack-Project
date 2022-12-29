@@ -1,9 +1,9 @@
 export class AuthenticationQueries {
     
     public static GetUserByLogin: string = 
-        `SELECT[user].id, password, user_type_id
-        FROM[user] 
-        WHERE login = 'proLobbyOwner' AND[user].status_id = 1`;
+        `SELECT [user].id, password, user_type_id
+        FROM [user] 
+        WHERE login = ? AND [user].status_id = ?`;
 
         // `SELECT [user].id, password, user_type_id, [user_type].[title]
         // FROM [user]
