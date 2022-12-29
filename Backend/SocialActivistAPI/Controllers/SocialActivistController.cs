@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SocialActivistAPI.Models;
+using SocialActivistAPI.Common;
+using SocialActivistAPI.DTO;
 using SocialActivistAPI.Services;
 
 namespace SocialActivistAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route($"{Const.BaseUrl}/[controller]")]
     public class SocialActivistController : ControllerBase
     {
         private readonly SocialActivistService _socialActivistService;
@@ -16,23 +17,30 @@ namespace SocialActivistAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<SocialActivistLocal>>> GetAll()
+        public async Task<ActionResult<List<SocialActivistDTO>>> GetAll()
         {
-            var result = await _socialActivistService.GetAll();
+            try
+            {
+                var result = await _socialActivistService.GetAll();
 
-            if (result == null)
-            {
-                return NotFound();
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return Ok(result);
+                return Problem(ex.Message);
             }
 
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SocialActivistLocal>> Get(int id)
+        public async Task<ActionResult<SocialActivistDTO>> Get(int id)
         {
             var result = await _socialActivistService.Get(id);
 
@@ -47,14 +55,5 @@ namespace SocialActivistAPI.Controllers
             }
 
         }
-    }
-
-    public class SocialActivistLocal
-    {
-        public int UserId { get; set; }
-        public string? TwitterHandle { get; set; }
-        public string? Email {get; set;}
-        public string? Address { get; set;}
-        public string? PhoneNumber { get; set;}
     }
 }

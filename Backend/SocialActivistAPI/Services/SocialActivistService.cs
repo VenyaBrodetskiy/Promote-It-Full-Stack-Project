@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialActivistAPI.Controllers;
 using SocialActivistAPI.Models;
+using SocialActivistAPI.DTO;
 
 namespace SocialActivistAPI.Services
 {
@@ -13,57 +13,53 @@ namespace SocialActivistAPI.Services
             _db = db;
         }
 
-        public async Task<List<SocialActivistLocal>> GetAll()
+        public async Task<List<SocialActivistDTO>> GetAll()
         {
-            var result = await _db.SocialActivists
-                .Select(sa => new SocialActivistLocal()
-                {
-                    UserId = sa.UserId,
-                    TwitterHandle = sa.TwitterHandle,
-                    Email = sa.Email,
-                    Address = sa.Address,
-                    PhoneNumber = sa.PhoneNumber
-                })
-                .ToListAsync();
+            try
+            {
+                var result = await _db.SocialActivists
+                    .Select(sa => ToDto(sa))
+                    .ToListAsync();
 
-            return result;
-
-            // ask Alon how to make it async
-
-            //var result2 = from sa in _db.SocialActivists
-            //              select new SocialActivistLocal()
-            //              {
-            //                  UserId = sa.UserId,
-            //                  TwitterHandle = sa.TwitterHandle,
-            //                  UserIdFromUser = sa.User.Id,
-            //                  UserType = sa.User.UserType.Title
-
-            //              };
-            //return result2.ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task<SocialActivistLocal?> Get(int id)
+        public async Task<SocialActivistDTO?> Get(int id)
         {
-            var result = await _db.SocialActivists.FindAsync(id);
-
-            if (result == null)
-            { 
-                return null;
-
-            }
-            else
+            try
             {
-                var resultFiltered = new SocialActivistLocal()
-                {
-                    UserId = result.UserId,
-                    TwitterHandle = result.TwitterHandle,
-                    Email = result.Email,
-                    Address = result.Address,
-                    PhoneNumber = result.PhoneNumber
-                };
+                var result = await _db.SocialActivists.FindAsync(id);
 
-                return resultFiltered;
+                if (result == null)
+                { 
+                    return null;
+                }
+                else
+                {
+                    return ToDto(result);
+                }
             }
+            catch (Exception) 
+            {
+                throw;  
+            }
+        }
+
+        private static SocialActivistDTO ToDto(SocialActivist socialActivist)
+        {
+            return new SocialActivistDTO()
+            {
+                UserId = socialActivist.UserId,
+                TwitterHandle = socialActivist.TwitterHandle,
+                Email = socialActivist.Email,
+                Address = socialActivist.Address,
+                PhoneNumber = socialActivist.PhoneNumber
+            };
         }
     }
 }

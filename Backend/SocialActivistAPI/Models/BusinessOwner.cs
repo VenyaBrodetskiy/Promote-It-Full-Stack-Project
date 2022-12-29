@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SocialActivistAPI.Models;
+﻿namespace SocialActivistAPI.Models;
 
 public partial class BusinessOwner
 {
