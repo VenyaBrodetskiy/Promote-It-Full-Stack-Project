@@ -19,7 +19,8 @@ export class UserQueries {
     
     public static AddBusinessOwner: string = `
         INSERT [business_owner] 
-            (user_id, twitter_handle, name, email,
+            (user_id, twitter_handle, 
+            name, email,
             create_date, update_date, 
             create_user_id, update_user_id, 
             status_id) 
@@ -27,7 +28,8 @@ export class UserQueries {
     
     public static AddNonProfitOrganization: string = `
         INSERT [non_profit_organization] 
-            (user_id, name, email, website,
+            (user_id, name, 
+            email, website,
             create_date, update_date, 
             create_user_id, update_user_id, 
             status_id) 

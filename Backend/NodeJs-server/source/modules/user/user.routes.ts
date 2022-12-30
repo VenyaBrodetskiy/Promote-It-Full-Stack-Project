@@ -15,6 +15,9 @@ export class UserRoutes extends RouteConfig {
         this.app.route(`/${this.baseUrl}`).post([
             UserController.addUser]);
         
+        this.app.route(`/${this.baseUrl}/:userTypeId`).post([
+            UserController.addUserInfo]);
+        
         // this.app.route(`/${this.baseUrl}`).get([
         //     AuthMiddleware.verifyToken([UserType.businessOwner]), 
         //     UserController.getAll]);

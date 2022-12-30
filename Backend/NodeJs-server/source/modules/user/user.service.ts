@@ -1,7 +1,7 @@
-import { entityWithId, RoleType, systemError, user } from '../../common/entities';
+import { entityWithId, systemError, user, userInfo } from '../../common/entities';
 import { SqlHelper } from '../../core/helpers/sql.helper';
 import _ from 'underscore';
-import { Role, Statuses } from '../../common/enums';
+import { Statuses, UserType } from '../../common/enums';
 import { DateHelper } from '../../framework/date.helpers';
 import { UserQueries } from './user.queries';
 
@@ -33,7 +33,7 @@ interface localAddNonProfitOrganization {
     website: string;
 }
 
-interface localCommonUser {
+interface localUserInfo {
     user_id: number;
     twitter_handle?: string;
     name?: string;
@@ -65,6 +65,58 @@ class UserService implements IUserService {
                 resolve(result as user);
             })
             .catch((error: systemError) => reject(error));
+        });
+    }
+
+    public addUserInfo(userInfo: userInfo, userTypeId: UserType): Promise<userInfo> {
+        return new Promise<userInfo>((resolve, reject) => {
+            const createDate: string = DateHelper.dateToString(new Date());
+
+            switch (userTypeId) {
+                case UserType.socialActivist: 
+                    SqlHelper.executeQueryNoResult(
+                        UserQueries.AddSocialActivist, false,
+                        userInfo.user_id, userInfo.twitter_handle!, userInfo.email,
+                        userInfo.address!, userInfo.phone_number!,
+                        createDate, createDate,
+                        userInfo.user_id, userInfo.user_id,
+                        Statuses.Active)
+                        .then(() => {
+                            resolve(userInfo);
+                        })
+                        .catch((error: systemError) => reject(error));
+                    break;
+                case UserType.businessOwner: 
+                    SqlHelper.executeQueryNoResult(
+                        UserQueries.AddBusinessOwner, false,
+                        userInfo.user_id, userInfo.twitter_handle!,
+                        userInfo.name!, userInfo.email,
+                        createDate, createDate,
+                        userInfo.user_id, userInfo.user_id,
+                        Statuses.Active)
+                        .then(() => {
+                            resolve(userInfo);
+                        })
+                        .catch((error: systemError) => reject(error));
+                    break;
+                case UserType.nonProfitOrganization: 
+                    SqlHelper.executeQueryNoResult(
+                        UserQueries.AddNonProfitOrganization, false,
+                        userInfo.user_id, userInfo.name!,
+                        userInfo.email, userInfo.website!, 
+                        createDate, createDate,
+                        userInfo.user_id, userInfo.user_id,
+                        Statuses.Active)
+                        .then(() => {
+                            resolve(userInfo);
+                        })
+                        .catch((error: systemError) => reject(error));
+                    break;
+                default:
+                    // error?
+            }
+
+
         });
     }
 

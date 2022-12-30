@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { RequestHelper } from "../../core/helpers/request.helpers";
 import { ResponseHelper } from "../../core/helpers/response.helper";
-import { AuthenticatedRequest, systemError, user } from "../../common/entities";
-import { AppError } from "../../common/enums";
+import { AuthenticatedRequest, systemError, user, userInfo } from "../../common/entities";
+import { UserType, AppError } from "../../common/enums";
 import UserService from "./user.service";
 import ErrorService from "../../core/error.service";
 import bcrypt from 'bcryptjs';
@@ -36,6 +36,52 @@ class UserController {
                     login: body.login,
                 }
                 return res.status(200).json(returnUser);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+
+    };
+
+    public addUserInfo(req: Request, res: Response, next: NextFunction) {
+
+        loggerService.info(`${req.method} ${req.originalUrl}`);
+        
+        const numericParamOrError: number | systemError = RequestHelper.parseNumericInput(req.params.userTypeId);
+        // TODO: validation for numericParamOrError is one of the user types??
+
+        let userTypeId: UserType = 0;
+
+        switch (numericParamOrError) {
+            case 1:
+                userTypeId = UserType.businessOwner;
+                break;
+            case 2:
+                userTypeId = UserType.socialActivist;
+                break;
+            case 3:
+                userTypeId = UserType.nonProfitOrganization;
+                break;
+            default:
+                // error?
+        }
+        
+    
+        const body: userInfo = req.body;
+
+        const userInfo: userInfo = {
+            user_id: body.user_id,
+            twitter_handle: body.twitter_handle,
+            name: body.name,
+            email: body.email,
+            address: body.address,
+            phone_number: body.phone_number,
+            website: body.website,
+        };
+
+        UserService.addUserInfo(userInfo, userTypeId) // (req as AuthenticatedRequest).userData.userId
+            .then((userInfo: userInfo) => {
+                return res.status(200).json(userInfo);
             })
             .catch((error: systemError) => {
                 return ResponseHelper.handleError(res, error);
