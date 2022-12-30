@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialActivistAPI.Models;
 using SocialActivistAPI.DTO;
+using SocialActivistAPI.Common;
 
 namespace SocialActivistAPI.Services
 {
@@ -18,6 +19,7 @@ namespace SocialActivistAPI.Services
             try
             {
                 var result = await _db.SocialActivists
+                    .Where(sa => sa.StatusId == (int)Statuses.Active)
                     .Select(sa => ToDto(sa))
                     .ToListAsync();
 
@@ -33,7 +35,10 @@ namespace SocialActivistAPI.Services
         {
             try
             {
-                var result = await _db.SocialActivists.FindAsync(id);
+                var result = await _db.SocialActivists
+                    .Where(sa => sa.StatusId == (int)Statuses.Active && sa.UserId == id)
+                    .Select(sa => ToDto(sa))
+                    .FirstAsync();
 
                 if (result == null)
                 { 
@@ -41,7 +46,7 @@ namespace SocialActivistAPI.Services
                 }
                 else
                 {
-                    return ToDto(result);
+                    return result;
                 }
             }
             catch (Exception) 
