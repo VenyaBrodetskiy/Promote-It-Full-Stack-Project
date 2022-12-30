@@ -26,7 +26,16 @@ export interface user extends entityWithId {
     userTypeId: number;
     login?: string;
     password?: string;
-  
+}
+
+export interface userInfo {
+    user_id: number;
+    twitter_handle?: string;
+    name?: string;
+    email: string;
+    address?: string;
+    phone_number?: string;
+    website?: string;
 }
 
 export interface roleType extends entityWithId {
