@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SocialActivistAPI.Models;
 using SocialActivistAPI.Services;
 
@@ -14,11 +15,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MasaProjectDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    
 });
 
 // TODO: add auto IOC here
-// ASK ALON - is it okay to be scoped service?
 builder.Services.AddScoped<SocialActivistService>();
+builder.Services.AddScoped<UserToCampaignBalanceService>();
 
 var app = builder.Build();
 
@@ -27,7 +29,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/error");
 }
 
 app.UseHttpsRedirection();
