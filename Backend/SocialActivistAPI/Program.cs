@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SocialActivistAPI.AccessorsServices;
+using SocialActivistAPI.EngineServices;
 using SocialActivistAPI.Models;
 using SocialActivistAPI.Services;
 
@@ -21,6 +23,9 @@ builder.Services.AddDbContext<MasaProjectDbContext>(options =>
 // TODO: add auto IOC here
 builder.Services.AddScoped<SocialActivistService>();
 builder.Services.AddScoped<UserToCampaignBalanceService>();
+builder.Services.AddScoped<TransactionService>();
+
+builder.Services.AddScoped<TransactionValidationService>();
 
 var app = builder.Build();
 
@@ -32,6 +37,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// added logging of http requests
+app.UseHttpLogging();
 
 app.UseAuthorization();
 
