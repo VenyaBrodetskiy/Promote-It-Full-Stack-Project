@@ -27,4 +27,5 @@ export class Queries {
 }
 
 export const NON_EXISTING_ID: number = -1;
+export const SYSTEM_ID: number = 13;
 export const TEMP_USER_ID: number = 1;

@@ -46,29 +46,46 @@ interface localUserInfo {
 }
 interface IUserService {
 
-    addUser(user: user, userId: number): Promise<user>;
+    addUser(user: user, userId: number): Promise<number>;
 
 }
 class UserService implements IUserService {
     
     constructor() { }
 
-    public addUser(user: user, userId: number): Promise<user> {
-        return new Promise<user>((resolve, reject) => {
+    public addUser(user: user, userID: number): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
-            
+
             SqlHelper.createNew(
-                UserQueries.AddUser, user, 
-                user.login as string, user.password as string, user.userTypeId,  
-                createDate, createDate, 
-                userId, userId, 
+                UserQueries.AddUser, user,
+                user.login as string, user.password as string, user.userTypeId,
+                createDate, createDate,
+                userID, userID,
                 Statuses.Active)
-            .then((result: entityWithId) => {
-                resolve(result as user);
-            })
-            .catch((error: systemError) => reject(error));
+                .then((result: entityWithId) => {
+                    resolve(result.id);
+                })
+                .catch((error: systemError) => reject(error));
         });
     }
+
+    // public addUser(user: user, userId: number): Promise<user> {
+    //     return new Promise<user>((resolve, reject) => {
+    //         const createDate: string = DateHelper.dateToString(new Date());
+            
+    //         SqlHelper.createNew(
+    //             UserQueries.AddUser, user, 
+    //             user.login as string, user.password as string, user.userTypeId,  
+    //             createDate, createDate, 
+    //             userId, userId, 
+    //             Statuses.Active)
+    //         .then((result: entityWithId) => {
+    //             resolve(result as user);
+    //         })
+    //         .catch((error: systemError) => reject(error));
+    //     });
+    // }
 
     public addUserInfo(userInfo: userInfo, userTypeId: UserType): Promise<userInfo> {
         return new Promise<userInfo>((resolve, reject) => {
