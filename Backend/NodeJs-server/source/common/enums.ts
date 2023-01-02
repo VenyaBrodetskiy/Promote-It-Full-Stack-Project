@@ -7,7 +7,8 @@ export enum UserType {
     businessOwner = 1,
     socialActivist,
     nonProfitOrganization,
-    prolobbyOwner
+    prolobbyOwner,
+    system
 }
 
 export enum Role {

@@ -38,6 +38,18 @@ export interface userInfo {
     website?: string;
 }
 
+export interface userAnyType {
+    userTypeId: number;
+    login: string;
+    password: string;
+    twitter_handle?: string;
+    name?: string;
+    email: string;
+    address?: string;
+    phone_number?: string;
+    website?: string;
+}
+
 export interface roleType extends entityWithId {
     roleName: string;
 }
