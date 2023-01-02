@@ -1,4 +1,4 @@
-import { Connection, SqlClient, Error, Query, ProcedureManager } from "msnodesqlv8";
+import { Connection, SqlClient, Error, Query} from "msnodesqlv8";
 import { Queries } from "../../common/constants";
 import { systemError, entityWithId } from "../../common/entities";
 import ErrorService from "../error.service";
@@ -126,97 +126,6 @@ export class SqlHelper {
         })
     }
 
-    public static executeSpCreateNew(
-            procedureName: string, 
-            original: entityWithId, ...params: (string | number)[]): Promise<entityWithId> {
-
-        return new Promise<entityWithId>((resolve, reject) => {
-            SqlHelper.openConnection()
-                .then((connection) => {
-                    const pm: ProcedureManager = connection.procedureMgr();
-                    pm.callproc(procedureName, params, 
-                        (storedProcedureError: Error | undefined, result: entityWithId[] | undefined, output: any[] | undefined) => {
-                            if (storedProcedureError) {
-                                reject(ErrorService.getError(AppError.QueryError));
-                            }
-                            else {
-                                const id: number | null = SqlHelper.treatInsertResult2(result);
-                                if (id !== null) {
-                                    original.id = id;
-                                    resolve(original);
-                                }
-                                else {
-                                    reject(ErrorService.getError(AppError.QueryError))
-                                }
-                            }
-                        }
-                    )
-                })
-                .catch((error: systemError) => {
-                    reject(error);
-                })
-        })
-    }
-
-    public static executeSpArrayResult<T>(
-            procedureName: string, 
-            ...params: (string | number)[]
-            ): Promise<T[]> {
-
-        return new Promise<T[]>((resolve, reject) => {
-
-            SqlHelper.openConnection()
-                .then((connection: Connection) => {
-                    const pm: ProcedureManager = connection.procedureMgr();
-                    pm.callproc(procedureName, params, 
-                        (storProcError: Error | undefined, procResult: T[]| undefined) => {
-                            if (storProcError) {
-                                reject(ErrorService.getError(AppError.QueryError))
-                            }
-                            else {
-                                if (procResult !== undefined) {
-                                    resolve(procResult);
-                                }
-                                else {
-                                    resolve([]);
-                                }
-                            }
-                        }
-                    )
-                })
-                .catch((error: systemError) => reject(error));
-        })
-
-        
-    }
-
-    public static executeSpNoResult(
-            procedureName: string, 
-            ignoreNoRowsAffected: boolean, ...params: (string | number )[]): Promise<void> {
-        
-        return new Promise<void>((resolve, reject) => {
-            SqlHelper.openConnection()
-                .then((connection: Connection) => {
-                    const pm: ProcedureManager = connection.procedureMgr();
-                    const q: Query = pm.callproc(procedureName, params, (storedProcError: Error | undefined) => {
-                        if (storedProcError) {
-                            reject(ErrorService.getError(AppError.QueryError));
-                        }
-                    })
-
-                    // important: q.on('rowcount') works correctly only if set nocount on in DB
-                    q.on('rowcount', (rowCount: number) => {
-                        if (!ignoreNoRowsAffected && (rowCount === 0)) {
-                            reject(ErrorService.getError(AppError.NoData));
-                            return;
-                        }
-                        resolve();
-                    })
-                })
-                .catch((error:systemError) => reject(error));
-            
-        })
-    }
 
     private static treatInsertResult(
         original: entityWithId, queryResult: entityWithId[] | undefined,
@@ -237,16 +146,6 @@ export class SqlHelper {
         }
         else {
             reject(badQueryError);
-        }
-    }
-
-    private static treatInsertResult2(queryResult: entityWithId[] | undefined): number | null {
-        
-        if (queryResult !== undefined && queryResult.length === 1) {
-            return queryResult[0].id;
-        }
-        else {
-            return null;
         }
     }
 

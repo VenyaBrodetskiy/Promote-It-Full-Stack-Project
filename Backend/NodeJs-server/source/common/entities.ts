@@ -1,4 +1,4 @@
-import { AppError, Role, UserType } from "./enums";
+import { AppError, UserType } from "./enums";
 import { Request } from "express";
 export interface entityWithId{
     id: number;
@@ -24,51 +24,30 @@ export interface jwtUserData {
 
 export interface user extends entityWithId {
     userTypeId: number;
-    login?: string;
-    password?: string;
-}
-
-export interface userInfo {
-    user_id: number;
-    twitter_handle?: string;
-    name?: string;
-    email: string;
-    address?: string;
-    phone_number?: string;
-    website?: string;
-}
-
-export interface userAnyType {
-    userTypeId: number;
     login: string;
     password: string;
-    twitter_handle?: string;
-    name?: string;
+}
+
+export interface socialActivist extends user {
+    user_id: number;
+    twitter_handle: string;
     email: string;
-    address?: string;
-    phone_number?: string;
-    website?: string;
-}
-
-export interface roleType extends entityWithId {
-    roleName: string;
-}
-
-export interface storeType extends entityWithId {
-    name: string;
     address: string;
-    openDate: string;
-    scale: string;
+    phone_number: string;
 }
 
-export interface employeeType extends entityWithId{
-    firstName: string;
-    lastName: string;
-    position: string;
+export interface businessOwner extends user {
+    user_id: number;
+    twitter_handle: string;
+    name: string;
+    email: string;
 }
 
-export interface employeeOfStore extends employeeType{
-    storeName: string;
+export interface nonProfitOrganization extends user {
+    user_id: number;
+    name: string;
+    email: string;
+    website: string;
 }
 
 export interface systemError {
@@ -88,6 +67,4 @@ export interface authenticationToken {
 }
 
 export interface AuthenticatedRequest extends Request, authenticationToken {}
-
-export type RoleType = keyof typeof Role;
 

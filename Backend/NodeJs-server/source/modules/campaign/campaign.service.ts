@@ -1,8 +1,8 @@
-import { DateHelper } from "../../framework/date.helpers";
-import { campaign, campaignWitnProducts, entityWithId, systemError } from "../../common/entities";
-import { SqlHelper } from "../../core/helpers/sql.helper";
-import { CampaignQueries } from "./campaign.queries";
 import { Statuses } from "../../common/enums";
+import { campaign, campaignWitnProducts, entityWithId, systemError } from "../../common/entities";
+import { CampaignQueries } from "./campaign.queries";
+import { DateHelper } from "../../framework/date.helpers";
+import { SqlHelper } from "../../core/helpers/sql.helper";
 
 interface localCampaign extends entityWithId {
     hashtag: string;
@@ -58,16 +58,16 @@ class CampaignService implements ICampaignService {
         });
     }
    
-    public addCampaign(campaign: campaign, userId: number): Promise<campaign> {
+    public addCampaign(campaign: campaign, createUserId: number): Promise<campaign> {
         return new Promise<campaign>((resolve, reject) => {
 
             const createDate: string = DateHelper.dateToString(new Date());
 
             SqlHelper.createNew(
                 CampaignQueries.AddCampaign, campaign,
-                campaign.hashtag, campaign.landingPage, userId, 
+                campaign.hashtag, campaign.landingPage, createUserId, 
                 createDate, createDate,
-                userId, userId,
+                createUserId, createUserId,
                 Statuses.Active)
                 .then((result: entityWithId) => {
                     resolve(result as campaign);
