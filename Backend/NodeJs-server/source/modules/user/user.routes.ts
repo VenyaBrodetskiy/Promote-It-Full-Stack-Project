@@ -1,8 +1,6 @@
-import { RouteConfig } from '../../framework/routes.config';
 import { Application } from "express"
+import { RouteConfig } from '../../framework/routes.config';
 import UserController from "./user.controller"
-import AuthMiddleware from '../../core/middleware/auth.middleware';
-import { UserType } from '../../common/enums';
 
 export class UserRoutes extends RouteConfig {
     

@@ -1,8 +1,8 @@
 import { Application } from "express";
 import { RouteConfig } from "../../framework/routes.config";
-import CampaignController from "./campaign.controller"
-import AuthMiddleware from '../../core/middleware/auth.middleware';
 import { UserType } from "../../common/enums";
+import AuthMiddleware from '../../core/middleware/auth.middleware';
+import CampaignController from "./campaign.controller"
 
 export class CampaignRoutes extends RouteConfig {
 

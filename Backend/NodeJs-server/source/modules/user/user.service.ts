@@ -1,61 +1,22 @@
-import { entityWithId, systemError, user, userInfo } from '../../common/entities';
-import { SqlHelper } from '../../core/helpers/sql.helper';
 import _ from 'underscore';
-import { AppError, Statuses, UserType } from '../../common/enums';
-import { DateHelper } from '../../framework/date.helpers';
+import { Statuses } from '../../common/enums';
+import { entityWithId, systemError, user, businessOwner, socialActivist, nonProfitOrganization } from '../../common/entities';
 import { UserQueries } from './user.queries';
-import ErrorService from "../../core/error.service";
+import { DateHelper } from '../../framework/date.helpers';
+import { SqlHelper } from '../../core/helpers/sql.helper';
 
-//TODO: remove unused interfaces
-interface localUser {
-    id: number;
-    login: string;
-    user_type_id: number;
-}
-
-interface localAddSocialActivist { 
-    user_id: number;
-    twitter_handle: string;
-    email: string;
-    address: string;
-    phone_number: string;
-}
-
-interface localAddBusinessOwner { 
-    user_id: number;
-    twitter_handle: string;  
-    name: string;
-    email: string;
-}
-
-interface localAddNonProfitOrganization { 
-    user_id: number;
-    name: string;
-    email: string;
-    website: string;
-}
-
-interface localUserInfo {
-    user_id: number;
-    twitter_handle?: string;
-    name?: string;
-    email: string;
-    address?: string;
-    phone_number?: string;
-    website?: string;
-}
 interface IUserService {
 
     addUser(user: user, userId: number): Promise<number>;
-    addBusinessOwner(userInfo: userInfo): Promise<userInfo>;
-    addSocialActivist(userInfo: userInfo): Promise<userInfo>;
-    addNonProfitOrganization(userInfo: userInfo): Promise<userInfo>;
+    addBusinessOwner(businessOwner: businessOwner): Promise<void>;
+    addSocialActivist(socialActivist: socialActivist): Promise<void>;
+    addNonProfitOrganization(nonProfitOrganization: nonProfitOrganization): Promise<void>;
 }
 class UserService implements IUserService {
     
     constructor() { }
 
-    public addUser(user: user, userID: number): Promise<number> {
+    public addUser(user: user, createUserId: number): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
 
@@ -63,7 +24,7 @@ class UserService implements IUserService {
                 UserQueries.AddUser, user,
                 user.login as string, user.password as string, user.userTypeId,
                 createDate, createDate,
-                userID, userID,
+                createUserId, createUserId,
                 Statuses.Active)
                 .then((result: entityWithId) => {
                     resolve(result.id);
@@ -72,55 +33,55 @@ class UserService implements IUserService {
         });
     }
 
-    public addBusinessOwner(userInfo: userInfo): Promise<userInfo> {
-        return new Promise<userInfo>((resolve, reject) => {
+    public addBusinessOwner(businessOwner: businessOwner): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddBusinessOwner, false,
-                userInfo.user_id, userInfo.twitter_handle!,
-                userInfo.name!, userInfo.email,
+                businessOwner.user_id, businessOwner.twitter_handle,
+                businessOwner.name, businessOwner.email,
                 createDate, createDate,
-                userInfo.user_id, userInfo.user_id,
+                businessOwner.user_id, businessOwner.user_id,
                 Statuses.Active)
                 .then(() => {
-                    resolve(userInfo);
+                    resolve();
                 })
                 .catch((error: systemError) => reject(error));
         });
     }
 
-    public addSocialActivist(userInfo: userInfo): Promise<userInfo> {
-        return new Promise<userInfo>((resolve, reject) => {
+    public addSocialActivist(socialActivist: socialActivist): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddSocialActivist, false,
-                userInfo.user_id, userInfo.twitter_handle!, userInfo.email,
-                userInfo.address!, userInfo.phone_number!,
+                socialActivist.user_id, socialActivist.twitter_handle, socialActivist.email,
+                socialActivist.address, socialActivist.phone_number,
                 createDate, createDate,
-                userInfo.user_id, userInfo.user_id,
+                socialActivist.user_id, socialActivist.user_id,
                 Statuses.Active)
                 .then(() => {
-                    resolve(userInfo);
+                    resolve();
                 })
                 .catch((error: systemError) => reject(error));
         });
     }
 
-    public addNonProfitOrganization(userInfo: userInfo): Promise<userInfo> {
-        return new Promise<userInfo>((resolve, reject) => {
+    public addNonProfitOrganization(nonProfitOrganization: nonProfitOrganization): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddNonProfitOrganization, false,
-                userInfo.user_id, userInfo.name!,
-                userInfo.email, userInfo.website!,
+                nonProfitOrganization.user_id, nonProfitOrganization.name,
+                nonProfitOrganization.email, nonProfitOrganization.website,
                 createDate, createDate,
-                userInfo.user_id, userInfo.user_id,
+                nonProfitOrganization.user_id, nonProfitOrganization.user_id,
                 Statuses.Active)
                 .then(() => {
-                    resolve(userInfo);
+                    resolve();
                 })
                 .catch((error: systemError) => reject(error));
         });

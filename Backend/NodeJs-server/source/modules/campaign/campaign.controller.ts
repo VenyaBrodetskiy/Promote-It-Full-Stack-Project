@@ -1,18 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import { NON_EXISTING_ID } from "../../common/constants";
 import { campaign, AuthenticatedRequest, systemError, campaignWitnProducts } from "../../common/entities";
-import { ResponseHelper } from "../../core/helpers/response.helper";
 import CampaignService from "./campaign.service";
-import loggerService from "../../core/logger.service";
+import LoggerService from "../../core/logger.service";
+import { ResponseHelper } from "../../core/helpers/response.helper";
 
 class CampaignController {
-
 
     constructor() { }
 
     public getAllCampaigns(req: Request, res: Response, next: NextFunction) {
         
-        loggerService.info(`${req.method} ${req.originalUrl}`);
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
         
         CampaignService.getAllCampaigns()
             .then((result: campaign[]) => {
@@ -25,7 +24,7 @@ class CampaignController {
 
     public getAllCampaignsWitnProducts(req: Request, res: Response, next: NextFunction) {
         
-        loggerService.info(`${req.method} ${req.originalUrl}`);
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
         
         CampaignService.getAllCampaignsWithProducts()
             .then((result: campaignWitnProducts[]) => {
@@ -39,7 +38,7 @@ class CampaignController {
     public addCampaign(req: Request, res: Response, next: NextFunction) {
 
         // TODO: (very low priority) add validation, that landing page is working one 
-        loggerService.info(`${req.method} ${req.originalUrl}`);
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
         
         const body: campaign = req.body;
         const inputCampaign: campaign = {

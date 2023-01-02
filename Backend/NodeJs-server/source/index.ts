@@ -1,7 +1,7 @@
 import { Environment } from "./core/helpers/env.helper";
 import * as http from "http";
 import cors from "cors";
-import morgan from "morgan";
+//import morgan from "morgan";
 import express, { Express } from "express";
 import { RouteConfig } from "./framework/routes.config";
 import { UserRoutes } from "./modules/user/user.routes";
