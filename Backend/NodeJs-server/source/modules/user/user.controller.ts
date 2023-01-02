@@ -9,6 +9,10 @@ import bcrypt from 'bcryptjs';
 import { NON_EXISTING_ID, SYSTEM_ID } from "../../common/constants";
 import loggerService from "../../core/logger.service";
 
+//TODO: add validation for userTypeId (1 / 2 / 3 - as Enum UserType)
+//TODO: ok to use UserType with ? or need to create 3 types like businessOwnerType, socialActivistType, nonprofitOrganizationType ?
+//TODO: repeated code - can be reduced? But how to reduce without going back to 1 function with switch?
+
 class UserController {
 
     constructor() { }
@@ -23,7 +27,6 @@ class UserController {
         UserService.addUser(user, SYSTEM_ID) 
             .then((id: number) => {
                 userInfo.user_id = id;
-
                 return UserService.addBusinessOwner(userInfo);
             })
             .then((userInfo: userInfo) => {
@@ -44,8 +47,27 @@ class UserController {
         UserService.addUser(user, SYSTEM_ID)
             .then((id: number) => {
                 userInfo.user_id = id;
-
                 return UserService.addSocialActivist(userInfo);
+            })
+            .then((userInfo: userInfo) => {
+                return res.status(200).json(userInfo.user_id);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
+    public addNonProfitOrganization(req: Request, res: Response, next: NextFunction) {
+
+        loggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const user: user = UserController.parseBodyToUser(req);
+        const userInfo: userInfo = UserController.parseBodyToUserInfo(req);
+
+        UserService.addUser(user, SYSTEM_ID)
+            .then((id: number) => {
+                userInfo.user_id = id;
+                return UserService.addNonProfitOrganization(userInfo);
             })
             .then((userInfo: userInfo) => {
                 return res.status(200).json(userInfo.user_id);
