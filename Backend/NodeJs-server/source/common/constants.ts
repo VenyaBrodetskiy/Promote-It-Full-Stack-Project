@@ -1,7 +1,3 @@
-export class SqlParameters {
-    public static Id: string = "id";
-}
-
 export class Queries {
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
 }

@@ -56,12 +56,6 @@ export interface systemError {
     message: string;
 }
 
-export interface sqlParameter {
-    name: string;
-    type: any;
-    value: string | number;
-}
-
 export interface authenticationToken {
     userData: jwtUserData;
 }
