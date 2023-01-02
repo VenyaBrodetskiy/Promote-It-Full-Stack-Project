@@ -6,7 +6,7 @@ import { DateHelper } from '../../framework/date.helpers';
 import { UserQueries } from './user.queries';
 import ErrorService from "../../core/error.service";
 
-
+//TODO: remove unused interfaces
 interface localUser {
     id: number;
     login: string;
@@ -47,7 +47,9 @@ interface localUserInfo {
 interface IUserService {
 
     addUser(user: user, userId: number): Promise<number>;
-
+    addBusinessOwner(userInfo: userInfo): Promise<userInfo>;
+    addSocialActivist(userInfo: userInfo): Promise<userInfo>;
+    addNonProfitOrganization(userInfo: userInfo): Promise<userInfo>;
 }
 class UserService implements IUserService {
     
@@ -106,80 +108,23 @@ class UserService implements IUserService {
         });
     }
 
-    public addUserInfo(userInfo: userInfo, userTypeId: UserType): Promise<userInfo> {
+    public addNonProfitOrganization(userInfo: userInfo): Promise<userInfo> {
         return new Promise<userInfo>((resolve, reject) => {
             const createDate: string = DateHelper.dateToString(new Date());
 
-            switch (userTypeId) {
-
-                case UserType.businessOwner: 
-                    SqlHelper.executeQueryNoResult(
-                        UserQueries.AddBusinessOwner, false,
-                        userInfo.user_id, userInfo.twitter_handle!,
-                        userInfo.name!, userInfo.email,
-                        createDate, createDate,
-                        userInfo.user_id, userInfo.user_id,
-                        Statuses.Active)
-                        .then(() => {
-                            resolve(userInfo);
-                        })
-                        .catch((error: systemError) => reject(error));
-                    break;
-                case UserType.nonProfitOrganization: 
-                    SqlHelper.executeQueryNoResult(
-                        UserQueries.AddNonProfitOrganization, false,
-                        userInfo.user_id, userInfo.name!,
-                        userInfo.email, userInfo.website!, 
-                        createDate, createDate,
-                        userInfo.user_id, userInfo.user_id,
-                        Statuses.Active)
-                        .then(() => {
-                            resolve(userInfo);
-                        })
-                        .catch((error: systemError) => reject(error));
-                    break;
-                default:
-                    reject(ErrorService.getError(AppError.InputParameterNotSupplied));
-                    // error?
-            }
-
-
+            SqlHelper.executeQueryNoResult(
+                UserQueries.AddNonProfitOrganization, false,
+                userInfo.user_id, userInfo.name!,
+                userInfo.email, userInfo.website!,
+                createDate, createDate,
+                userInfo.user_id, userInfo.user_id,
+                Statuses.Active)
+                .then(() => {
+                    resolve(userInfo);
+                })
+                .catch((error: systemError) => reject(error));
         });
     }
-
-    // public getAll(): Promise<user[]> {
-    //     return new Promise<user[]>((resolve, reject) => {
-    //         const result: user[] = [];          
-            
-    //         SqlHelper.executeQueryArrayResult<localUser>(UserQueries.GetAll, Statuses.Active, Statuses.Active, Statuses.Active)
-    //         .then((queryResult: localUser[]) => {
-    //             queryResult.reduce((prevUser: localUser, currUser: localUser, index: number) => {
-    //                 if (prevUser.id === currUser.id) {
-    //                     if (typeof prevUser.role_name == 'string') prevUser.role_name = [prevUser.role_name as string];
-    //                     prevUser.role_name.push(currUser.role_name as string);
-    //                     if (index === queryResult.length - 1) result.push(this.parseUser(prevUser));
-    //                     return prevUser;
-    //                 }
-    //                 else {
-    //                     result.push(this.parseUser(prevUser));
-    //                     if (index === queryResult.length - 1) result.push(this.parseUser(currUser));
-    //                     return currUser;
-    //                 }
-    //             });
-    //             resolve(result);
-    //         })
-    //         .catch((error: systemError) => reject(error));
-    //     });
-    // }
-
-
-
-    
-
-
-
-
-
 
 }
 

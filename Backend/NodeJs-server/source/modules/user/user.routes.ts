@@ -18,9 +18,8 @@ export class UserRoutes extends RouteConfig {
         this.app.route(`/${this.baseUrl}/add-social-activist`).post([
             UserController.addSocialActivist]);
         
-        // сделать 3 эндпоинта (на каждый тип юзера)
-        // на каждый эндопоинт свой контроллер, который делает 2 вещи: руководит записью в таблицу юзер, делает запись в "свою" таблицу
-        // в сервисе 4 функции - по 1 на каждую таблицу
+        this.app.route(`/${this.baseUrl}/add-nonprofit-organization`).post([
+            UserController.addNonProfitOrganization]);
 
         return this.app;
     }
