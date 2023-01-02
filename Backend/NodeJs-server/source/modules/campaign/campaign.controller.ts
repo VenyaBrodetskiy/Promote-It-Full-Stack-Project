@@ -11,7 +11,9 @@ class CampaignController {
     constructor() { }
 
     public getAllCampaigns(req: Request, res: Response, next: NextFunction) {
+        
         loggerService.info(`${req.method} ${req.originalUrl}`);
+        
         CampaignService.getAllCampaigns()
             .then((result: campaign[]) => {
                 return res.status(200).json(result);
@@ -22,7 +24,9 @@ class CampaignController {
     }
 
     public getAllCampaignsWitnProducts(req: Request, res: Response, next: NextFunction) {
+        
         loggerService.info(`${req.method} ${req.originalUrl}`);
+        
         CampaignService.getAllCampaignsWithProducts()
             .then((result: campaignWitnProducts[]) => {
                 return res.status(200).json(result);
@@ -38,7 +42,7 @@ class CampaignController {
         loggerService.info(`${req.method} ${req.originalUrl}`);
         
         const body: campaign = req.body;
-        const inputCampaign = {
+        const inputCampaign: campaign = {
             id: NON_EXISTING_ID,
             hashtag: body.hashtag,
             landingPage: body.landingPage

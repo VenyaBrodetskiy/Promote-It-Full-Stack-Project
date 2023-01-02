@@ -50,21 +50,29 @@ class UserController {
         const numericParamOrError: number | systemError = RequestHelper.parseNumericInput(req.params.userTypeId);
         // TODO: validation for numericParamOrError is one of the user types??
 
-        let userTypeId: UserType = 0;
-
-        switch (numericParamOrError) {
-            case 1:
-                userTypeId = UserType.businessOwner;
-                break;
-            case 2:
-                userTypeId = UserType.socialActivist;
-                break;
-            case 3:
-                userTypeId = UserType.nonProfitOrganization;
-                break;
-            default:
-                // error?
+        let userTypeId: UserType;
+        if (typeof numericParamOrError === "number") {
+            userTypeId = numericParamOrError;
         }
+        else 
+        {
+            return ResponseHelper.handleError(res, ErrorService.getError(AppError.InputParameterNotSupplied));
+        }
+        // let userTypeId: UserType = 0;
+
+        // switch (numericParamOrError) {
+        //     case 1:
+        //         userTypeId = UserType.businessOwner;
+        //         break;
+        //     case 2:
+        //         userTypeId = UserType.socialActivist;
+        //         break;
+        //     case 3:
+        //         userTypeId = UserType.nonProfitOrganization;
+        //         break;
+        //     default:
+        //         return ResponseHelper.handleError(res, ErrorService.getError(AppError.InputParameterNotSupplied));
+        // }
         
     
         const body: userInfo = req.body;

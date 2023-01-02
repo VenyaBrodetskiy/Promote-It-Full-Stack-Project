@@ -16,7 +16,8 @@ const routes: Array<RouteConfig> = [];
 const app: Express = express();
 
 /** Logging */
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
+
 /** Takes care of JSON data */
 app.use(express.json());
 

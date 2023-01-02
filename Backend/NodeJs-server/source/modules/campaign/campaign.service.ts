@@ -7,14 +7,13 @@ import { Statuses } from "../../common/enums";
 interface localCampaign extends entityWithId {
     hashtag: string;
     landing_page: string;
-    non_profit_organization_name?: string;
+    non_profit_organization_name: string;
 }
 
 export interface localCampaignWitnProducts extends localCampaign {
     product_title: string;
     business_owner_name: string;
     product_qty: number;
-
 }
 
 interface ICampaignService {
@@ -51,7 +50,7 @@ class CampaignService implements ICampaignService {
             SqlHelper.executeQueryArrayResult<localCampaignWitnProducts>(CampaignQueries.GetAllCampaignsWitnProducts, Statuses.Active)
                 .then((queryResult: localCampaignWitnProducts[]) => {
                     queryResult.forEach((campaign: localCampaignWitnProducts) => {
-                        result.push(this.localCampaignWitnProducts(campaign))
+                        result.push(this.parseLocalCampaignWitnProducts(campaign))
                     });
                     resolve(result);
                 })
@@ -87,7 +86,7 @@ class CampaignService implements ICampaignService {
         }
     }
 
-    private localCampaignWitnProducts(campaign: localCampaignWitnProducts): campaignWitnProducts {
+    private parseLocalCampaignWitnProducts(campaign: localCampaignWitnProducts): campaignWitnProducts {
         return {
             id: campaign.id,
             hashtag: campaign.hashtag,
