@@ -1,9 +1,11 @@
 import { entityWithId, systemError, user, userInfo } from '../../common/entities';
 import { SqlHelper } from '../../core/helpers/sql.helper';
 import _ from 'underscore';
-import { Statuses, UserType } from '../../common/enums';
+import { AppError, Statuses, UserType } from '../../common/enums';
 import { DateHelper } from '../../framework/date.helpers';
 import { UserQueries } from './user.queries';
+import ErrorService from "../../core/error.service";
+
 
 interface localUser {
     id: number;
@@ -113,6 +115,7 @@ class UserService implements IUserService {
                         .catch((error: systemError) => reject(error));
                     break;
                 default:
+                    reject(ErrorService.getError(AppError.InputParameterNotSupplied));
                     // error?
             }
 
