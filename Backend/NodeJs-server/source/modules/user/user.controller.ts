@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
-import { NON_EXISTING_ID, SYSTEM_ID } from "../../common/constants";
+import { NON_EXISTING_ID, SYSTEM_USER_ID } from "../../common/constants";
 import { UserType, AppError } from "../../common/enums";
 import { systemError, businessOwner, socialActivist, nonProfitOrganization } from "../../common/entities";
 import UserService from "./user.service";
@@ -23,8 +23,7 @@ class UserController {
             userTypeId: body.userTypeId,
             login: body.login,
             password: hashedPasword,
-            user_id: NON_EXISTING_ID,
-            twitter_handle: body.twitter_handle,
+            twitterHandle: body.twitterHandle,
             name: body.name,
             email: body.email,
         };
@@ -33,13 +32,13 @@ class UserController {
             return ResponseHelper.handleError(res, ErrorService.getError(AppError.InputParameterNotSupplied));
         }
 
-        UserService.addUser(businessOwner, SYSTEM_ID) 
+        UserService.addUser(businessOwner, SYSTEM_USER_ID) 
             .then((id: number) => {
-                businessOwner.user_id = id;
+                businessOwner.id = id;
                 return UserService.addBusinessOwner(businessOwner);
             })
             .then(() => {
-                return res.status(200).json(businessOwner.user_id);
+                return res.status(200).json(businessOwner.id);
             })
             .catch((error: systemError) => {
                 return ResponseHelper.handleError(res, error);
@@ -57,24 +56,23 @@ class UserController {
             userTypeId: body.userTypeId,
             login: body.login,
             password: hashedPasword,
-            user_id: NON_EXISTING_ID,
-            twitter_handle: body.twitter_handle,
+            twitterHandle: body.twitterHandle,
             email: body.email,
             address: body.address,
-            phone_number: body.phone_number,
+            phoneNumber: body.phoneNumber,
         };
 
         if (socialActivist.userTypeId !== UserType.socialActivist) {
             return ResponseHelper.handleError(res, ErrorService.getError(AppError.InputParameterNotSupplied));
         }
 
-        UserService.addUser(socialActivist, SYSTEM_ID)
+        UserService.addUser(socialActivist, SYSTEM_USER_ID)
             .then((id: number) => {
-                socialActivist.user_id = id;
+                socialActivist.id = id;
                 return UserService.addSocialActivist(socialActivist);
             })
             .then(() => {
-                return res.status(200).json(socialActivist.user_id);
+                return res.status(200).json(socialActivist.id);
             })
             .catch((error: systemError) => {
                 return ResponseHelper.handleError(res, error);
@@ -92,7 +90,6 @@ class UserController {
             userTypeId: body.userTypeId,
             login: body.login,
             password: hashedPasword,
-            user_id: NON_EXISTING_ID,
             name: body.name,
             email: body.email,
             website: body.website,
@@ -103,13 +100,13 @@ class UserController {
             return ResponseHelper.handleError(res, ErrorService.getError(AppError.InputParameterNotSupplied));
         }
 
-        UserService.addUser(nonProfitOrganization, SYSTEM_ID)
+        UserService.addUser(nonProfitOrganization, SYSTEM_USER_ID)
             .then((id: number) => {
-                nonProfitOrganization.user_id = id;
+                nonProfitOrganization.id = id;
                 return UserService.addNonProfitOrganization(nonProfitOrganization);
             })
             .then(() => {
-                return res.status(200).json(nonProfitOrganization.user_id);
+                return res.status(200).json(nonProfitOrganization.id);
             })
             .catch((error: systemError) => {
                 return ResponseHelper.handleError(res, error);
