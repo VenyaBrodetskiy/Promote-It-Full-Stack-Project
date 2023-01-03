@@ -39,10 +39,10 @@ class UserService implements IUserService {
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddBusinessOwner, false,
-                businessOwner.user_id, businessOwner.twitter_handle,
+                businessOwner.id, businessOwner.twitterHandle,
                 businessOwner.name, businessOwner.email,
                 createDate, createDate,
-                businessOwner.user_id, businessOwner.user_id,
+                businessOwner.id, businessOwner.id,
                 Statuses.Active)
                 .then(() => {
                     resolve();
@@ -57,10 +57,10 @@ class UserService implements IUserService {
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddSocialActivist, false,
-                socialActivist.user_id, socialActivist.twitter_handle, socialActivist.email,
-                socialActivist.address, socialActivist.phone_number,
+                socialActivist.id, socialActivist.twitterHandle, socialActivist.email,
+                socialActivist.address, socialActivist.phoneNumber,
                 createDate, createDate,
-                socialActivist.user_id, socialActivist.user_id,
+                socialActivist.id, socialActivist.id,
                 Statuses.Active)
                 .then(() => {
                     resolve();
@@ -75,10 +75,10 @@ class UserService implements IUserService {
 
             SqlHelper.executeQueryNoResult(
                 UserQueries.AddNonProfitOrganization, false,
-                nonProfitOrganization.user_id, nonProfitOrganization.name,
+                nonProfitOrganization.id, nonProfitOrganization.name,
                 nonProfitOrganization.email, nonProfitOrganization.website,
                 createDate, createDate,
-                nonProfitOrganization.user_id, nonProfitOrganization.user_id,
+                nonProfitOrganization.id, nonProfitOrganization.id,
                 Statuses.Active)
                 .then(() => {
                     resolve();

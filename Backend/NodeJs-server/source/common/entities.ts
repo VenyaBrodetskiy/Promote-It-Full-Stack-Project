@@ -29,22 +29,19 @@ export interface user extends entityWithId {
 }
 
 export interface socialActivist extends user {
-    user_id: number;
-    twitter_handle: string;
+    twitterHandle: string;
     email: string;
     address: string;
-    phone_number: string;
+    phoneNumber: string;
 }
 
 export interface businessOwner extends user {
-    user_id: number;
-    twitter_handle: string;
+    twitterHandle: string;
     name: string;
     email: string;
 }
 
 export interface nonProfitOrganization extends user {
-    user_id: number;
     name: string;
     email: string;
     website: string;
