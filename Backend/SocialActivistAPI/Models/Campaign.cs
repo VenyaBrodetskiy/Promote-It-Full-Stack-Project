@@ -34,4 +34,6 @@ public partial class Campaign
     public virtual User User { get; set; } = null!;
 
     public virtual ICollection<UserToCampaignBalance> UserToCampaignBalances { get; } = new List<UserToCampaignBalance>();
+
+    public virtual ICollection<Transaction> Transactions { get; } = new List<Transaction>();
 }

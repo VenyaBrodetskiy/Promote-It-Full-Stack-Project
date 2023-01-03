@@ -1,4 +1,6 @@
 ﻿using SocialActivistAPI.DTO;
+using SocialActivistAPI.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace SocialActivistAPI.EngineServices
 {
@@ -10,13 +12,17 @@ namespace SocialActivistAPI.EngineServices
             _logger = logger;
         }
 
-        public async Task<bool> IsTransactionPossible(TransactionDTO transactionInfo)
+        public void IsTransactionPossible(TransactionDTO transactionInfo)
         {
-            _logger.LogInformation("1/5 Transaction: Validating transaction...");
+            _logger.LogInformation("1/4 Transaction: Validating transaction...");
 
-            // not implemented yet
-            await Task.Delay(100);
-            return true;
+            if (transactionInfo.StateId == (int)TransactionStates.Shipped)
+            {
+                throw new ValidationException("Transaction State is not valid");
+            }
+
+            // no need to check balance and N of products, because they are checked in
+            // UserToCampaignBalance service and in ProductsToCampaignQty service
         }
     }
 }

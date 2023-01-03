@@ -6,8 +6,8 @@
 
         public int ProductId { get; set; }
 
+        public int CampaignId { get; set; }
+
         public int StateId { get; set; }
-
-
     }
 }
