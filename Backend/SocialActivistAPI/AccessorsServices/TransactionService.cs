@@ -1,4 +1,5 @@
-﻿using SocialActivistAPI.Common;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using SocialActivistAPI.Common;
 using SocialActivistAPI.DTO;
 using SocialActivistAPI.Models;
 
@@ -13,13 +14,39 @@ namespace SocialActivistAPI.AccessorsServices
             _db = db;
         }
 
-        public async Task<int> CreateTransaction(Transaction transaction)
+        public async Task<int> CreateTransaction(TransactionDTO transactionDTO)
         {
-            _db.Transactions.Add(transaction);
+            try
+            {
+                var transaction = FromDto(transactionDTO);
 
-            await _db.SaveChangesAsync();
+                _db.Transactions.Add(transaction);
 
-            return transaction.Id;
+                await _db.SaveChangesAsync();
+
+                return transaction.Id;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private Transaction FromDto(TransactionDTO transactionDTO)
+        {
+            return new Transaction()
+            {
+                Id = Const.NonExistId,
+                UserId = transactionDTO.UserId,
+                ProductId = transactionDTO.ProductId,
+                CampaignId = transactionDTO.CampaignId,
+                StateId = transactionDTO.StateId,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                CreateUserId = transactionDTO.UserId,
+                UpdateUserId = transactionDTO.UserId,
+                StatusId = (int)Statuses.Active
+            };
         }
     }
 }

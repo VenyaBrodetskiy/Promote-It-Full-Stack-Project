@@ -2,13 +2,13 @@
 using SocialActivistAPI.Models;
 using SocialActivistAPI.DTO;
 using SocialActivistAPI.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace SocialActivistAPI.Services
 {
     public class UserToCampaignBalanceService
     {
         private readonly MasaProjectDbContext _db;
-
         public UserToCampaignBalanceService(MasaProjectDbContext db)
         {
             _db = db;
@@ -26,6 +26,41 @@ namespace SocialActivistAPI.Services
                              select ToDto(userToCampaign, campaign, socialActivist);
 
                 return await result.ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> DecreaseBalance(TransactionDTO transactionInfo)
+        {
+            try
+            {
+                var userToCampaign = await _db.UserToCampaignBalances
+                    .Where(row => row.UserId == transactionInfo.UserId && row.CampaignId == transactionInfo.CampaignId)
+                    .FirstAsync();
+
+                // TODO: maybe here better to call accessor of Products table
+                var priceOfProduct = await _db.Products.FindAsync(transactionInfo.ProductId);
+
+                if (priceOfProduct == null)
+                {
+                    throw new ValidationException("Couldn't find product by id");
+                }
+
+                if (userToCampaign.Balance - priceOfProduct.Price < 0)
+                {
+                    throw new ValidationException("Transaction cancelled. Not enough money");
+                }
+
+                userToCampaign.Balance -= priceOfProduct.Price;
+                userToCampaign.UpdateDate = DateTime.Now;
+                userToCampaign.UpdateUserId = transactionInfo.UserId;
+
+                await _db.SaveChangesAsync();
+
+                return userToCampaign.Balance;
             }
             catch (Exception)
             {

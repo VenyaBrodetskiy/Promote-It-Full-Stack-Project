@@ -11,6 +11,8 @@ public partial class Transaction
 
     public int ProductId { get; set; }
 
+    public int CampaignId { get; set; }
+
     public int StateId { get; set; }
 
     public DateTime CreateDate { get; set; }
@@ -26,6 +28,8 @@ public partial class Transaction
     public virtual User CreateUser { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
+
+    public virtual Campaign Campaign { get; set; } = null!;
 
     public virtual TransactionState State { get; set; } = null!;
 

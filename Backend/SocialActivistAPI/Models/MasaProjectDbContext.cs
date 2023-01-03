@@ -344,6 +344,7 @@ public partial class MasaProjectDbContext : DbContext
                 .HasColumnName("create_date");
             entity.Property(e => e.CreateUserId).HasColumnName("create_user_id");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.CampaignId).HasColumnName("campaign_id");
             entity.Property(e => e.StateId).HasColumnName("state_id");
             entity.Property(e => e.StatusId).HasColumnName("status_id");
             entity.Property(e => e.UpdateDate)
@@ -361,6 +362,11 @@ public partial class MasaProjectDbContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_transaction_product");
+
+            entity.HasOne(d => d.Campaign).WithMany(p => p.Transactions)
+               .HasForeignKey(d => d.CampaignId)
+               .OnDelete(DeleteBehavior.ClientSetNull)
+               .HasConstraintName("FK_transaction_campaign");
 
             entity.HasOne(d => d.State).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.StateId)
