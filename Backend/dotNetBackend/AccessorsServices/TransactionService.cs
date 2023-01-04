@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using SocialActivistAPI.Common;
-using SocialActivistAPI.DTO;
-using SocialActivistAPI.Models;
+using dotNetBackend.Common;
+using dotNetBackend.DTO;
+using dotNetBackend.Models;
 
-namespace SocialActivistAPI.AccessorsServices
+namespace dotNetBackend.AccessorsServices
 {
     public class TransactionService
     {

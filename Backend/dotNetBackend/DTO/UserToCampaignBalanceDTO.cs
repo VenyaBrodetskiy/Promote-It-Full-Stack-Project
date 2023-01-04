@@ -1,4 +1,4 @@
-﻿namespace SocialActivistAPI.DTO
+﻿namespace dotNetBackend.DTO
 {
     public record UserToCampaignBalanceDTO
     {

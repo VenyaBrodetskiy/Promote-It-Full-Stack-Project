@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialActivistAPI.Models;
-using SocialActivistAPI.DTO;
-using SocialActivistAPI.Common;
+using dotNetBackend.Models;
+using dotNetBackend.DTO;
+using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.Services
+namespace dotNetBackend.Services
 {
     public class UserToCampaignBalanceService
     {

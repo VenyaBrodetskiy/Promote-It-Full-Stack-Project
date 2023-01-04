@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace SocialActivistAPI.Models;
+namespace dotNetBackend.Models;
 
 public partial class MasaProjectDbContext : DbContext
 {

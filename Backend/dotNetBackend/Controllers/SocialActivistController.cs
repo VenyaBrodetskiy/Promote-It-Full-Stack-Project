@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialActivistAPI.AccessorsServices;
-using SocialActivistAPI.Common;
-using SocialActivistAPI.DTO;
-using SocialActivistAPI.EngineServices;
-using SocialActivistAPI.Models;
-using SocialActivistAPI.Services;
+using dotNetBackend.AccessorsServices;
+using dotNetBackend.Common;
+using dotNetBackend.DTO;
+using dotNetBackend.EngineServices;
+using dotNetBackend.Models;
+using dotNetBackend.Services;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.Controllers
+namespace dotNetBackend.Controllers
 {
     [ApiController]
     [Route($"{Const.BaseUrl}/[controller]")]
