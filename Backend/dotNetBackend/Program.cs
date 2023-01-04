@@ -46,3 +46,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// check if git works fine after renaming
