@@ -18,17 +18,17 @@ namespace dotNetBackend.Controllers
         private readonly BusinessOwnerService _businessOwnerService;
         private readonly TransactionService _transactionService;
         private readonly ShippingValidationService _shippingValidationService;
+        private readonly ProductService _productService;
         //private readonly UserToCampaignBalanceService _userToCampaignService;
-        //private readonly ProductToCampaignQtyService _productToCampaignService;
 
         public BusinessOwnerController(
             ILogger<BusinessOwnerController> logger,
             MasaProjectDbContext db,
             BusinessOwnerService BOService,
             TransactionService TService,
-            ShippingValidationService SVService
+            ShippingValidationService SVService,
+            ProductService PService
             //UserToCampaignBalanceService UtCBService,
-            //ProductToCampaignQtyService PtCQtyService,
             )
         {
             _logger = logger;
@@ -36,8 +36,9 @@ namespace dotNetBackend.Controllers
             _businessOwnerService = BOService;
             _transactionService = TService;
             _shippingValidationService = SVService;
+            _productService = PService;
             //_userToCampaignService = UtCBService;
-            //_productToCampaignService = PtCQtyService;
+
 
         }
 
@@ -160,6 +161,33 @@ namespace dotNetBackend.Controllers
             }
 
         }
+
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO productInfo)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            try
+            {
+
+                var id = await _productService.CreateProduct(productInfo);
+                _logger.LogInformation("2/4 Transaction: New transaction added - OK");
+
+                
+                return Ok(new
+                {
+                    ProductId = id,
+                    productInfo = productInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+
+        }
+
 
     }
 }

@@ -28,6 +28,8 @@ builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<TransactionValidationService>();
 builder.Services.AddScoped<ShippingValidationService>();
 builder.Services.AddScoped<BusinessOwnerService>();
+builder.Services.AddScoped<ProductService>();
+
 
 var app = builder.Build();
 
