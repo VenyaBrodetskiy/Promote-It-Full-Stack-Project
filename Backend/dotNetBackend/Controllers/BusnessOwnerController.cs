@@ -16,26 +16,26 @@ namespace dotNetBackend.Controllers
         private readonly ILogger<BusinessOwnerController> _logger;
         private readonly MasaProjectDbContext _db;
         private readonly BusinessOwnerService _businessOwnerService;
+        private readonly TransactionService _transactionService;
         //private readonly UserToCampaignBalanceService _userToCampaignService;
         //private readonly ProductToCampaignQtyService _productToCampaignService;
-        //private readonly TransactionService _transactionService;
         //private readonly TransactionValidationService _transactionValidationService;
         public BusinessOwnerController(
             ILogger<BusinessOwnerController> logger,
             MasaProjectDbContext db,
-            BusinessOwnerService BOService
+            BusinessOwnerService BOService,
+            TransactionService TService
             //UserToCampaignBalanceService UtCBService,
             //ProductToCampaignQtyService PtCQtyService,
-            //TransactionService TService,
             //TransactionValidationService TVService
-            ) 
+            )
         {
             _logger = logger;
             _db = db;
             _businessOwnerService = BOService;
+            _transactionService = TService;
             //_userToCampaignService = UtCBService;
             //_productToCampaignService = PtCQtyService;
-            //_transactionService = TService;
             //_transactionValidationService = TVService;
         }
 
@@ -88,6 +88,31 @@ namespace dotNetBackend.Controllers
             catch (Exception ex)
             {
 
+                return Problem(ex.Message);
+            }
+
+        }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<TransactionDTO>>> GetOrdered(int businessOwnerId)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            try
+            {
+                var result = await _transactionService.GetOrdered(businessOwnerId);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
                 return Problem(ex.Message);
             }
 
