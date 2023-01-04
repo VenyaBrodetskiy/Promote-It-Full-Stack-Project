@@ -94,7 +94,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<List<TransactionDTO>>> GetOrdered(int businessOwnerId)
+        public async Task<ActionResult<List<OrderDTO>>> GetOrders(int businessOwnerId)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
