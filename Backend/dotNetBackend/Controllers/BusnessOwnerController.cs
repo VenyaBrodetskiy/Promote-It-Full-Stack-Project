@@ -17,26 +17,28 @@ namespace dotNetBackend.Controllers
         private readonly MasaProjectDbContext _db;
         private readonly BusinessOwnerService _businessOwnerService;
         private readonly TransactionService _transactionService;
+        private readonly ShippingValidationService _shippingValidationService;
         //private readonly UserToCampaignBalanceService _userToCampaignService;
         //private readonly ProductToCampaignQtyService _productToCampaignService;
-        //private readonly TransactionValidationService _transactionValidationService;
+
         public BusinessOwnerController(
             ILogger<BusinessOwnerController> logger,
             MasaProjectDbContext db,
             BusinessOwnerService BOService,
-            TransactionService TService
+            TransactionService TService,
+            ShippingValidationService SVService
             //UserToCampaignBalanceService UtCBService,
             //ProductToCampaignQtyService PtCQtyService,
-            //TransactionValidationService TVService
             )
         {
             _logger = logger;
             _db = db;
             _businessOwnerService = BOService;
             _transactionService = TService;
+            _shippingValidationService = SVService;
             //_userToCampaignService = UtCBService;
             //_productToCampaignService = PtCQtyService;
-            //_transactionValidationService = TVService;
+
         }
 
         // this route is just for example and testing
@@ -118,106 +120,46 @@ namespace dotNetBackend.Controllers
 
         }
 
-        //[HttpGet("[action]/{UserId}")]
-        //public async Task<ActionResult<UserToCampaignBalanceDTO>> GetBalance(int UserId)
-        //{
-        //    // no validation of UserId here, it should do middleware (here on in Node.js server)
-        //    _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+        [HttpPut("[action]")]
 
-        //    try
-        //    {
-        //        var result = await _userToCampaignService.GetBalance(UserId);
+        public async Task<ActionResult<OrderDTO>> ChangeTransactionState(int businessOwnerId, int transactionId)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
-        //        if (result == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            return Ok(result);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Problem(ex.Message);
-        //    }
-        //}
+            // why this validation doesnt work?
+            //try
+            //{
+            //    _shippingValidationService.IsShippingPossible(transactionId);
+            //    _logger.LogInformation("Validating shipping possibility - OK");
+            //}
+            //catch (ValidationException ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Problem(ex.Message);
+            //}
 
-        //[HttpPost("[action]")]
-        //public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction(TransactionDTO transactionInfo)
-        //{
-        //    // no validation of UserId here, it should do middleware (here on in Node.js server)
+            try
+            {
+                var result = await _transactionService.ChangeTransactionState(businessOwnerId, transactionId);
 
-        //    _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
 
-        //    // steps:
-        //    // 1. check if enough money to perform transaction
-        //    // 2. create transaction
-        //    // 3. change balance
-        //    // 4. change N of products
-        //    // 5. make sure 2-4 all done properly otherwise cancell all
+        }
 
-        //    // 1. check if enough money to perform transaction
-        //    try
-        //    {
-        //        _transactionValidationService.IsTransactionPossible(transactionInfo);
-        //        _logger.LogInformation("1/4 Transaction: Validating transaction - OK");
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Problem(ex.Message);
-        //    }
-
-        //    _logger.LogInformation("Creating transaction...");
-        //    using (var dbContextTransaction = _db.Database.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            // 2. create transaction
-        //            var id = await _transactionService.CreateTransaction(transactionInfo);
-        //            _logger.LogInformation("2/4 Transaction: New transaction added - OK");
-
-        //            // 3. change balance
-        //            var newBalance = await _userToCampaignService.DecreaseBalance(transactionInfo);
-        //            _logger.LogInformation("3/4 Transaction: Balance decreased - OK");
-
-        //            // 4. change N of products (if user donates product, don't need to change N of products)
-        //            if (transactionInfo.StateId == (int)TransactionStates.Ordered)
-        //            {
-        //                var newNumOfProducts = await _productToCampaignService.DecreaseNumOfProducts(transactionInfo);
-        //                _logger.LogInformation("4/4 Transaction: Number of products decreased - OK");
-        //            }
-        //            else
-        //            {
-        //                _logger.LogInformation("4/4 Transaction: Number of products didn't change, because product was donated - OK");
-        //            }
-
-        //            dbContextTransaction.Commit();
-        //            return Ok(new
-        //            {
-        //                TransactionId = id,
-        //                NewBalance = newBalance
-        //            });
-        //        }
-        //        catch (ValidationException ex)
-        //        {
-        //            _logger.LogError("Transaction failed. Rolling back all changes...");
-        //            dbContextTransaction.Rollback();
-
-        //            return BadRequest(ex.Message);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            _logger.LogError("Transaction failed. Rolling back all changes...");
-        //            dbContextTransaction.Rollback();
-
-        //            return Problem(ex.Message);
-        //        }
-        //    }
-        //}
     }
 }
