@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿//using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore;
 using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using dotNetBackend.Models;
@@ -32,6 +33,27 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
+        public async Task<List<TransactionDTO>> GetOrdered(int businessOwnerId)
+        {
+
+            try
+            {
+                var result = await _db.Transactions
+                    .Where(t => t.Product.UserId == businessOwnerId)
+                    .Where(t => t.StateId == (int)TransactionStates.Ordered)
+                    .Where(t => t.StatusId == (int)Statuses.Active)
+                    .Select(t => ToDto(t))
+                    .ToListAsync();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
         private Transaction FromDto(TransactionDTO transactionDTO)
         {
             return new Transaction()
@@ -46,6 +68,17 @@ namespace dotNetBackend.AccessorsServices
                 CreateUserId = transactionDTO.UserId,
                 UpdateUserId = transactionDTO.UserId,
                 StatusId = (int)Statuses.Active
+            };
+        }
+
+        private static TransactionDTO ToDto(Transaction transaction)
+        {
+            return new TransactionDTO()
+            {
+                UserId = transaction.UserId,
+                ProductId = transaction.ProductId,
+                CampaignId = transaction.CampaignId,
+                StateId = transaction.StateId
             };
         }
     }
