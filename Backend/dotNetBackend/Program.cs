@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SocialActivistAPI.AccessorsServices;
-using SocialActivistAPI.EngineServices;
-using SocialActivistAPI.Models;
-using SocialActivistAPI.Services;
+using dotNetBackend.AccessorsServices;
+using dotNetBackend.EngineServices;
+using dotNetBackend.Models;
+using dotNetBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +26,7 @@ builder.Services.AddScoped<UserToCampaignBalanceService>();
 builder.Services.AddScoped<ProductToCampaignQtyService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<TransactionValidationService>();
+builder.Services.AddScoped<BusinessOwnerService>();
 
 var app = builder.Build();
 

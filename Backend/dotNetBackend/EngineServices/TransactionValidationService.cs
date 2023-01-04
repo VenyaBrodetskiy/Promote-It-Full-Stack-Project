@@ -1,8 +1,8 @@
-﻿using SocialActivistAPI.DTO;
-using SocialActivistAPI.Common;
+﻿using dotNetBackend.DTO;
+using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.EngineServices
+namespace dotNetBackend.EngineServices
 {
     public class TransactionValidationService
     {
