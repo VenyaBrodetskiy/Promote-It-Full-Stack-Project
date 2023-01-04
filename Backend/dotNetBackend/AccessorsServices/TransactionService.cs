@@ -3,6 +3,7 @@ using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using dotNetBackend.Models;
 using System.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace dotNetBackend.AccessorsServices
 {
@@ -57,6 +58,49 @@ namespace dotNetBackend.AccessorsServices
                 throw;
             }
 
+        }
+
+        public async Task<OrderDTO> ChangeTransactionState(int businessOwnerId, int transactionId)
+        {
+            try
+            {
+                var transaction = await _db.Transactions
+                    .Where(row => row.Id == transactionId)
+                    .FirstAsync();
+
+                // why this validation doesnt work?
+                //if (transaction.Product.UserId != businessOwnerId)
+                //{
+                //    throw new ValidationException("Transaction doesn`t belong to this business owner");
+                //}
+
+
+                transaction.StateId = (int)TransactionStates.Shipped;
+                transaction.UpdateUserId = businessOwnerId;
+                transaction.UpdateDate = DateTime.Now;
+
+                await _db.SaveChangesAsync();
+
+                var socialActivist = await _db.SocialActivists
+                    .Where(sa => sa.UserId == transaction.UserId)
+                    .FirstAsync();
+
+                var product = await _db.Products
+                    .Where(p => p.Id == transaction.ProductId)
+                    .FirstAsync();
+
+                var transactionState = await _db.TransactionStates
+                    .Where(ts => ts.Id == transaction.StateId)
+                    .FirstAsync();
+
+                var result = ToDto(transaction, socialActivist, product, transactionState);
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private Transaction FromDto(TransactionDTO transactionDTO)

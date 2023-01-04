@@ -16,7 +16,7 @@
 
         public string ProductTitle { get; set; } = null!;
 
-        public string TransactionState { get; set; }
+        public string TransactionState { get; set; } = null!;
 
     }
 }
