@@ -103,7 +103,7 @@ namespace dotNetBackend.Controllers
 
             try
             {
-                var result = await _transactionService.GetOrdered(businessOwnerId);
+                var result = await _transactionService.GetOrderList(businessOwnerId);
 
                 if (result == null)
                 {
@@ -154,6 +154,10 @@ namespace dotNetBackend.Controllers
                 {
                     return Ok(result);
                 }
+            }
+            catch (ValidationException ex)
+            {
+                return Forbid(ex.Message);
             }
             catch (Exception ex)
             {
