@@ -66,7 +66,9 @@ namespace dotNetBackend.AccessorsServices
             try
             {
                 var transaction = await _db.Transactions
-                    .Where(row => row.Id == transactionId && row.Product.UserId == businessOwnerId)
+                    .Where(row => row.Id == transactionId 
+                        && row.Product.UserId == businessOwnerId 
+                        && row.StateId == (int)TransactionStates.Ordered)
                     .FirstAsync();
 
 
