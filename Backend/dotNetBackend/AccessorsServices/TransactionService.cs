@@ -5,6 +5,7 @@ using dotNetBackend.Models;
 using System.Net;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace dotNetBackend.AccessorsServices
 {
     public class TransactionService
@@ -34,7 +35,7 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        public async Task<List<OrderDTO>> GetOrdered(int businessOwnerId)
+        public async Task<List<OrderDTO>> GetOrderList(int businessOwnerId)
         {
 
             try
@@ -49,7 +50,7 @@ namespace dotNetBackend.AccessorsServices
                                     && transaction.StateId == (int)TransactionStates.Ordered
                                     && transaction.StatusId == (int)Statuses.Active
 
-                             select ToDto(transaction, socialActivist, product, transactionState);
+                             select ToOrderDto(transaction, socialActivist, product, transactionState);
 
                 return await result.ToListAsync();
             }
@@ -65,14 +66,8 @@ namespace dotNetBackend.AccessorsServices
             try
             {
                 var transaction = await _db.Transactions
-                    .Where(row => row.Id == transactionId)
+                    .Where(row => row.Id == transactionId && row.Product.UserId == businessOwnerId)
                     .FirstAsync();
-
-                // why this validation doesnt work?
-                //if (transaction.Product.UserId != businessOwnerId)
-                //{
-                //    throw new ValidationException("Transaction doesn`t belong to this business owner");
-                //}
 
 
                 transaction.StateId = (int)TransactionStates.Shipped;
@@ -93,7 +88,7 @@ namespace dotNetBackend.AccessorsServices
                     .Where(ts => ts.Id == transaction.StateId)
                     .FirstAsync();
 
-                var result = ToDto(transaction, socialActivist, product, transactionState);
+                var result = ToOrderDto(transaction, socialActivist, product, transactionState);
 
                 return result;
             }
@@ -121,10 +116,11 @@ namespace dotNetBackend.AccessorsServices
         }
 
 
-        private static OrderDTO ToDto(Transaction transaction, SocialActivist socialActivist, Product product, TransactionState transactionState)
+        private static OrderDTO ToOrderDto(Transaction transaction, SocialActivist socialActivist, Product product, TransactionState transactionState)
         {
             return new OrderDTO()
             {
+                Id = transaction.Id,
                 UserId = transaction.UserId,
                 TwitterHandle = socialActivist.TwitterHandle,
                 Email = socialActivist.Email,
@@ -132,6 +128,7 @@ namespace dotNetBackend.AccessorsServices
                 PhoneNumber = socialActivist.PhoneNumber,
                 ProductId = transaction.ProductId,
                 ProductTitle = product.Title,
+                ProductOwnerId = product.UserId,
                 TransactionState = transactionState.Title
 
             };

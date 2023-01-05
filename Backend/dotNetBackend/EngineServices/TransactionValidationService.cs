@@ -12,12 +12,11 @@ namespace dotNetBackend.EngineServices
             _logger = logger;
         }
 
-        // TransactionDTO transactionInfo
-        public void IsTransactionPossible(int transactionInfoStateId)
+        public void IsTransactionPossible(TransactionDTO transactionInfo)
         {
             _logger.LogInformation("1/4 Transaction: Validating transaction...");
 
-            if (transactionInfoStateId == (int)TransactionStates.Shipped)
+            if (transactionInfo.StateId == (int)TransactionStates.Shipped)
             {
                 throw new ValidationException("Transaction State is not valid");
             }
