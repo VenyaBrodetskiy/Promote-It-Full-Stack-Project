@@ -19,6 +19,7 @@ namespace dotNetBackend.Controllers
         private readonly TransactionService _transactionService;
         private readonly ShippingValidationService _shippingValidationService;
         private readonly ProductService _productService;
+        private readonly ProductToCampaignQtyService _productToCampaignQtyService;
         //private readonly UserToCampaignBalanceService _userToCampaignService;
 
         public BusinessOwnerController(
@@ -27,7 +28,8 @@ namespace dotNetBackend.Controllers
             BusinessOwnerService BOService,
             TransactionService TService,
             ShippingValidationService SVService,
-            ProductService PService
+            ProductService PService,
+            ProductToCampaignQtyService PTCService
             //UserToCampaignBalanceService UtCBService,
             )
         {
@@ -37,6 +39,7 @@ namespace dotNetBackend.Controllers
             _transactionService = TService;
             _shippingValidationService = SVService;
             _productService = PService;
+            _productToCampaignQtyService = PTCService;
             //_userToCampaignService = UtCBService;
 
 
@@ -168,6 +171,31 @@ namespace dotNetBackend.Controllers
                 {
                     ProductId = id,
                     productInfo = productInfo
+                });
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<ProductDTO>> CreateProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            try
+            {
+
+                var id = await _productToCampaignQtyService.CreateProductToCampaignQty(productToCampaignQtyDTO);
+                _logger.LogInformation("Qty of products to campaign added - OK");
+
+
+                return Ok(new
+                {
+                    Id = id,
+                    Info = productToCampaignQtyDTO
                 });
             }
             catch (Exception ex)
