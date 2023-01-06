@@ -127,21 +127,6 @@ namespace dotNetBackend.Controllers
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
-            // why this validation doesnt work?
-            //try
-            //{
-            //    _shippingValidationService.IsShippingPossible(transactionId);
-            //    _logger.LogInformation("Validating shipping possibility - OK");
-            //}
-            //catch (ValidationException ex)
-            //{
-            //    return BadRequest(ex.Message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return Problem(ex.Message);
-            //}
-
             try
             {
                 var result = await _transactionService.ChangeTransactionState(businessOwnerId, transactionId);
@@ -176,7 +161,7 @@ namespace dotNetBackend.Controllers
             {
 
                 var id = await _productService.CreateProduct(productInfo);
-                _logger.LogInformation("2/4 Transaction: New transaction added - OK");
+                _logger.LogInformation("New product added - OK");
 
                 
                 return Ok(new
