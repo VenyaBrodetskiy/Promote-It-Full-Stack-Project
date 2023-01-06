@@ -20,6 +20,16 @@ namespace dotNetBackend.AccessorsServices
         {
             try
             {
+                var user = await _db.Users
+                    .Where(row => row.Id == productDTO.UserId)
+                    .FirstAsync();
+
+                if (user.UserTypeId != (int)UserTypes.BusinessOwner)
+                {
+                    throw new ValidationException("Product wasn`t created. Type of user is wrong");
+                }
+
+
                 var product = FromDto(productDTO);
 
                 _db.Products.Add(product);

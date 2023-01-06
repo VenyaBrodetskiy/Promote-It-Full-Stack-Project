@@ -12,4 +12,13 @@
         Shipped = 2,
         Donated = 3
     }
+
+    public enum UserTypes
+    {
+        BusinessOwner = 1,
+        SocialActivist = 2,
+        NonprofitOrganization = 3,
+        ProlobbyOwner = 4,
+        System = 5
+    }
 }
