@@ -41,5 +41,53 @@ namespace dotNetBackend.Services
                 throw;
             }
         }
+
+
+        public async Task<int> CreateProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        {
+            try
+            {
+
+                var user = await _db.Users
+                    .Where(row => row.Id == productToCampaignQtyDTO.UserId)
+                    .FirstAsync();
+
+                if (user.UserTypeId != (int)UserTypes.BusinessOwner)
+                {
+                    throw new ValidationException("Qty of products to campaign wasn`t added. Type of user is wrong");
+                }
+
+
+                var productToCampaignQty = FromDto(productToCampaignQtyDTO);
+
+                _db.ProductToCampaignQties.Add(productToCampaignQty);
+
+                await _db.SaveChangesAsync();
+
+                return productToCampaignQty.Id;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private ProductToCampaignQty FromDto(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        {
+            return new ProductToCampaignQty()
+            {
+                Id = Const.NonExistId,
+                ProductId = productToCampaignQtyDTO.ProductId,
+                CampaignId = productToCampaignQtyDTO.CampaignId,
+                ProductQty = productToCampaignQtyDTO.ProductQty,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                CreateUserId = productToCampaignQtyDTO.UserId,
+                UpdateUserId = productToCampaignQtyDTO.UserId,
+                StatusId = (int)Statuses.Active
+            };
+        }
+
     }
 }
