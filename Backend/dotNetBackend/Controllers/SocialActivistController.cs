@@ -134,8 +134,17 @@ namespace dotNetBackend.Controllers
             // 1. check if enough money to perform transaction
             try
             {
-                _transactionValidationService.IsTransactionPossible(transactionInfo);
-                _logger.LogInformation("1/4 Transaction: Validating transaction - OK");
+                var validationResult = _transactionValidationService.IsTransactionPossible(transactionInfo);
+
+                if (validationResult)
+                {
+                    _logger.LogInformation("1/4 Transaction: Validating transaction - OK");
+                }
+                else
+                {
+                    throw new ValidationException("Transaction State is not valid");
+                }
+                
             }
             catch (ValidationException ex)
             {
