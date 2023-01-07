@@ -142,13 +142,9 @@ namespace dotNetBackend.Controllers
                 }
                 else
                 {
-                    throw new ValidationException("Transaction State is not valid");
+                    _logger.LogInformation("1/4 Transaction: Validating transaction - Failed");
+                    return BadRequest("Transaction State is not valid");
                 }
-                
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
