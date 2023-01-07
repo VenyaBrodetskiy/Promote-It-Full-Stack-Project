@@ -14,35 +14,27 @@ namespace dotNetBackend.Controllers
     public class BusinessOwnerController : ControllerBase
     {
         private readonly ILogger<BusinessOwnerController> _logger;
-        private readonly MasaProjectDbContext _db;
         private readonly BusinessOwnerService _businessOwnerService;
         private readonly TransactionService _transactionService;
-        private readonly ShippingValidationService _shippingValidationService;
         private readonly ProductService _productService;
         private readonly ProductToCampaignQtyService _productToCampaignQtyService;
-        //private readonly UserToCampaignBalanceService _userToCampaignService;
+        private readonly DonationValidationService _donationValidationService;
 
         public BusinessOwnerController(
             ILogger<BusinessOwnerController> logger,
-            MasaProjectDbContext db,
             BusinessOwnerService BOService,
             TransactionService TService,
-            ShippingValidationService SVService,
             ProductService PService,
-            ProductToCampaignQtyService PTCService
-            //UserToCampaignBalanceService UtCBService,
+            ProductToCampaignQtyService PTCService,
+            DonationValidationService DVService
             )
         {
             _logger = logger;
-            _db = db;
             _businessOwnerService = BOService;
             _transactionService = TService;
-            _shippingValidationService = SVService;
             _productService = PService;
             _productToCampaignQtyService = PTCService;
-            //_userToCampaignService = UtCBService;
-
-
+            _donationValidationService = DVService;
         }
 
         // this route is just for example and testing
@@ -96,7 +88,6 @@ namespace dotNetBackend.Controllers
 
                 return Problem(ex.Message);
             }
-
         }
 
         [HttpGet("[action]")]
@@ -121,7 +112,6 @@ namespace dotNetBackend.Controllers
             {
                 return Problem(ex.Message);
             }
-
         }
 
         [HttpPut("[action]")]
@@ -143,68 +133,67 @@ namespace dotNetBackend.Controllers
                     return Ok(result);
                 }
             }
-            catch (ValidationException ex)
+            catch (InvalidOperationException)
             {
-                return Forbid(ex.Message);
+                return NotFound("Invalid input data");
             }
             catch (Exception ex)
             {
                 return Problem(ex.Message);
             }
-
         }
 
-
         [HttpPost("[action]")]
-        public async Task<ActionResult<ProductDTO>> CreateProduct(ProductDTO productInfo)
+        public async Task<ActionResult<ProductDTO>> AddProduct(ProductDTO productInfo)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
             try
             {
-
-                var id = await _productService.CreateProduct(productInfo);
+                var id = await _productService.AddProduct(productInfo);
                 _logger.LogInformation("New product added - OK");
 
-                
-                return Ok(new
-                {
-                    ProductId = id,
-                    productInfo = productInfo
-                });
+                // TODO: probably in future better to return ProductDTO type with id
+                return Ok(id);
             }
             catch (Exception ex)
             {
                 return Problem(ex.Message);
             }
-
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<ProductDTO>> CreateProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        public async Task<ActionResult<ProductDTO>> DonateProductsToCampaign(ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
             try
             {
+                var validationResult = await _donationValidationService.IsDonationPossible(productToCampaignQtyDTO);
+                if (validationResult)
+                {
+                    _logger.LogInformation("Validating donation - OK");
+                }
+                else
+                {
+                    _logger.LogInformation("Validating donation - Failed");
+                    return BadRequest("Qty of products to campaign wasn`t added. This product doesn`t belong to this user");
+                }
 
-                var id = await _productToCampaignQtyService.CreateProductToCampaignQty(productToCampaignQtyDTO);
+                var result = await _productToCampaignQtyService.ChangeProductToCampaignQty(productToCampaignQtyDTO);
                 _logger.LogInformation("Qty of products to campaign added - OK");
 
+                return Ok(result);
 
-                return Ok(new
-                {
-                    Id = id,
-                    Info = productToCampaignQtyDTO
-                });
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound("Invalid input data");
             }
             catch (Exception ex)
             {
                 return Problem(ex.Message);
             }
-
         }
-
-
     }
 }

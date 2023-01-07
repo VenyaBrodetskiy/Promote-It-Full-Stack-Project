@@ -26,9 +26,9 @@ builder.Services.AddScoped<UserToCampaignBalanceService>();
 builder.Services.AddScoped<ProductToCampaignQtyService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<TransactionValidationService>();
-builder.Services.AddScoped<ShippingValidationService>();
 builder.Services.AddScoped<BusinessOwnerService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<DonationValidationService>();
 
 
 var app = builder.Build();
@@ -51,4 +51,3 @@ app.MapControllers();
 
 app.Run();
 
-// check if git works fine after renaming
