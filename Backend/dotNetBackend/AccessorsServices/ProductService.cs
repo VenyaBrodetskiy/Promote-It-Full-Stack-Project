@@ -2,7 +2,6 @@
 using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using dotNetBackend.Models;
-using System.Net;
 using System.ComponentModel.DataAnnotations;
 
 namespace dotNetBackend.AccessorsServices
@@ -16,21 +15,21 @@ namespace dotNetBackend.AccessorsServices
             _db = db;
         }
 
-        public async Task<int> CreateProduct(ProductDTO productDTO)
+        public async Task<int> AddProduct(ProductDTO productDTO)
         {
             try
             {
-                var user = await _db.Users
+                // TODO: remove when we add Authorization / middleware
+                User user = await _db.Users
                     .Where(row => row.Id == productDTO.UserId)
                     .FirstAsync();
-
                 if (user.UserTypeId != (int)UserTypes.BusinessOwner)
                 {
                     throw new ValidationException("Product wasn`t created. Type of user is wrong");
                 }
+                //
 
-
-                var product = FromDto(productDTO);
+                Product product = FromDto(productDTO);
 
                 _db.Products.Add(product);
 
@@ -60,5 +59,6 @@ namespace dotNetBackend.AccessorsServices
             };
         }
 
+        
     }
 }

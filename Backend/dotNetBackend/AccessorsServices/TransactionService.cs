@@ -37,7 +37,6 @@ namespace dotNetBackend.AccessorsServices
 
         public async Task<List<OrderDTO>> GetOrderList(int businessOwnerId)
         {
-
             try
             {
                 var result = from transaction in _db.Transactions
@@ -58,7 +57,6 @@ namespace dotNetBackend.AccessorsServices
             {
                 throw;
             }
-
         }
 
         public async Task<OrderDTO> ChangeTransactionState(int businessOwnerId, int transactionId)
@@ -71,13 +69,13 @@ namespace dotNetBackend.AccessorsServices
                         && row.StateId == (int)TransactionStates.Ordered)
                     .FirstAsync();
 
-
                 transaction.StateId = (int)TransactionStates.Shipped;
                 transaction.UpdateUserId = businessOwnerId;
                 transaction.UpdateDate = DateTime.Now;
 
                 await _db.SaveChangesAsync();
 
+                // TODO: (low priority) remove below code or use other AccessorsServices here
                 var socialActivist = await _db.SocialActivists
                     .Where(sa => sa.UserId == transaction.UserId)
                     .FirstAsync();

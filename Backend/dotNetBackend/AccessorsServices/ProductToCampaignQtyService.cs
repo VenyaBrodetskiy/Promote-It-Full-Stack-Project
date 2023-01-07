@@ -42,30 +42,44 @@ namespace dotNetBackend.Services
             }
         }
 
-
-        public async Task<int> CreateProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        public async Task<ProductToCampaignQtyDTO> ChangeProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             try
             {
+                // TODO: now UserId comes from ProductToCampaignQtyDTO
+                // not sure that this approach is good. Maybe better to take UserId from token or pass as additional param
 
-                var user = await _db.Users
-                    .Where(row => row.Id == productToCampaignQtyDTO.UserId)
-                    .FirstAsync();
-
-                if (user.UserTypeId != (int)UserTypes.BusinessOwner)
+                var productToCampaignQtyExist = await _db.ProductToCampaignQties
+                    .Where(row => row.ProductId == productToCampaignQtyDTO.ProductId
+                               && row.CampaignId == productToCampaignQtyDTO.CampaignId)
+                    .ToListAsync();
+                
+                if (productToCampaignQtyExist.Count == 0)
                 {
-                    throw new ValidationException("Qty of products to campaign wasn`t added. Type of user is wrong");
+                    var productToCampaignQty = FromDto(productToCampaignQtyDTO);
+
+                    _db.ProductToCampaignQties.Add(productToCampaignQty);
+
+                    await _db.SaveChangesAsync();
+
+                    var result = ToDto(productToCampaignQty);
+
+                    // return DTO type? without ID?
+                    return result;
                 }
+                else
+                {
+                    productToCampaignQtyExist[0].ProductQty += productToCampaignQtyDTO.ProductQty;
+                    productToCampaignQtyExist[0].UpdateDate = DateTime.Now;
+                    productToCampaignQtyExist[0].UpdateUserId = productToCampaignQtyDTO.UserId;
 
+                    await _db.SaveChangesAsync();
 
-                var productToCampaignQty = FromDto(productToCampaignQtyDTO);
+                    var result = ToDto(productToCampaignQtyExist[0]);
 
-                _db.ProductToCampaignQties.Add(productToCampaignQty);
-
-                await _db.SaveChangesAsync();
-
-                return productToCampaignQty.Id;
-
+                    // return DTO type? without ID?
+                    return result;
+                }
             }
             catch (Exception)
             {
@@ -86,6 +100,17 @@ namespace dotNetBackend.Services
                 CreateUserId = productToCampaignQtyDTO.UserId,
                 UpdateUserId = productToCampaignQtyDTO.UserId,
                 StatusId = (int)Statuses.Active
+            };
+        }
+
+        private ProductToCampaignQtyDTO ToDto(ProductToCampaignQty productToCampaignQty)
+        {
+            return new ProductToCampaignQtyDTO()
+            {
+                UserId = productToCampaignQty.UpdateUserId,
+                ProductId = productToCampaignQty.ProductId,
+                CampaignId = productToCampaignQty.CampaignId,
+                ProductQty = productToCampaignQty.ProductQty
             };
         }
 
