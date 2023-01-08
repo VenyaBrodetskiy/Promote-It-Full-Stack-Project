@@ -1,8 +1,8 @@
-﻿using SocialActivistAPI.DTO;
-using SocialActivistAPI.Common;
+﻿using dotNetBackend.DTO;
+using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.EngineServices
+namespace dotNetBackend.EngineServices
 {
     public class TransactionValidationService
     {
@@ -12,17 +12,21 @@ namespace SocialActivistAPI.EngineServices
             _logger = logger;
         }
 
-        public void IsTransactionPossible(TransactionDTO transactionInfo)
+        public bool IsTransactionPossible(TransactionDTO transactionInfo)
         {
             _logger.LogInformation("1/4 Transaction: Validating transaction...");
 
             if (transactionInfo.StateId == (int)TransactionStates.Shipped)
             {
-                throw new ValidationException("Transaction State is not valid");
+                return false;
             }
+
+            return true;
 
             // no need to check balance and N of products, because they are checked in
             // UserToCampaignBalance service and in ProductsToCampaignQty service
         }
+
+
     }
 }

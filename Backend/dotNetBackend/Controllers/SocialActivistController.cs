@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialActivistAPI.AccessorsServices;
-using SocialActivistAPI.Common;
-using SocialActivistAPI.DTO;
-using SocialActivistAPI.EngineServices;
-using SocialActivistAPI.Models;
-using SocialActivistAPI.Services;
+using dotNetBackend.AccessorsServices;
+using dotNetBackend.Common;
+using dotNetBackend.DTO;
+using dotNetBackend.EngineServices;
+using dotNetBackend.Models;
+using dotNetBackend.Services;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.Controllers
+namespace dotNetBackend.Controllers
 {
     [ApiController]
     [Route($"{Const.BaseUrl}/[controller]")]
@@ -100,7 +100,7 @@ namespace SocialActivistAPI.Controllers
 
             try
             {
-                var result = await _userToCampaignService.GetBalance(UserId);
+                var result = await _userToCampaignService.GetUserBalances(UserId);
 
                 if (result == null)
                 {
@@ -134,12 +134,17 @@ namespace SocialActivistAPI.Controllers
             // 1. check if enough money to perform transaction
             try
             {
-                _transactionValidationService.IsTransactionPossible(transactionInfo);
-                _logger.LogInformation("1/4 Transaction: Validating transaction - OK");
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
+                var validationResult = _transactionValidationService.IsTransactionPossible(transactionInfo);
+
+                if (validationResult)
+                {
+                    _logger.LogInformation("1/4 Transaction: Validating transaction - OK");
+                }
+                else
+                {
+                    _logger.LogInformation("1/4 Transaction: Validating transaction - Failed");
+                    return BadRequest("Transaction State is not valid");
+                }
             }
             catch (Exception ex)
             {
@@ -191,6 +196,40 @@ namespace SocialActivistAPI.Controllers
 
                     return Problem(ex.Message);
                 }
+            }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<UserToCampaignBalanceDTO>> UpdateUserBalance(UserToCampaignTwitterInfo userToCampaign)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            try
+            {
+                var balance = await _userToCampaignService.GetBalance(userToCampaign.UserId, userToCampaign.CampaignId);
+                if (balance.Count == 0)
+                {
+                    _logger.LogInformation("User {userToCampaign.UserId} doesn't have balance for Campaign {userToCampaign.CampaignId}", userToCampaign.UserId, userToCampaign.CampaignId);
+                    
+                    var result = await _userToCampaignService.AddNewBalance(userToCampaign);
+                    _logger.LogInformation("Created new line in UserToCampaignBalance: {userTwitter}", result.TwitterHandle);
+
+                    return Ok(result);
+                }
+                else
+                {
+                    _logger.LogInformation("User {userToCampaign.UserId} already has balance for Campaign {userToCampaign.CampaignId}", userToCampaign.UserId, userToCampaign.CampaignId);
+
+                    var result = await _userToCampaignService.ChangeBalance(userToCampaign);
+                    _logger.LogInformation("Updated user balance: {userTwitter}", result.TwitterHandle);
+
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
             }
         }
     }

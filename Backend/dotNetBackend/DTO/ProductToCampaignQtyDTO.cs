@@ -1,6 +1,6 @@
 ﻿namespace dotNetBackend.DTO
 {
-    public record TransactionDTO
+    public record ProductToCampaignQtyDTO
     {
         public int UserId { get; set; }
 
@@ -8,6 +8,6 @@
 
         public int CampaignId { get; set; }
 
-        public int StateId { get; set; }
+        public int ProductQty { get; set; }
     }
 }

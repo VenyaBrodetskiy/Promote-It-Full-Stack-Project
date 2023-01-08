@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocialActivistAPI.Models;
+namespace dotNetBackend.Models;
 
 public partial class UserToCampaignBalance
 {
@@ -12,6 +12,8 @@ public partial class UserToCampaignBalance
     public int CampaignId { get; set; }
 
     public int Balance { get; set; }
+
+    public int PreviousTweetCount { get; set; }
 
     public DateTime CreateDate { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace SocialActivistAPI.Models;
+﻿namespace dotNetBackend.Models;
 
 public partial class BusinessOwner
 {

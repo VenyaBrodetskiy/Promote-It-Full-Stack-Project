@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocialActivistAPI.Models;
+namespace dotNetBackend.Models;
 
 public partial class SocialActivist
 {

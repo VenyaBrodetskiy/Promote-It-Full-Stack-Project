@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialActivistAPI.Models;
-using SocialActivistAPI.DTO;
-using SocialActivistAPI.Common;
+using dotNetBackend.Models;
+using dotNetBackend.DTO;
+using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialActivistAPI.Services
+namespace dotNetBackend.Services
 {
     public class ProductToCampaignQtyService
     {
@@ -41,5 +41,78 @@ namespace SocialActivistAPI.Services
                 throw;
             }
         }
+
+        public async Task<ProductToCampaignQtyDTO> ChangeProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        {
+            try
+            {
+                // TODO: now UserId comes from ProductToCampaignQtyDTO
+                // not sure that this approach is good. Maybe better to take UserId from token or pass as additional param
+
+                var productToCampaignQtyExist = await _db.ProductToCampaignQties
+                    .Where(row => row.ProductId == productToCampaignQtyDTO.ProductId
+                               && row.CampaignId == productToCampaignQtyDTO.CampaignId)
+                    .ToListAsync();
+                
+                if (productToCampaignQtyExist.Count == 0)
+                {
+                    var productToCampaignQty = FromDto(productToCampaignQtyDTO);
+
+                    _db.ProductToCampaignQties.Add(productToCampaignQty);
+
+                    await _db.SaveChangesAsync();
+
+                    var result = ToDto(productToCampaignQty);
+
+                    // return DTO type? without ID?
+                    return result;
+                }
+                else
+                {
+                    productToCampaignQtyExist[0].ProductQty += productToCampaignQtyDTO.ProductQty;
+                    productToCampaignQtyExist[0].UpdateDate = DateTime.Now;
+                    productToCampaignQtyExist[0].UpdateUserId = productToCampaignQtyDTO.UserId;
+
+                    await _db.SaveChangesAsync();
+
+                    var result = ToDto(productToCampaignQtyExist[0]);
+
+                    // return DTO type? without ID?
+                    return result;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private ProductToCampaignQty FromDto(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        {
+            return new ProductToCampaignQty()
+            {
+                Id = Const.NonExistId,
+                ProductId = productToCampaignQtyDTO.ProductId,
+                CampaignId = productToCampaignQtyDTO.CampaignId,
+                ProductQty = productToCampaignQtyDTO.ProductQty,
+                CreateDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                CreateUserId = productToCampaignQtyDTO.UserId,
+                UpdateUserId = productToCampaignQtyDTO.UserId,
+                StatusId = (int)Statuses.Active
+            };
+        }
+
+        private ProductToCampaignQtyDTO ToDto(ProductToCampaignQty productToCampaignQty)
+        {
+            return new ProductToCampaignQtyDTO()
+            {
+                UserId = productToCampaignQty.UpdateUserId,
+                ProductId = productToCampaignQty.ProductId,
+                CampaignId = productToCampaignQty.CampaignId,
+                ProductQty = productToCampaignQty.ProductQty
+            };
+        }
+
     }
 }

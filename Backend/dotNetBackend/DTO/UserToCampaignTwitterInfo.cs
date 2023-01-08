@@ -1,13 +1,11 @@
 ﻿namespace dotNetBackend.DTO
 {
-    public record TransactionDTO
+    public record UserToCampaignTwitterInfo
     {
         public int UserId { get; set; }
 
-        public int ProductId { get; set; }
-
         public int CampaignId { get; set; }
 
-        public int StateId { get; set; }
+        public int CurrentTweetCount { get; set; }
     }
 }
