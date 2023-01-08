@@ -10,6 +10,8 @@
 
         public int Balance { get; set; }
 
+        public int PreviousTweetCount { get; set; }
+
         public DateTime UpdateDate { get; set; }
 
     }

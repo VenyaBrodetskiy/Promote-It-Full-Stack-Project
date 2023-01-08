@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Tweetinvi.Parameters;
 using TwitterAccessor;
+using TwitterAccessor.Common;
 using TwitterAccessor.Services;
 
 internal class Program
@@ -31,9 +32,8 @@ internal class Program
 
         app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}", 
             async (
-                [FromRoute] string socialActivistTwitterHandle, 
-                [FromRoute] string businessOwnerTwitterHandle, 
-                HttpClient httpClient, 
+                string socialActivistTwitterHandle, 
+                string businessOwnerTwitterHandle, 
                 [FromServices] TweetinviService tweetinviService) =>
             {
                 var tweet = new PublishTweetParameters()
@@ -41,10 +41,19 @@ internal class Program
                     Text = $"This tweet is created automatically. {socialActivistTwitterHandle} used points to buy {businessOwnerTwitterHandle} product"
                 };
 
-                var responseTweet = await tweetinviService.userClient.Tweets.PublishTweetAsync(tweet);
-                return responseTweet.Text;
+                try
+                {
+                    var responseTweet = await tweetinviService.userClient.Tweets.PublishTweetAsync(tweet);
+                    app.Logger.LogInformation("tweet is published: {tweet}", responseTweet.Text);
+                    return Results.Ok(responseTweet.Text);
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogInformation(ex.Message);
+                    return Results.Problem(ex.Message);
+                }
             })
-        .WithName("Social Activist bought product from Business owner")
+        .WithName("Create Tweet when Social Activist bought product from Business owner")
         .WithOpenApi();
 
         app.MapPost("/GetTweetsCountForCampaignHashtag", 
@@ -61,17 +70,15 @@ internal class Program
                 // 5. if retweets increase from last time, increase User balance
 
                 // 0. get all users (social activists)
-                var socialActivistsResponse = await httpClient.GetAsync("https://localhost:7121/api/SocialActivist");
+                var socialActivistsResponse = await httpClient.GetAsync(Const.APIGetSocialActivists);
+                SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
 
-                SocialActivistDTO[]? socialActivist = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
+                var userToCampaign = await twitterService.CountTweetsForUsers(campaign,  socialActivists);
 
-                List<string> userTwitterHandles = socialActivist.Select(sa => sa.TwitterHandle).ToList();
-
-                var userToCampaign = await twitterService.CountTweetsForUsers(campaign, userTwitterHandles, socialActivist);
-
+                return Results.Ok(userToCampaign);
                 // add or change balance in UserToCampaignBalance
             })
-        .WithName("Count tweets by ")
+        .WithName("Count tweets by campaign")
         .WithOpenApi();
 
 
