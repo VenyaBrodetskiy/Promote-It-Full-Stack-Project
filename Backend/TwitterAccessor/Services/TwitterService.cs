@@ -11,10 +11,15 @@ namespace TwitterAccessor.Services
             _tweetinviService = tweetinviService;
         }
 
-        public async Task<List<UserToCampaignBalanceDTO>> CountTweetsForUsers(CampaignInfo campaign, SocialActivistDTO[]? socialActivists)
+        public async Task<List<UserToCampaignTwitterInfo>> CountTweetsForUsers(CampaignInfo campaign, SocialActivistDTO[]? socialActivists)
         {
-            // 1. get all tweets by hashtag
-            SearchTweetsV2Response searchResponse = await _tweetinviService.userClient.SearchV2.SearchTweetsAsync(campaign.hashtag);
+            // 1. get all tweets by Hashtag
+            // 2. sort those which made by users of my platform
+            // 3. check if tweets are made by rules: contains link + Hashtag
+            // 4. count tweets and retweets for each user
+
+            // 1. get all tweets by Hashtag
+            SearchTweetsV2Response searchResponse = await _tweetinviService.userClient.SearchV2.SearchTweetsAsync(campaign.Hashtag);
 
             // 2. filter posts made by SocialActivists
             List<string>? userTwitterHandles = socialActivists.Select(sa => sa.TwitterHandle).ToList();
@@ -22,34 +27,33 @@ namespace TwitterAccessor.Services
             var authors = searchResponse.Includes.Users
                 .Where(author => userTwitterHandles.Contains($"@{author.Username}")).ToList();
 
-            var userToCampaign = new List<UserToCampaignBalanceDTO>();
+            var userToCampaigns = new List<UserToCampaignTwitterInfo>();
 
             authors.ForEach(author =>
             {
                 int tweetCount = 0;
-                // check 1. author 2. that landingPage is included in tweet message
+                // 3. check if tweets are made by rules: contains link + Hashtag
+                // check 1. author 2. that LandingPage is included in tweet message
                 var tweetsBySa = searchResponse.Tweets
                     .Where(tweet => tweet.AuthorId == author.Id)
-                    .Where(tweet => tweet.Text.IndexOf(campaign.landingPage) > -1)
+                    .Where(tweet => tweet.Text.IndexOf(campaign.LandingPage) > -1)
                     .ToList();
 
-                //counting tweets and retweets
+                // 4. count tweets and retweets for each user
                 tweetsBySa
                     .ForEach(tweet => tweetCount += 1 + tweet.PublicMetrics.QuoteCount + tweet.PublicMetrics.RetweetCount);
 
-                Console.WriteLine($"Campaign: {campaign.hashtag}\nUser: {author.Username}\nValidated tweets + retweets: {tweetCount}");
+                Console.WriteLine($"Campaign: {campaign.Hashtag}\nUser: {author.Username}\nValidated tweets + retweets: {tweetCount}");
 
-                userToCampaign.Add(new UserToCampaignBalanceDTO()
+                userToCampaigns.Add(new UserToCampaignTwitterInfo()
                 {
-                    Id = socialActivists.Where(sa => sa.TwitterHandle == $"@{author.Username}").Select(sa => sa.UserId).First(),
-                    TwitterHandle = socialActivists.Where(sa => sa.TwitterHandle == $"@{author.Username}").Select(sa => sa.TwitterHandle).First(),
-                    CampaignHashtag = campaign.hashtag,
-                    Balance = tweetCount,
-                    UpdateDate = DateTime.Now
+                    UserId = socialActivists.Where(sa => sa.TwitterHandle == $"@{author.Username}").Select(sa => sa.UserId).First(),
+                    CampaignId = campaign.CampaignId,
+                    CurrentTweetCount = tweetCount,
                 });
             });
 
-            return userToCampaign;
+            return userToCampaigns;
 
         }
     }

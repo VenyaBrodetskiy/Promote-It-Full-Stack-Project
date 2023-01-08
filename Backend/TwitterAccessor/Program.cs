@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Timers;
 using Tweetinvi.Parameters;
 using TwitterAccessor;
 using TwitterAccessor.Common;
@@ -62,26 +64,53 @@ internal class Program
                 [FromServices] HttpClient httpClient, 
                 [FromServices] TwitterService twitterService) =>
             {
-                // 0. get all users (social activists)
-                // 1. get all tweets by hashtag
-                // 2. sort those which made by users of my platform
-                // 3. check if they are made by rules: contains link + hashtag
-                // 4. count tweets and retweets for each user
-                // 5. if retweets increase from last time, increase User balance
 
-                // 0. get all users (social activists)
-                var socialActivistsResponse = await httpClient.GetAsync(Const.APIGetSocialActivists);
-                SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
+                try
+                {
+                    // get all users (social activists)
+                    var socialActivistsResponse = await httpClient.GetAsync(Const.ApiGetSocialActivists);
+                    SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
 
-                var userToCampaign = await twitterService.CountTweetsForUsers(campaign,  socialActivists);
+                    var userToCampaigns = await twitterService.CountTweetsForUsers(campaign, socialActivists);
 
-                return Results.Ok(userToCampaign);
-                // add or change balance in UserToCampaignBalance
+                    //var responseMessage = await httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaigns[0]);
+                    //app.Logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, responseMessage.Content.ToString());
+
+                    foreach (var userToCampaign in userToCampaigns) 
+                    {
+                        var responseMessage = await httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaign);
+                        app.Logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, responseMessage.Content.ToString());
+                    };
+
+                    return Results.Ok();
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             })
         .WithName("Count tweets by campaign")
         .WithOpenApi();
 
+        var timer = new System.Timers.Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
+        timer.Enabled = true;
+        timer.Elapsed += OnTimerEvent;
 
         app.Run();
+    }
+
+    private static async void OnTimerEvent(Object? source, ElapsedEventArgs e)
+    {
+        Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
+
+        var campaign = new CampaignInfo()
+        {
+            CampaignId = 4,
+            Hashtag = "#trytofindthishash01",
+            LandingPage = "old"
+        };
+        var httpClient = new HttpClient();
+        
+        await httpClient.PostAsJsonAsync("https://localhost:7133/GetTweetsCountForCampaignHashtag", campaign);
     }
 }
