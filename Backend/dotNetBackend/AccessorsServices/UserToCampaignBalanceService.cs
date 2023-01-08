@@ -78,6 +78,7 @@ namespace dotNetBackend.Services
                 TwitterHandle = socialActivist.TwitterHandle,
                 CampaignHashtag = campaign.Hashtag,
                 Balance = userToCampaign.Balance,
+                PreviousTweetCount = userToCampaign.PreviousTweetCount,
                 UpdateDate = userToCampaign.UpdateDate
             };
         }

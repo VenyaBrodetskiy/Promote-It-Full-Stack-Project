@@ -451,6 +451,7 @@ public partial class MasaProjectDbContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Balance).HasColumnName("balance");
+            entity.Property(e => e.PreviousTweetCount).HasColumnName("previous_tweet_count");
             entity.Property(e => e.CampaignId).HasColumnName("campaign_id");
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
