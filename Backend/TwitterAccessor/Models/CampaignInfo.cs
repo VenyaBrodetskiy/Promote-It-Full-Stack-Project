@@ -2,9 +2,9 @@
 {
     public record CampaignInfo
     {
-        public int id { get; set; }
-        public string hashtag { get; set; }
-        public string landingPage { get; set; }
+        public int CampaignId { get; set; }
+        public string? Hashtag { get; set; }
+        public string? LandingPage { get; set; }
 
     }
 }
