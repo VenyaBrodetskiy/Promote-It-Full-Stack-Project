@@ -19,6 +19,7 @@ builder.Services.AddDbContext<MasaProjectDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     
 });
+builder.Services.AddHttpClient();
 
 // TODO: add auto IOC here
 builder.Services.AddScoped<SocialActivistService>();

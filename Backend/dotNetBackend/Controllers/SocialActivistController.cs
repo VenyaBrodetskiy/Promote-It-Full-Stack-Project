@@ -14,28 +14,35 @@ namespace dotNetBackend.Controllers
     public class SocialActivistController : ControllerBase
     {
         private readonly ILogger<SocialActivistController> _logger;
+        private readonly HttpClient _httpClient;
         private readonly MasaProjectDbContext _db;
         private readonly SocialActivistService _socialActivistService;
         private readonly UserToCampaignBalanceService _userToCampaignService;
         private readonly ProductToCampaignQtyService _productToCampaignService;
         private readonly TransactionService _transactionService;
         private readonly TransactionValidationService _transactionValidationService;
+        private readonly ProductService _productService;
+
         public SocialActivistController(
             ILogger<SocialActivistController> logger,
+            HttpClient httpClient,
             MasaProjectDbContext db,
             SocialActivistService SAService, 
             UserToCampaignBalanceService UtCBService,
             ProductToCampaignQtyService PtCQtyService,
             TransactionService TService,
-            TransactionValidationService TVService) 
+            TransactionValidationService TVService,
+            ProductService ProductService) 
         {
             _logger = logger;
+            _httpClient = httpClient;
             _db = db;
             _socialActivistService = SAService;
             _userToCampaignService = UtCBService;
             _productToCampaignService = PtCQtyService;
             _transactionService = TService;
             _transactionValidationService = TVService;
+            _productService = ProductService;
         }
 
         // this route is just for example and testing
@@ -176,11 +183,28 @@ namespace dotNetBackend.Controllers
                     }
 
                     dbContextTransaction.Commit();
-                    return Ok(new
+
+                    string socialActivistTwitterHandle = (await _socialActivistService.Get(transactionInfo.UserId))!.TwitterHandle;
+                    string businessOwnerTwitterHandle = await _productService.GetOwnerByProductId(transactionInfo.ProductId);
+                    var response = await _httpClient.PostAsync(
+                        Const.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
+                        null);
+                    _logger.LogInformation(response.StatusCode.ToString());
+
+                    if (response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
                     {
-                        TransactionId = id,
-                        NewBalance = newBalance
-                    });
+                        return Ok(new
+                        {
+                            TransactionId = id,
+                            NewBalance = newBalance,
+                            TwitterPostStatus = response.StatusCode.ToString()
+                        });
+                    }
+                    else
+                    {
+                        return Problem("transaction OK, but tweet wasn't posted");
+                    }
+
                 }
                 catch (ValidationException ex)
                 {

@@ -32,10 +32,10 @@ internal class Program
 
         app.UseHttpsRedirection();
 
-        app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}", 
+        app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}",
             async (
-                string socialActivistTwitterHandle, 
-                string businessOwnerTwitterHandle, 
+                string socialActivistTwitterHandle,
+                string businessOwnerTwitterHandle,
                 [FromServices] TweetinviService tweetinviService) =>
             {
                 var tweet = new PublishTweetParameters()
@@ -58,59 +58,80 @@ internal class Program
         .WithName("Create Tweet when Social Activist bought product from Business owner")
         .WithOpenApi();
 
-        app.MapPost("/GetTweetsCountForCampaignHashtag", 
-            async (
-                [FromBody] CampaignInfo campaign, 
-                [FromServices] HttpClient httpClient, 
-                [FromServices] TwitterService twitterService) =>
-            {
+        //app.MapPut("/UpdateBalancesByCampaignHashtag", 
+        //    async (
+        //        [FromBody] CampaignInfo campaign, 
+        //        [FromServices] TwitterService twitterService) =>
+        //    {
+        //        try
+        //        {
+        //            await twitterService.ChangeUserBalancesForCampaign(campaign);
 
+        //            return Results.Ok();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Results.Problem(ex.Message);
+        //        }
+        //    })
+        //.WithName("Count tweets by campaign")
+        //.WithOpenApi();
+
+        app.MapPut("/UpdateBalancesAllCampaigns",
+            async ([FromServices] TwitterService twitterService) =>
+            {
                 try
                 {
-                    // get all users (social activists)
-                    var socialActivistsResponse = await httpClient.GetAsync(Const.ApiGetSocialActivists);
-                    SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
+                    await twitterService.ChangeUserBalancesForAllCampaigns();
 
-                    var userToCampaigns = await twitterService.CountTweetsForUsers(campaign, socialActivists);
-
-                    //var responseMessage = await httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaigns[0]);
-                    //app.Logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, responseMessage.Content.ToString());
-
-                    foreach (var userToCampaign in userToCampaigns) 
-                    {
-                        var responseMessage = await httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaign);
-                        app.Logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, responseMessage.Content.ToString());
-                    };
-
-                    return Results.Ok();
+                    return Results.Ok("All Campaignes checked, all user balances updated");
                 }
                 catch (Exception ex)
                 {
                     return Results.Problem(ex.Message);
                 }
             })
-        .WithName("Count tweets by campaign")
+        .WithName("Count tweets for all campaigns")
         .WithOpenApi();
 
-        var timer = new System.Timers.Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
-        timer.Enabled = true;
-        timer.Elapsed += OnTimerEvent;
+        app.MapPut("/StartTwitterChecking/{seconds}",
+            (int seconds,
+            [FromServices] TwitterService twitterService) =>
+            {
+                try
+                {
+                    twitterService.StartPeriodicalCheck(seconds);
+
+                    return Results.Ok("Started periodical check of twitter");
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
+            })
+        .WithName("Start to check twitter each {seconds}")
+        .WithOpenApi();
+
+        app.MapPost("/StopTwitterChecking",
+            ([FromServices] TwitterService twitterService) =>
+            {
+                try
+                {
+                    twitterService.StopPeriodicalCheck();
+
+                    return Results.Ok("Stopped periodical check of twitter");
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
+            })
+        .WithName("Stopped automatic twitter check")
+        .WithOpenApi();
+
 
         app.Run();
     }
-
-    private static async void OnTimerEvent(Object? source, ElapsedEventArgs e)
-    {
-        Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
-
-        var campaign = new CampaignInfo()
-        {
-            CampaignId = 4,
-            Hashtag = "#trytofindthishash01",
-            LandingPage = "old"
-        };
-        var httpClient = new HttpClient();
-        
-        await httpClient.PostAsJsonAsync("https://localhost:7133/GetTweetsCountForCampaignHashtag", campaign);
-    }
 }
+
+  
