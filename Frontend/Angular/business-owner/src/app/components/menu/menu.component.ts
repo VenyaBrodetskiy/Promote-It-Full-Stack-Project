@@ -6,6 +6,9 @@ import { States } from "../../constants";
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.less']
 })
+
+
+
 export class MenuComponent {
   public States = States;
 }

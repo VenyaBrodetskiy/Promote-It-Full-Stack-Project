@@ -1,6 +1,6 @@
 export interface ICampaign {
-  id: number;
+  id?: number;
   hashtag: string;
   landingPage: string;
-  nonProfitOrganizationName: string;
+  nonProfitOrganizationName?: string;
 }

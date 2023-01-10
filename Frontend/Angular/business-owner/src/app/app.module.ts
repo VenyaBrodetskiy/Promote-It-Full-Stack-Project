@@ -14,6 +14,7 @@ import { States } from './constants';
 import { RouterModule, Routes } from '@angular/router';
 import { CampaignPageComponent } from './pages/campaign-page/campaign-page.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
+import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 
 const routes: Routes = [
   { path: States.campaigns, component: CampaignPageComponent },
@@ -28,7 +29,8 @@ const routes: Routes = [
     CreateProductPageComponent,
     MenuComponent,
     CampaignPageComponent,
-    CreateProductComponent
+    CreateProductComponent,
+    CreateCampaignComponent
   ],
   imports: [
     BrowserModule,
