@@ -3,4 +3,5 @@ export interface ICampaign {
   hashtag: string;
   landingPage: string;
   nonProfitOrganizationName?: string;
+  title?: string;
 }

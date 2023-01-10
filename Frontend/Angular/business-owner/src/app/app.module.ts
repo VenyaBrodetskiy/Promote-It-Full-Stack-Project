@@ -15,10 +15,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { CampaignPageComponent } from './pages/campaign-page/campaign-page.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
+import { DonateProductComponent } from './components/donate-product/donate-product.component';
+import { SelectComponent } from './components/select/select.component';
 
 const routes: Routes = [
   { path: States.campaigns, component: CampaignPageComponent },
   { path: States.donateNewProduct, component: CreateProductPageComponent },
+  { path: States.donateToCampaign, component: DonateProductComponent },
+
 ]
 
 @NgModule({
@@ -30,7 +34,9 @@ const routes: Routes = [
     MenuComponent,
     CampaignPageComponent,
     CreateProductComponent,
-    CreateCampaignComponent
+    CreateCampaignComponent,
+    DonateProductComponent,
+    SelectComponent
   ],
   imports: [
     BrowserModule,

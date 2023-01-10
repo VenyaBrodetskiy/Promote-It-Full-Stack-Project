@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from "rxjs";
+import { Endpoints } from '../constants';
 import { IProduct } from '../models/product';
 import { ErrorService } from './error.service';
 
@@ -13,6 +14,15 @@ export class ProductService {
     private http: HttpClient,
     private ErrorService: ErrorService
   ) { }
+
+  getAll(): Observable<IProduct[]> {
+
+    //don`t have GetProducts in the backend, need to create
+    return this.http.get<IProduct[]>(`https://localhost:7121/api/BusinessOwner/GetProduct`)
+      .pipe(
+        catchError(this.errorHandler.bind(this))
+      )
+  }
 
   create(body: IProduct): Observable<number> {
 

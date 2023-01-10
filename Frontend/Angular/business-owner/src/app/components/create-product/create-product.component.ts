@@ -4,7 +4,7 @@ import { IProduct } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
-  selector: 'app-create-product',
+  selector: 'bo-create-product',
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.less']
 })

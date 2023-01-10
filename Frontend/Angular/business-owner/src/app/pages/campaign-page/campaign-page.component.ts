@@ -5,7 +5,7 @@ import { CampaignService } from 'src/app/services/campaign.service';
 
 
 @Component({
-  selector: 'app-campaign-page',
+  selector: 'bo-campaign-page',
   templateUrl: './campaign-page.component.html',
   styleUrls: ['./campaign-page.component.less']
 })
