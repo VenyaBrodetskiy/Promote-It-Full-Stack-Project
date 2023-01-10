@@ -84,6 +84,7 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(TokenClaims.UserTypeId, UserTypes.System.ToString("D"));
     });
 });
+builder.Services.AddCors();
 
 // TODO: add auto IOC here
 builder.Services.AddScoped<SocialActivistService>();
@@ -106,6 +107,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(
+    options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 // added logging of http requests
 app.UseHttpLogging();

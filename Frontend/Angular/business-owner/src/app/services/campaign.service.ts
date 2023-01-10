@@ -20,7 +20,7 @@ export class CampaignService {
 
   getAll(): Observable<ICampaign[]> {
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzMzNjUzNDgsImV4cCI6MTY3MzM3MjU0OH0.dkG5FN35u7oHPtjePJzPB1leLDnmPwTs3629ng_o2pw');
+    const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzMzNzc4MzYsImV4cCI6MTY3MzM4NTAzNn0._vkvU192Yipi6jl2-Uotk-61Xx3PG7DuYC-tCRlJ84k');
 
     return this.http.get<ICampaign[]>(`${Endpoints.campaigns}`, { headers })
       .pipe(
