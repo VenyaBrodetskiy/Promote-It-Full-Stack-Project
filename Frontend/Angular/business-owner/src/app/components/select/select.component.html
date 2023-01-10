@@ -1,0 +1,26 @@
+<!-- <select
+  class="form-select"
+  [id]="unique"
+  [name]="unique"
+  [(ngModel)]="value"
+  (change)="onChange(option.id)"
+  [attr.aria-label]="label">
+    <option
+      *ngFor="let option of options; index as i"
+      [value]="option.id"
+      [innerHTML]="option.hashtag"
+      ></option>
+</select> -->
+
+<select
+  class="form-select"
+  [id]="unique"
+  [name]="unique"
+  [(ngModel)]="selectedOption"
+  (ngModelChange)="onChange(selectedOption)"
+  [attr.aria-label]="label">
+    <option
+      *ngFor="let option of options; index as i"
+      [value]="option"
+      [innerHTML]="option.hashtag"></option>
+</select>

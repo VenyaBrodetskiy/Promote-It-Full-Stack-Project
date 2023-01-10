@@ -1,0 +1,7 @@
+<bo-select
+  [options]="campaignOptions$ | async"
+  [label]="campaignLabel"
+  [(ngModel)]="selectedCampaignId"
+  (selectedCampaignIdChange)="onSelectedCampaignIdChange()"
+  >
+</bo-select>
