@@ -1,3 +1,8 @@
+// now is not used. created for checking if the problem is with addProduct in frontend or in backend, because same method, but different back
+// addProduct - C#, addCampaign - nodeJS
+// kept in case this front will be expanded to social activist. if not - need to remove
+
+
 import { ICampaign } from 'src/app/models/campaign';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
