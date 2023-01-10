@@ -18,7 +18,7 @@ export class CreateProductComponent {
   @Output() productTitleChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() productPriceChange: EventEmitter<number> = new EventEmitter<number>();
 
-  product$: Observable<IProduct>;
+  product$: Observable<number>;
 
   public onProductTitleChange(): void {
     this.productTitleChange.emit(this.productTitle);
@@ -31,12 +31,17 @@ export class CreateProductComponent {
   //TODO: UserId is hardcoded
   public onSubmit(productTitle: string, productPrice: number): void {
     let body: IProduct = {
-      "title": productTitle,
-      "price": productPrice,
-      "userId": 4
+      title: productTitle,
+      price: productPrice,
+      userId: 4
     }
-    this.product$ = this.productService.create(JSON.stringify(body));
-    console.log(JSON.stringify(body));
+    this.productService.create(body)
+      .subscribe(
+        response => {
+          console.log(response);
+        }
+      );
+    console.log(body);
   }
 
 

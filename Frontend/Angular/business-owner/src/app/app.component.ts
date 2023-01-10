@@ -1,7 +1,4 @@
-import { Observable } from 'rxjs';
-import { ICampaign } from './models/campaign';
-import { Component, OnInit } from '@angular/core';
-import { CampaignService } from './services/campaign.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',

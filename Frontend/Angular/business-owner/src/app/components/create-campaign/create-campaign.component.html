@@ -1,0 +1,11 @@
+<div class="mb-3">
+  <label for="productTitleInput" class="form-label">hashtag</label>
+  <input type="text" class="form-control" id="campaignHashtag" [(ngModel)]="hashtag"
+    >
+</div>
+<div class="mb-3">
+  <label for="productPriceInput" class="form-label">landingPage</label>
+  <input type="text" class="form-control" id="campaignLandingPage" [(ngModel)]="landingPage"
+    >
+</div>
+<button type="submit" class="btn btn-primary" (click)="onSubmit(hashtag, landingPage)">Submit</button>
