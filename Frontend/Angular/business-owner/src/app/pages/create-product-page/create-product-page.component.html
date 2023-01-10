@@ -1,0 +1,24 @@
+<!-- <form> -->
+  <div class="mb-3">
+    <label for="productTitleInput" class="form-label">Product title</label>
+    <input
+      type="text"
+      class="form-control"
+      id="productTitleInput"
+      [(ngModel)]="productTitle"
+      (keyup)="onProductTitleChange()">
+  </div>
+  <div class="mb-3">
+    <label for="productPriceInput" class="form-label">Product price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="productPriceInput"
+      [(ngModel)]="productPrice"
+      (keyup)="onProductPriceChange()">
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    (click)="onSubmit(productTitle, productPrice)">Submit</button>
+<!-- </form> -->
