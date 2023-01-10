@@ -1,9 +1,15 @@
-<bo-error></bo-error>
+<div class="container d-flex">
+  <div class="menu-container mf-flex mf-flex-col-1">
+    <bo-menu></bo-menu>
 
-<bo-campaign
-  *ngFor="let campaign of campaigns$ | async; let i = index"
-  [campaign]="campaign"
-></bo-campaign>
+  </div>
+  <div class="content-container flex-grow-1">
+    <router-outlet></router-outlet>
+
+    <!-- <bo-create-product-page></bo-create-product-page> -->
+
+  </div>
+</div>
 
 
-<bo-create-product-page></bo-create-product-page>
+

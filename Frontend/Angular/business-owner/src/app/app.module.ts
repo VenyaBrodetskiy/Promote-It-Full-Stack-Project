@@ -9,13 +9,26 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorComponent } from './components/error/error.component';
 import { CreateProductPageComponent } from './pages/create-product-page/create-product-page.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { States } from './constants';
+import { RouterModule, Routes } from '@angular/router';
+import { CampaignPageComponent } from './pages/campaign-page/campaign-page.component';
+import { CreateProductComponent } from './components/create-product/create-product.component';
+
+const routes: Routes = [
+  { path: States.campaigns, component: CampaignPageComponent },
+  { path: States.donateNewProduct, component: CreateProductPageComponent },
+]
 
 @NgModule({
   declarations: [
     AppComponent,
     CampaignComponent,
     ErrorComponent,
-    CreateProductPageComponent
+    CreateProductPageComponent,
+    MenuComponent,
+    CampaignPageComponent,
+    CreateProductComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +36,8 @@ import { CreateProductPageComponent } from './pages/create-product-page/create-p
     FormsModule,
     CommonModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    RouterModule.forChild(routes),
   ],
   providers: [],
   bootstrap: [AppComponent]
