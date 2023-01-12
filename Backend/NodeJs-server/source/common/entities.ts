@@ -1,6 +1,6 @@
 import { AppError, UserType } from "./enums";
 import { Request } from "express";
-export interface entityWithId{
+export interface entityWithId {
     id: number;
 }
 
@@ -17,10 +17,10 @@ export interface campaignWitnProducts extends campaign {
 
 }
 
-export interface jwtUserData {
-    userId: number;
-    userTypeId: UserType;
-}
+// export interface jwtUserData {
+//     userId: number;
+//     userTypeId: UserType;
+// }
 
 export interface user extends entityWithId {
     userTypeId: number;
@@ -54,8 +54,9 @@ export interface systemError {
 }
 
 export interface authenticationToken {
-    userData: jwtUserData;
+    userId: number;
+    userTypeId: UserType;
 }
 
-export interface AuthenticatedRequest extends Request, authenticationToken {}
+export interface AuthenticatedRequest extends Request, authenticationToken { }
 

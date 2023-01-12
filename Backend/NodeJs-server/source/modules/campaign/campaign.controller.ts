@@ -10,9 +10,9 @@ class CampaignController {
     constructor() { }
 
     public getAllCampaigns(req: Request, res: Response, next: NextFunction) {
-        
+
         LoggerService.info(`${req.method} ${req.originalUrl}`);
-        
+
         CampaignService.getAllCampaigns()
             .then((result: campaign[]) => {
                 return res.status(200).json(result);
@@ -23,9 +23,9 @@ class CampaignController {
     }
 
     public getAllCampaignsWitnProducts(req: Request, res: Response, next: NextFunction) {
-        
+
         LoggerService.info(`${req.method} ${req.originalUrl}`);
-        
+
         CampaignService.getAllCampaignsWithProducts()
             .then((result: campaignWitnProducts[]) => {
                 return res.status(200).json(result);
@@ -39,7 +39,7 @@ class CampaignController {
 
         // TODO: (very low priority) add validation, that landing page is working one 
         LoggerService.info(`${req.method} ${req.originalUrl}`);
-        
+
         const body: campaign = req.body;
         const inputCampaign: campaign = {
             id: NON_EXISTING_ID,
@@ -47,7 +47,7 @@ class CampaignController {
             landingPage: body.landingPage
         };
 
-        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userData.userId) 
+        CampaignService.addCampaign(inputCampaign, (req as AuthenticatedRequest).userId)
             .then((result: campaign) => {
                 return res.status(200).json(result);
             })

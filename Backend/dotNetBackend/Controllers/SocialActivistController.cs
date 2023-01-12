@@ -6,6 +6,7 @@ using dotNetBackend.EngineServices;
 using dotNetBackend.Models;
 using dotNetBackend.Services;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace dotNetBackend.Controllers
 {
@@ -45,8 +46,8 @@ namespace dotNetBackend.Controllers
             _productService = ProductService;
         }
 
-        // this route is just for example and testing
         [HttpGet]
+        [Authorize(Policy = Policies.SystemBackendOnly)]
         public async Task<ActionResult<List<SocialActivistDTO>>> GetAll()
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
@@ -73,6 +74,7 @@ namespace dotNetBackend.Controllers
 
         // this route is just for example and testing
         [HttpGet("{id}")]
+        [Authorize(Policy = Policies.SocialActivist)]
         public async Task<ActionResult<SocialActivistDTO>> Get(int id)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
@@ -125,6 +127,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = Policies.SocialActivist)]
         public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction(TransactionDTO transactionInfo)
         {
             // no validation of UserId here, it should do middleware (here on in Node.js server)
@@ -224,6 +227,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(Policy = Policies.SystemBackendOnly)]
         public async Task<ActionResult<UserToCampaignBalanceDTO>> UpdateUserBalance(UserToCampaignTwitterInfo userToCampaign)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);

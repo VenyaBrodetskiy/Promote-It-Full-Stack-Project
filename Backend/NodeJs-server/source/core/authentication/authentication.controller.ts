@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { jwtUserData, authenticationToken, systemError } from "../../common/entities";
+import { authenticationToken, systemError } from "../../common/entities";
 import { ResponseHelper } from "../helpers/response.helper";
 import AuthenticationService from './authentication.service';
 import jwt from 'jsonwebtoken';
@@ -13,25 +13,21 @@ interface localUser {
 
 class AuthenticationController {
 
-    constructor() {}
+    constructor() { }
 
     public login(req: Request, res: Response, next: NextFunction) {
         // we use body (not url) in order 
         const user: localUser = req.body;
 
         AuthenticationService.login(user.login, user.password)
-            .then((userData: jwtUserData) => {
+            .then((userData: authenticationToken) => {
                 // TODO: generate JWT token
 
-                const authenticationToken: authenticationToken = {
-                    userData: userData
-                };
-
                 const token: string = jwt.sign(
-                    authenticationToken,
+                    userData,
                     Environment.TOKEN_SECRET,
                     {
-                    expiresIn: "2h",
+                        expiresIn: "2h",
                     }
                 );
 

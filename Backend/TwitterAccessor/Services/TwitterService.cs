@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Timers;
-using Tweetinvi.Core.Models.Properties;
 using Tweetinvi.Models.V2;
 using TwitterAccessor.Common;
 using Timer = System.Timers.Timer;
@@ -15,7 +12,8 @@ namespace TwitterAccessor.Services
         private readonly TweetinviService _tweetinviService;
         private readonly ILogger<TwitterService> _logger;
         private readonly HttpClient _httpClient;
-        private Timer _timer;
+        private readonly Timer _timer;
+        private string? _token { get; set; }
 
         public TwitterService(TweetinviService tweetinviService, HttpClient httpClient, ILogger<TwitterService> logger)
         {
@@ -25,8 +23,10 @@ namespace TwitterAccessor.Services
             _timer = new Timer(100000);
         }
 
-        public void StartPeriodicalCheck(int seconds)
+        public void StartPeriodicalCheck(int seconds, string token)
         {
+            _token = token;
+
             double interval = TimeSpan.FromSeconds(seconds).TotalMilliseconds;
             _timer.Interval = interval;
             _timer.Enabled = true;
@@ -44,7 +44,7 @@ namespace TwitterAccessor.Services
             {
                 _logger.LogInformation("Periodical check of twitter started at {0:HH:mm:ss.fff}", e.SignalTime);
 
-                await ChangeUserBalancesForAllCampaigns();
+                await ChangeUserBalancesForAllCampaigns(_token!);
             }
             catch (Exception ex)
             {
@@ -52,12 +52,23 @@ namespace TwitterAccessor.Services
             }
         }
 
-        public async Task ChangeUserBalancesForAllCampaigns()
+        public async Task ChangeUserBalancesForAllCampaigns(string token)
         {
             // 1. get all campaigns
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Const.ApiGetCampaigns);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzMzMDM4MjYsImV4cCI6MTY3MzMxMTAyNn0.ZMV-3dD9ER3zAb8tSszp8Kdom0qJ1erHhJPOK_qLknA");
-            HttpResponseMessage campaignsResponse = await _httpClient.SendAsync(request);
+            if (_token == null)
+            {
+                _token = token;
+            }
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            //var request = new HttpRequestMessage(HttpMethod.Get, Const.ApiGetCampaigns);
+            //request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            //HttpResponseMessage campaignsResponse = await _httpClient.SendAsync(request);
+            var campaignsResponse = await _httpClient.GetAsync(Const.ApiGetCampaigns);
+            if (campaignsResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Not Authorized");
+            }
+
             CampaignInfo[]? campaigns = await campaignsResponse.Content.ReadFromJsonAsync<CampaignInfo[]>();
 
             // 2. get all users (social activists)
@@ -73,31 +84,22 @@ namespace TwitterAccessor.Services
 
         public async Task ChangeUserBalancesForCampaign(CampaignInfo campaign, SocialActivistDTO[]? socialActivists)
         {
-            // 1. get all users (social activists)
-            // TODO: move to upper function
-            //var socialActivistsResponse = await _httpClient.GetAsync(Const.ApiGetSocialActivists);
-            //SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
-
-            // 2. Count tweets and retweets for each user
+            // 1. Count tweets and retweets for each user
             var userToCampaigns = await CountTweetsForUsers(campaign, socialActivists);
 
-            // 3. change balance in DB based on tweet qty
+            // 2. change balance in DB based on tweet qty
             foreach (var userToCampaign in userToCampaigns)
             {
                 var responseMessage = await _httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaign);
                 _logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, await responseMessage.Content.ReadAsStringAsync());
             };
         }
+
         private async Task<List<UserToCampaignTwitterInfo>> CountTweetsForUsers(CampaignInfo campaign, SocialActivistDTO[]? socialActivists)
         {
             // 1. get all tweets by Hashtag
-            // 2. sort those which made by users of my platform
-            // 3. check if tweets are made by rules: contains link + Hashtag
-            // 4. count tweets and retweets for each user
-
-            // 1. get all tweets by Hashtag
             SearchTweetsV2Response searchResponse = await _tweetinviService.userClient.SearchV2.SearchTweetsAsync(campaign.Hashtag);
-            if (searchResponse.Tweets.Count() == 0) return new List<UserToCampaignTwitterInfo>();
+            if (searchResponse.Tweets.Length == 0) return new List<UserToCampaignTwitterInfo>();
 
             // 2. filter posts made by SocialActivists
             List<string>? userTwitterHandles = socialActivists.Select(sa => sa.TwitterHandle).ToList();
@@ -112,7 +114,6 @@ namespace TwitterAccessor.Services
             {
                 int tweetCount = 0;
                 // 3. check if tweets are made by rules: contains link + Hashtag
-                // check 1. author 2. that LandingPage is included in tweet message
                 var tweetsBySa = searchResponse.Tweets
                     .Where(tweet => tweet.AuthorId == author.Id)
                     .Where(tweet => tweet.Text.IndexOf(campaign.LandingPage) > -1 
@@ -134,7 +135,6 @@ namespace TwitterAccessor.Services
             });
 
             return userToCampaigns;
-
         }
     }
 }
