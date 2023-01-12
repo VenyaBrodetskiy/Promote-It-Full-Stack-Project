@@ -18,14 +18,9 @@ export class SelectComponent {
   public unique: string = uuidv4();
 
   public selectedOption: ICampaign;
+
   public onChange(selectedOption: ICampaign): void {
     this.value.emit(selectedOption.id);
   }
 
-  // public onChange(selectedValue: number): void {
-  //   this.value.emit(selectedValue);
-  // }
-
 }
-
-

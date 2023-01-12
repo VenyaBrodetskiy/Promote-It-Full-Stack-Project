@@ -5,7 +5,6 @@ import { catchError, Observable, throwError } from "rxjs";
 import { ICampaign } from './../models/campaign';
 import { Endpoints } from '../constants';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -14,13 +13,12 @@ export class CampaignService {
   constructor(
     private http: HttpClient,
     private ErrorService: ErrorService
-
   ) {
   }
 
   getAll(): Observable<ICampaign[]> {
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzMzODczNDUsImV4cCI6MTY3MzM5NDU0NX0.ZNLVInxeZxb3ExACkd3dHvejISOcNLs_NQdq1V3Cv2Y');
+    const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzM1MzUwNjQsImV4cCI6MTY3MzU0MjI2NH0.3Pr4QveVEDpRwMwPVHkvlUgZUkPU25UZrn_e6RmDEYw');
 
     return this.http.get<ICampaign[]>(`${Endpoints.campaigns}`, { headers })
       .pipe(
@@ -37,7 +35,6 @@ export class CampaignService {
         catchError(this.errorHandler.bind(this))
       )
   }
-
 
   private errorHandler(error: HttpErrorResponse) {
     this.ErrorService.handle(error.message)

@@ -1,7 +1,29 @@
-<bo-select
-  [options]="campaignOptions$ | async"
-  [label]="campaignLabel"
-  [(ngModel)]="selectedCampaignId"
-  (selectedCampaignIdChange)="onSelectedCampaignIdChange()"
-  >
-</bo-select>
+<div>
+  <div class="mb-3">
+    <bo-select
+      [options]="campaignOptions$ | async"
+      [label]="campaignLabel"
+      [(ngModel)]="selectedCampaignId"
+      (selectedCampaignIdChange)="onSelectedCampaignIdChange()"
+      >
+    </bo-select>
+  </div>
+  <div class="mb-3">
+    <bo-select-product
+      [options]="productOptions$ | async"
+      [label]="productLabel"
+      [(ngModel)]="selectedProductId"
+      (selectedProductIdChange)="onSelectedProductIdChange()"
+      >
+    </bo-select-product>
+  </div>
+  <div class="mb-3">
+    <label for="productQtyInput" class="form-label">Input donated product qty</label>
+    <input type="number" class="form-control" id="productQtyInput" [(ngModel)]="productQty"
+      (keyup)="onProductQtyChange()">
+  </div>
+
+  <button type="submit" class="btn btn-primary" (click)="onSubmit(selectedCampaignId, selectedProductId, productQty)">Submit</button>
+</div>
+
+
