@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -18,11 +18,14 @@ import { CreateCampaignComponent } from './components/create-campaign/create-cam
 import { DonateProductComponent } from './components/donate-product/donate-product.component';
 import { SelectComponent } from './components/select/select.component';
 import { SelectProductComponent } from './components/select-product/select-product.component';
+import { OrderComponent } from './components/order/order.component';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 const routes: Routes = [
   { path: States.campaigns, component: CampaignPageComponent },
   { path: States.donateNewProduct, component: CreateProductPageComponent },
   { path: States.donateToCampaign, component: DonateProductComponent },
+  { path: States.orders, component: OrderPageComponent },
 
 ]
 
@@ -38,12 +41,15 @@ const routes: Routes = [
     CreateCampaignComponent,
     DonateProductComponent,
     SelectComponent,
-    SelectProductComponent
+    SelectProductComponent,
+    OrderComponent,
+    OrderPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     HttpClientModule,
     NgbModule,

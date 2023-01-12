@@ -12,6 +12,8 @@ export class SelectComponent {
 
   @Input() options: ICampaign[] | null;
   @Input() label: string;
+  @Input() selectedCampaignId: number;
+  @Input() compareWith: (c1: any, c2: any) => boolean;
 
   @Output() value: EventEmitter<number> = new EventEmitter<number>();
 

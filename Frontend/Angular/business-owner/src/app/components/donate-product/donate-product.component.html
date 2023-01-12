@@ -4,7 +4,8 @@
       [options]="campaignOptions$ | async"
       [label]="campaignLabel"
       [(ngModel)]="selectedCampaignId"
-      (selectedCampaignIdChange)="onSelectedCampaignIdChange()"
+      (ngModelChange)="onSelectedCampaignIdChange($event)"
+      [compareWith]="compareFn"
       >
     </bo-select>
   </div>

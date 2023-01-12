@@ -3,7 +3,7 @@
 // kept in case this front will be expanded to social activist. if not - need to remove
 
 
-import { ICampaign } from 'src/app/models/campaign';
+import { INewCampaign } from 'src/app/models/campaign';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CampaignService } from 'src/app/services/campaign.service';
@@ -22,7 +22,7 @@ export class CreateCampaignComponent {
 
   //TODO: UserId is hardcoded
   public onSubmit(hashtag: string, landingPage: string): void {
-    let body: ICampaign = {
+    let body: INewCampaign = {
       hashtag: hashtag,
       landingPage: landingPage
     }

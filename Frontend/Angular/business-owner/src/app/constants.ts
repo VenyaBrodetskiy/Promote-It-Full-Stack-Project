@@ -17,7 +17,8 @@ export class Endpoints {
 
   public static donateNewProduct: string = `${Endpoints.baseUrlC}api/businessowner/addproduct`;
   public static donateProductToCampaign: string = `${Endpoints.baseUrlC}api/businessowner/donateproductstocampaign`;
-
+  public static orders: string = `${Endpoints.baseUrlC}api/businessowner/getorders`;
+  public static changeState: string = `${Endpoints.baseUrlC}api/BusinessOwner/ChangeTransactionState`;
 
   public static login: string = `${Endpoints.baseUrlNode}auth/login`;
   public static userById: string = `${Endpoints.baseUrlNode}user/`;
