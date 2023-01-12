@@ -3,14 +3,14 @@ using dotNetBackend.AccessorsServices;
 using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using dotNetBackend.EngineServices;
-using dotNetBackend.Models;
 using dotNetBackend.Services;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace dotNetBackend.Controllers
 {
     [ApiController]
     [Route($"{Const.BaseUrl}/[controller]")]
+    [Authorize(Policy = Policies.BusinessOwner)]
     public class BusinessOwnerController : ControllerBase
     {
         private readonly ILogger<BusinessOwnerController> _logger;
@@ -115,7 +115,6 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpPut("[action]")]
-
         public async Task<ActionResult<OrderDTO>> ChangeTransactionState(int businessOwnerId, int transactionId)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);

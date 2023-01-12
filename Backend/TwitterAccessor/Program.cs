@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Timers;
 using Tweetinvi.Parameters;
 using TwitterAccessor;
 using TwitterAccessor.Common;
+using TwitterAccessor.Models;
 using TwitterAccessor.Services;
 
 internal class Program
@@ -19,6 +18,7 @@ internal class Program
 
         builder.Services.AddSingleton<TweetinviService>();
         builder.Services.AddSingleton<TwitterService>();
+
         builder.Services.AddHttpClient();
 
         var app = builder.Build();
@@ -31,6 +31,9 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+
+        // Login as SystemUser
+        app.UseMiddleware<LoginAsSystemUserMiddleware>();
 
         app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}",
             async (
@@ -78,11 +81,17 @@ internal class Program
         //.WithOpenApi();
 
         app.MapPut("/UpdateBalancesAllCampaigns",
-            async ([FromServices] TwitterService twitterService) =>
+            async ([FromServices] TwitterService twitterService, HttpContext httpContext) =>
             {
                 try
                 {
-                    await twitterService.ChangeUserBalancesForAllCampaigns();
+                    string? token = httpContext.Request.Headers.Authorization;
+                    if (token == null)
+                    {
+                        return Results.BadRequest("Couldn't find token");
+                    }
+
+                    await twitterService.ChangeUserBalancesForAllCampaigns(token);
 
                     return Results.Ok("All Campaignes checked, all user balances updated");
                 }
@@ -96,11 +105,18 @@ internal class Program
 
         app.MapPut("/StartTwitterChecking/{seconds}",
             (int seconds,
-            [FromServices] TwitterService twitterService) =>
+            [FromServices] TwitterService twitterService,
+            HttpContext httpContext) =>
             {
                 try
                 {
-                    twitterService.StartPeriodicalCheck(seconds);
+                    string? token = httpContext.Request.Headers.Authorization;
+                    if (token == null)
+                    {
+                        return Results.BadRequest("Couldn't find token");
+                    }
+
+                    twitterService.StartPeriodicalCheck(seconds, token);
 
                     return Results.Ok("Started periodical check of twitter");
                 }
