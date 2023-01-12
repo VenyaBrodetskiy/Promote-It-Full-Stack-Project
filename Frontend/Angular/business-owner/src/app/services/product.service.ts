@@ -25,7 +25,7 @@ export class ProductService {
   }
 
   create(body: IProduct): Observable<number> {
-
+    
     return this.http.post<number>('https://localhost:7121/api/BusinessOwner/AddProduct', body)
       .pipe(
         catchError(this.errorHandler.bind(this))

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ICampaign } from 'src/app/models/campaign';
 import { IDonation } from 'src/app/models/donation';
 import { IProduct } from 'src/app/models/product';
+import { ActivatedRoute } from '@angular/router';
 
 import { CampaignService } from 'src/app/services/campaign.service';
 import { DonationService } from 'src/app/services/donation.service';
@@ -16,6 +17,7 @@ import { ProductService } from 'src/app/services/product.service';
 export class DonateProductComponent implements OnInit {
 
   constructor(
+    private route: ActivatedRoute,
     private campaignService: CampaignService,
     private productService: ProductService,
     private donationService: DonationService) {
@@ -36,9 +38,11 @@ export class DonateProductComponent implements OnInit {
   public selectedProductId: number;
 
 
-  public onSelectedCampaignIdChange(): void {
+  public onSelectedCampaignIdChange($event: number): void {
+    this.selectedCampaignId = $event;
     this.selectedCampaignIdChange.emit(this.selectedCampaignId);
   }
+
   public onSelectedProductIdChange(): void {
     this.selectedProductIdChange.emit(this.selectedProductId);
   }
@@ -47,9 +51,20 @@ export class DonateProductComponent implements OnInit {
     this.productQtyChange.emit(this.productQty);
   }
 
+  compareFn(c1: ICampaign, c2: ICampaign): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  }
+
   ngOnInit(): void {
+
     this.campaignOptions$ = this.campaignService.getAll();
     this.productOptions$ = this.productService.getAll();
+    this.route.paramMap.subscribe(params => {
+      let campaignId = +this.route.snapshot.paramMap.get('campaignId')!;
+      this.campaignOptions$.subscribe(options => {
+        this.selectedCampaignId = options.find(c => c.id === campaignId)!.id;
+      });
+    });
   }
 
   //TODO: UserId is hardcoded
