@@ -17,6 +17,7 @@ import { CreateProductComponent } from './components/create-product/create-produ
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { DonateProductComponent } from './components/donate-product/donate-product.component';
 import { SelectComponent } from './components/select/select.component';
+import { SelectProductComponent } from './components/select-product/select-product.component';
 
 const routes: Routes = [
   { path: States.campaigns, component: CampaignPageComponent },
@@ -36,7 +37,8 @@ const routes: Routes = [
     CreateProductComponent,
     CreateCampaignComponent,
     DonateProductComponent,
-    SelectComponent
+    SelectComponent,
+    SelectProductComponent
   ],
   imports: [
     BrowserModule,

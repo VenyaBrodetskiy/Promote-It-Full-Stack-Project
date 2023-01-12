@@ -12,8 +12,12 @@ export class States {
 export class Endpoints {
   private static baseUrlNode: string = "http://localhost:6060/"
   private static baseUrlC: string = "https://localhost:7121/"
+
   public static campaigns: string = `${Endpoints.baseUrlNode}api/campaign/`;
+
   public static donateNewProduct: string = `${Endpoints.baseUrlC}api/businessowner/addproduct`;
+  public static donateProductToCampaign: string = `${Endpoints.baseUrlC}api/businessowner/donateproductstocampaign`;
+
 
   public static login: string = `${Endpoints.baseUrlNode}auth/login`;
   public static userById: string = `${Endpoints.baseUrlNode}user/`;
