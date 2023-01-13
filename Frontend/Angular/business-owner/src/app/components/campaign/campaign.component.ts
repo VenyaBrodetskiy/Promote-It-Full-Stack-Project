@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'bo-campaign',
-  templateUrl: './campaign.component.html'
+  templateUrl: './campaign.component.html',
+  styleUrls: ['./campaign.component.less']
 })
-
 export class CampaignComponent {
 
   constructor(private router: Router) { }
@@ -17,6 +17,6 @@ export class CampaignComponent {
   States = States;
 
   onClick(campaignId: number) {
-    this.router.navigate(['donate-to-campaign', {campaignId: campaignId}]);
+    this.router.navigate([States.donateToCampaign, { campaignId: campaignId }]);
   }
 }
