@@ -6,39 +6,37 @@ import { Endpoints } from '../constants';
 import { IOrder } from '../models/order';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-
 export class OrderService {
 
-  constructor(
-    private http: HttpClient,
-    private ErrorService: ErrorService
-  ) { }
+    constructor(
+        private http: HttpClient,
+        private ErrorService: ErrorService
+    ) { }
 
-  getAll(): Observable<IOrder[]> {
+    public getAll(): Observable<IOrder[]> {
 
-    //TODO: remove hardcoded businessOwnerId=4
-    return this.http.get<IOrder[]>(`${Endpoints.orders}?businessOwnerId=4`)
-      .pipe(
-        catchError(this.errorHandler.bind(this))
-      )
-  }
+        //TODO: remove hardcoded businessOwnerId=4
+        return this.http.get<IOrder[]>(`${Endpoints.orders}?businessOwnerId=4`)
+            .pipe(
+                catchError(this.errorHandler.bind(this))
+            )
+    }
 
-  changeState(body: number): Observable<IOrder> {
+    public changeState(orderId: number): Observable<IOrder> {
 
-    //TODO: remove hardcoded businessOwnerId=4
-    return this.http.put<IOrder>(`${Endpoints.changeState}?businessOwnerId=4&transactionId=${body}`, null)
-      .pipe(
-        catchError(this.errorHandler.bind(this))
-      )
-  }
-  
+        //TODO: remove hardcoded businessOwnerId=4 (take from token)
+        //TODO: change backend, so orderId will be passed as a token
+        return this.http.put<IOrder>(`${Endpoints.changeState}?businessOwnerId=4&transactionId=${orderId}`, null)
+            .pipe(
+                catchError(this.errorHandler.bind(this))
+            )
+    }
 
-
-  private errorHandler(error: HttpErrorResponse) {
-    this.ErrorService.handle(error.message)
-    return throwError(() => error.message)
-  }
+    private errorHandler(error: HttpErrorResponse) {
+        this.ErrorService.handle(error.message)
+        return throwError(() => error.message)
+    }
 
 }

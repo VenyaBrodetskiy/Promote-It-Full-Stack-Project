@@ -6,35 +6,35 @@ import { IProduct } from '../models/product';
 import { ErrorService } from './error.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProductService {
 
-  constructor(
-    private http: HttpClient,
-    private ErrorService: ErrorService
-  ) { }
+    constructor(
+        private http: HttpClient,
+        private ErrorService: ErrorService
+    ) { }
 
-  getAll(): Observable<IProduct[]> {
+    public getAll(): Observable<IProduct[]> {
 
-    //don`t have GetProducts in the backend, need to create
-    return this.http.get<IProduct[]>(`https://localhost:7121/api/BusinessOwner/GetProduct`)
-      .pipe(
-        catchError(this.errorHandler.bind(this))
-      )
-  }
+        //don`t have GetProducts in the backend, need to create
+        return this.http.get<IProduct[]>(`https://localhost:7121/api/BusinessOwner/GetProduct`)
+            .pipe(
+                catchError(this.errorHandler.bind(this))
+            )
+    }
 
-  create(body: IProduct): Observable<number> {
-    
-    return this.http.post<number>('https://localhost:7121/api/BusinessOwner/AddProduct', body)
-      .pipe(
-        catchError(this.errorHandler.bind(this))
-      )
-  }
+    public create(body: IProduct): Observable<number> {
 
-  private errorHandler(error: HttpErrorResponse) {
-    this.ErrorService.handle(error.message)
-    return throwError(() => error.message)
-  }
+        return this.http.post<number>('https://localhost:7121/api/BusinessOwner/AddProduct', body)
+            .pipe(
+                catchError(this.errorHandler.bind(this))
+            )
+    }
+
+    private errorHandler(error: HttpErrorResponse) {
+        this.ErrorService.handle(error.message)
+        return throwError(() => error.message)
+    }
 
 }

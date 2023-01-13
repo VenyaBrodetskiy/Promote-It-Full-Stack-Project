@@ -15,11 +15,11 @@ export class DonationService {
     private ErrorService: ErrorService
   ) { }
 
-  create(body: IDonation): Observable<number> {
+  public create(body: IDonation): Observable<number> {
 
-    const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzM1NTE1MTUsImV4cCI6MTY3MzU1ODcxNX0.Ug1vFA8YWFKEQN5aMkzecZVT0Is6IHvFa5_sdpzbxHs');
+    //const headers = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjF9LCJpYXQiOjE2NzM2Mzk4NTEsImV4cCI6MTY3MzY0NzA1MX0.OWRBW13dO440A8YqfwvSOQ-BCvGxXxAl_PEKfJD5OEk');
 
-    return this.http.post<number>(`${Endpoints.donateProductToCampaign}`, body, { headers })
+    return this.http.post<number>(`${Endpoints.donateProductToCampaign}`, body)
       .pipe(
         catchError(this.errorHandler.bind(this))
       )

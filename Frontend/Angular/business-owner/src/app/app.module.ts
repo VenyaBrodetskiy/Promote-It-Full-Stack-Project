@@ -20,42 +20,57 @@ import { SelectComponent } from './components/select/select.component';
 import { SelectProductComponent } from './components/select-product/select-product.component';
 import { OrderComponent } from './components/order/order.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { LoginComponent } from './components/login/login.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthGuard } from './services/auth.guard';
+
 
 const routes: Routes = [
-  { path: States.campaigns, component: CampaignPageComponent },
-  { path: States.donateNewProduct, component: CreateProductPageComponent },
-  { path: States.donateToCampaign, component: DonateProductComponent },
-  { path: States.orders, component: OrderPageComponent },
+    { path: '', redirectTo: States.login, pathMatch: 'full' },
+    { path: States.login, component: LoginComponent },
+    { path: States.campaigns, component: CampaignPageComponent, canActivate: [AuthGuard] },
+    { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [AuthGuard] },
+    { path: States.donateToCampaign, component: DonateProductComponent, canActivate: [AuthGuard] },
+    { path: States.orders, component: OrderPageComponent, canActivate: [AuthGuard] },
+    { path: "**", component: LoginComponent }
 
 ]
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CampaignComponent,
-    ErrorComponent,
-    CreateProductPageComponent,
-    MenuComponent,
-    CampaignPageComponent,
-    CreateProductComponent,
-    CreateCampaignComponent,
-    DonateProductComponent,
-    SelectComponent,
-    SelectProductComponent,
-    OrderComponent,
-    OrderPageComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    HttpClientModule,
-    NgbModule,
-    RouterModule.forChild(routes),
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        CampaignComponent,
+        ErrorComponent,
+        CreateProductPageComponent,
+        MenuComponent,
+        CampaignPageComponent,
+        CreateProductComponent,
+        CreateCampaignComponent,
+        DonateProductComponent,
+        SelectComponent,
+        SelectProductComponent,
+        OrderComponent,
+        OrderPageComponent,
+        LoginComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        HttpClientModule,
+        NgbModule,
+        RouterModule.forChild(routes),
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
