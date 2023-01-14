@@ -1,14 +1,22 @@
 import { Request, Response, NextFunction } from "express";
-import { authenticationToken, systemError } from "../../common/entities";
+import { AuthenticatedRequest, authenticationToken, systemError } from "../../common/entities";
 import { ResponseHelper } from "../helpers/response.helper";
 import AuthenticationService from './authentication.service';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Environment } from "../helpers/env.helper";
+import { UserType } from "../../common/enums";
 
 
 interface localUser {
     login: string;
     password: string;
+}
+
+interface jwtBase {
+    userId: number;
+    userTypeId: UserType;
+    exp: number;
+    iat: number;
 }
 
 class AuthenticationController {
@@ -40,6 +48,13 @@ class AuthenticationController {
                 return ResponseHelper.handleError(res, error, true);
             })
     }
+
+    public getUserTypeId(req: Request, res: Response, next: NextFunction) {
+
+        return res.status(200).send({ userTypeId: (req as AuthenticatedRequest).userTypeId } );
+
+    }
+
 }
 
 // creating singleton

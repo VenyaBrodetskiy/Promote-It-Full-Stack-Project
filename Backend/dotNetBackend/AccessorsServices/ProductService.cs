@@ -30,11 +30,29 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        public async Task<int> AddProduct(int businessOwnerId, ProductDTO productDTO)
+        public async Task<List<ProductDTO>> GetProductList(int businessOwnerId)
         {
             try
             {
-                Product product = FromDto(businessOwnerId, productDTO);
+                var product = await _db.Products
+                    .Where(p => p.UserId == businessOwnerId
+                             && p.StatusId == (int)Statuses.Active)
+                    .ToListAsync();
+
+                var result = ToDto(product);
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> AddProduct(int businessOwnerId, NewProductDTO newProductDTO)
+        {
+            try
+            {
+                Product product = FromDto(businessOwnerId, newProductDTO);
 
                 _db.Products.Add(product);
 
@@ -48,14 +66,14 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        private Product FromDto(int businessOwnerId, ProductDTO productDTO)
+        private Product FromDto(int businessOwnerId, NewProductDTO newProductDTO)
         {
             return new Product()
             {
                 Id = Const.NonExistId,
                 UserId = businessOwnerId,
-                Title = productDTO.Title,
-                Price = productDTO.Price,
+                Title = newProductDTO.Title,
+                Price = newProductDTO.Price,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
                 CreateUserId = businessOwnerId,
@@ -64,6 +82,16 @@ namespace dotNetBackend.AccessorsServices
             };
         }
 
-        
+        private List<ProductDTO> ToDto(List<Product> product)
+        {
+            return product.Select(p => new ProductDTO()
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Price = p.Price
+            }).ToList();
+        }
+
+
     }
 }
