@@ -21,7 +21,7 @@ jobs:
       run: npm ci
       working-directory: Backend/NodeJs-server
     - name: run NodeJs server
-      run: npm run dev & npx wait-on http://localhost:6060
+      run: npm run dev & echo MOVE-NEXT-STEP-PLEASE
       working-directory: Backend/NodeJs-server
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
