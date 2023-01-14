@@ -7,11 +7,12 @@ using dotNetBackend.Models;
 using dotNetBackend.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using dotNetBackend.Helpers;
 
 namespace dotNetBackend.Controllers
 {
     [ApiController]
-    [Route($"{Const.BaseUrl}/[controller]")]
+    [Route($"{Const.BaseUrl}/[controller]/[action]")]
     public class SocialActivistController : ControllerBase
     {
         private readonly ILogger<SocialActivistController> _logger;
@@ -73,15 +74,19 @@ namespace dotNetBackend.Controllers
         }
 
         // this route is just for example and testing
-        [HttpGet("{id}")]
+        [HttpGet]
         [Authorize(Policy = Policies.SocialActivist)]
-        public async Task<ActionResult<SocialActivistDTO>> Get(int id)
+        public async Task<ActionResult<SocialActivistDTO>> Get()
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
+            int UserId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", UserId);
+
             try
             {
-                var result = await _socialActivistService.Get(id);
+                var result = await _socialActivistService.Get(UserId);
 
                 if (result == null)
                 {
@@ -101,11 +106,16 @@ namespace dotNetBackend.Controllers
 
         }
 
-        [HttpGet("[action]/{UserId}")]
-        public async Task<ActionResult<UserToCampaignBalanceDTO>> GetBalance(int UserId)
+        [HttpGet]
+        [Authorize(Policy = Policies.SocialActivist)]
+        public async Task<ActionResult<UserToCampaignBalanceDTO>> GetBalance()
         {
             // no validation of UserId here, it should do middleware (here on in Node.js server)
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            int UserId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", UserId);
 
             try
             {
@@ -126,13 +136,23 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         [Authorize(Policy = Policies.SocialActivist)]
-        public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction(TransactionDTO transactionInfo)
+        public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction(TransactionRequest transactionRequest)
         {
-            // no validation of UserId here, it should do middleware (here on in Node.js server)
-
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            int UserId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", UserId);
+
+            var transactionInfo = new TransactionDTO()
+            {
+                UserId = UserId,
+                ProductId = transactionRequest.ProductId,
+                CampaignId = transactionRequest.CampaignId,
+                StateId = transactionRequest.StateId,
+            };
 
             // steps:
             // 1. check if enough money to perform transaction
@@ -226,7 +246,7 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         [Authorize(Policy = Policies.SystemBackendOnly)]
         public async Task<ActionResult<UserToCampaignBalanceDTO>> UpdateUserBalance(UserToCampaignTwitterInfo userToCampaign)
         {

@@ -5,11 +5,12 @@ using dotNetBackend.DTO;
 using dotNetBackend.EngineServices;
 using dotNetBackend.Services;
 using Microsoft.AspNetCore.Authorization;
+using dotNetBackend.Helpers;
 
 namespace dotNetBackend.Controllers
 {
     [ApiController]
-    [Route($"{Const.BaseUrl}/[controller]")]
+    [Route($"{Const.BaseUrl}/[controller]/[action]")]
     [Authorize(Policy = Policies.BusinessOwner)]
     public class BusinessOwnerController : ControllerBase
     {
@@ -64,14 +65,18 @@ namespace dotNetBackend.Controllers
         }
 
         // this route is just for example and testing
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BusinessOwnerDTO>> Get(int id)
+        [HttpGet]
+        public async Task<ActionResult<BusinessOwnerDTO>> Get()
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
+
             try
             {
-                var result = await _businessOwnerService.Get(id);
+                var result = await _businessOwnerService.Get(businessOwnerId);
 
                 if (result == null)
                 {
@@ -90,10 +95,14 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpGet("[action]")]
-        public async Task<ActionResult<List<OrderDTO>>> GetOrders(int businessOwnerId)
+        [HttpGet]
+        public async Task<ActionResult<List<OrderDTO>>> GetOrders()
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
 
             try
             {
@@ -114,14 +123,18 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpPut("[action]")]
-        public async Task<ActionResult<OrderDTO>> ChangeTransactionState(int businessOwnerId, int transactionId)
+        [HttpPut]
+        public async Task<ActionResult<OrderDTO>> ChangeTransactionState(TransactionChangeState transactionInfo)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
+
             try
             {
-                var result = await _transactionService.ChangeTransactionState(businessOwnerId, transactionId);
+                var result = await _transactionService.ChangeTransactionState(businessOwnerId, transactionInfo);
 
                 if (result == null)
                 {
@@ -142,14 +155,18 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<ActionResult<ProductDTO>> AddProduct(ProductDTO productInfo)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
+
             try
             {
-                var id = await _productService.AddProduct(productInfo);
+                var id = await _productService.AddProduct(businessOwnerId, productInfo);
                 _logger.LogInformation("New product added - OK");
 
                 // TODO: probably in future better to return ProductDTO type with id
@@ -161,14 +178,18 @@ namespace dotNetBackend.Controllers
             }
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<ActionResult<ProductDTO>> DonateProductsToCampaign(ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
+
             try
             {
-                var validationResult = await _donationValidationService.IsDonationPossible(productToCampaignQtyDTO);
+                var validationResult = await _donationValidationService.IsDonationPossible(businessOwnerId, productToCampaignQtyDTO);
                 if (validationResult)
                 {
                     _logger.LogInformation("Validating donation - OK");
@@ -179,7 +200,7 @@ namespace dotNetBackend.Controllers
                     return BadRequest("Qty of products to campaign wasn`t added. This product doesn`t belong to this user");
                 }
 
-                var result = await _productToCampaignQtyService.ChangeProductToCampaignQty(productToCampaignQtyDTO);
+                var result = await _productToCampaignQtyService.ChangeProductToCampaignQty(businessOwnerId, productToCampaignQtyDTO);
                 _logger.LogInformation("Qty of products to campaign added - OK");
 
                 return Ok(result);

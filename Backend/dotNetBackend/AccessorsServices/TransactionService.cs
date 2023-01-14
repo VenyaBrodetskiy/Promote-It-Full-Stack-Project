@@ -59,17 +59,16 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        public async Task<OrderDTO> ChangeTransactionState(int businessOwnerId, int transactionId)
+        public async Task<OrderDTO> ChangeTransactionState(int businessOwnerId, TransactionChangeState transactionInfo)
         {
             try
             {
                 var transaction = await _db.Transactions
-                    .Where(row => row.Id == transactionId 
-                        && row.Product.UserId == businessOwnerId 
-                        && row.StateId == (int)TransactionStates.Ordered)
+                    .Where(row => row.Id == transactionInfo.Id
+                        && row.Product.UserId == businessOwnerId)
                     .FirstAsync();
 
-                transaction.StateId = (int)TransactionStates.Shipped;
+                transaction.StateId = transactionInfo.StateId;
                 transaction.UpdateUserId = businessOwnerId;
                 transaction.UpdateDate = DateTime.Now;
 

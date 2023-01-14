@@ -42,7 +42,7 @@ namespace dotNetBackend.Services
             }
         }
 
-        public async Task<ProductToCampaignQtyDTO> ChangeProductToCampaignQty(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        public async Task<ProductToCampaignQtyDTO> ChangeProductToCampaignQty(int businessOwnerId, ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace dotNetBackend.Services
                 
                 if (productToCampaignQtyExist.Count == 0)
                 {
-                    var productToCampaignQty = FromDto(productToCampaignQtyDTO);
+                    var productToCampaignQty = FromDto(businessOwnerId, productToCampaignQtyDTO);
 
                     _db.ProductToCampaignQties.Add(productToCampaignQty);
 
@@ -71,7 +71,7 @@ namespace dotNetBackend.Services
                 {
                     productToCampaignQtyExist[0].ProductQty += productToCampaignQtyDTO.ProductQty;
                     productToCampaignQtyExist[0].UpdateDate = DateTime.Now;
-                    productToCampaignQtyExist[0].UpdateUserId = productToCampaignQtyDTO.UserId;
+                    productToCampaignQtyExist[0].UpdateUserId = businessOwnerId;
 
                     await _db.SaveChangesAsync();
 
@@ -87,7 +87,7 @@ namespace dotNetBackend.Services
             }
         }
 
-        private ProductToCampaignQty FromDto(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        private ProductToCampaignQty FromDto(int businessOwnerId, ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             return new ProductToCampaignQty()
             {
@@ -97,8 +97,8 @@ namespace dotNetBackend.Services
                 ProductQty = productToCampaignQtyDTO.ProductQty,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
-                CreateUserId = productToCampaignQtyDTO.UserId,
-                UpdateUserId = productToCampaignQtyDTO.UserId,
+                CreateUserId = businessOwnerId,
+                UpdateUserId = businessOwnerId,
                 StatusId = (int)Statuses.Active
             };
         }
@@ -107,7 +107,6 @@ namespace dotNetBackend.Services
         {
             return new ProductToCampaignQtyDTO()
             {
-                UserId = productToCampaignQty.UpdateUserId,
                 ProductId = productToCampaignQty.ProductId,
                 CampaignId = productToCampaignQty.CampaignId,
                 ProductQty = productToCampaignQty.ProductQty
