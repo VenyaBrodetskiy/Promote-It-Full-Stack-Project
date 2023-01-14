@@ -17,24 +17,30 @@ jobs:
     steps:
     - name: Get repo code
       uses: actions/checkout@v3
-#     - name: Install node packages
-#       run: npm ci
-#       working-directory: Backend/NodeJs-server
+    - name: Install node packages
+      run: npm ci
+      working-directory: Backend/NodeJs-server
 #     - name: run NodeJs server
 #       run: npm run dev &
 #       working-directory: Backend/NodeJs-server
-    - name: Check if server is running
-      run: curl www.google.com
-#     - name: Setup .NET
-#       uses: actions/setup-dotnet@v3
-#       with:
-#         dotnet-version: 7.0.x
-#     - name: Restore dependencies
-#       run: dotnet restore
-#       working-directory: Backend/dotNetBackend
-#     - name: Build
-#       run: dotnet build --no-restore
-#       working-directory: Backend/dotNetBackend
+#     - name: Check if server is running
+#       run: curl www.google.com
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: Backend/dotNetBackend
+    - name: Build
+      run: dotnet build --no-restore
+      working-directory: Backend/dotNetBackend
+    - name: Run tests with server in background
+      uses: BerniWittmann/background-server-action@latest
+      with:
+        command: cd Backend/dotNetBackend, dir, dotnet test --no-build --verbosity normal
+        start: cd Backend/NodeJs-server, dir, npm run dev
+        wait-on: 'http://localhost:6060'
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal
 #       working-directory: Backend/dotNetBackend
