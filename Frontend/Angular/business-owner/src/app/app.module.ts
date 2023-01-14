@@ -24,6 +24,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './services/auth.guard';
+import { DonateToCampaignPageComponent } from './pages/donate-to-campaign-page/donate-to-campaign-page.component';
 
 
 const routes: Routes = [
@@ -31,7 +32,7 @@ const routes: Routes = [
     { path: States.login, component: LoginComponent },
     { path: States.campaigns, component: CampaignPageComponent, canActivate: [AuthGuard] },
     { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [AuthGuard] },
-    { path: States.donateToCampaign, component: DonateProductComponent, canActivate: [AuthGuard] },
+    { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [AuthGuard] },
     { path: States.orders, component: OrderPageComponent, canActivate: [AuthGuard] },
     { path: "**", component: LoginComponent }
 
@@ -52,7 +53,8 @@ const routes: Routes = [
         SelectProductComponent,
         OrderComponent,
         OrderPageComponent,
-        LoginComponent
+        LoginComponent,
+        DonateToCampaignPageComponent
     ],
     imports: [
         BrowserModule,
