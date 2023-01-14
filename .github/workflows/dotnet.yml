@@ -26,6 +26,6 @@ jobs:
 #     - name: Restore dependencies
 #       run: dotnet restore Backend\dotNetBackend
     - name: Build
-      run: dir; dotnet build Backend\dotNetBackend\dotNetBackEnd.sln
+      run: cd Backend/dotNetBackend; dir; dotnet build 
     - name: Test
       run: dotnet test --no-build --verbosity normal Backend\dotNetBackend
