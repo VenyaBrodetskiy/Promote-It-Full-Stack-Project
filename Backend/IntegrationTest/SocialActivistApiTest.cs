@@ -58,15 +58,13 @@ namespace IntegrationTest
 
             context.localClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         }
-        [Theory]
-        [InlineData(3)]
-        [InlineData(5)]
-        public async Task Get(int id)
+        [Fact]
+        public async Task Get()
         {
             // arrange
 
             // act
-            var response = await context.localClient.GetAsync($"/api/SocialActivist/{id}");
+            var response = await context.localClient.GetAsync($"/api/SocialActivist/Get");
             var body = await response.Content.ReadFromJsonAsync<SocialActivistDTO>();
 
             // assert
