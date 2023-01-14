@@ -1,59 +1,49 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ICampaign } from 'src/app/models/campaign';
 import { IDonation } from 'src/app/models/donation';
 import { IProduct } from 'src/app/models/product';
-import { ActivatedRoute } from '@angular/router';
-
 import { CampaignService } from 'src/app/services/campaign.service';
 import { DonationService } from 'src/app/services/donation.service';
 import { ProductService } from 'src/app/services/product.service';
+import { v4 as uuidv4 } from "uuid";
 
 @Component({
-    selector: 'bo-donate-product',
-    templateUrl: './donate-product.component.html',
-    styleUrls: ['./donate-product.component.less']
+  selector: 'bo-donate-to-campaign-page',
+  templateUrl: './donate-to-campaign-page.component.html',
+  styleUrls: ['./donate-to-campaign-page.component.less']
 })
-export class DonateProductComponent implements OnInit {
+export class DonateToCampaignPageComponent {
 
-    constructor(
-        private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
         private campaignService: CampaignService,
         private productService: ProductService,
-        private donationService: DonationService) {
-    }
+        private donationService: DonationService
+    ) { }
 
-    @Input() productQty: number;
+    @Input() campaignOptions: ICampaign[] | null;
+    @Input() selectedCampaignId: number;
+    @Input() compareWith: (c1: any, c2: any) => boolean;
 
-    @Output() selectedCampaignIdChange: EventEmitter<number> = new EventEmitter<number>();
-    @Output() selectedProductIdChange: EventEmitter<number> = new EventEmitter<number>();
-    @Output() productQtyChange: EventEmitter<number> = new EventEmitter<number>();
+    @Input() productOptions: IProduct[] | null;
+
+
+    public unique: string = uuidv4();
+
+    public selectedCampaign: ICampaign;
+
+    public selectedProduct: IProduct;
 
     public campaignOptions$: Observable<ICampaign[]>;
     public campaignLabel: string = "Select a campaign for donation";
-    public selectedCampaignId: number;
+    //public selectedCampaignId: number;
 
     public productOptions$: Observable<IProduct[]>;
     public productLabel: string = "Select a product for donation";
     public selectedProductId: number;
 
-
-    public onSelectedCampaignIdChange($event: number): void {
-        this.selectedCampaignId = $event;
-        this.selectedCampaignIdChange.emit(this.selectedCampaignId);
-    }
-
-    public onSelectedProductIdChange(): void {
-        this.selectedProductIdChange.emit(this.selectedProductId);
-    }
-
-    public onProductQtyChange(): void {
-        this.productQtyChange.emit(this.productQty);
-    }
-
-    compareFn(c1: ICampaign, c2: ICampaign): boolean {
-        return c1 && c2 ? c1.id === c2.id : c1 === c2;
-    }
+    public productQty: number;
 
     ngOnInit(): void {
 
