@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { catchError, Observable, throwError } from "rxjs";
 import { Endpoints } from '../constants';
-import { IOrder } from '../models/order';
+import { IChangeOrder, IOrder } from '../models/order';
 
 @Injectable({
     providedIn: 'root'
@@ -17,18 +17,15 @@ export class OrderService {
 
     public getAll(): Observable<IOrder[]> {
 
-        //TODO: remove hardcoded businessOwnerId=4
-        return this.http.get<IOrder[]>(`${Endpoints.orders}?businessOwnerId=4`)
+        return this.http.get<IOrder[]>(`${Endpoints.orders}`)
             .pipe(
                 catchError(this.errorHandler.bind(this))
             )
     }
 
-    public changeState(orderId: number): Observable<IOrder> {
+    public changeState(body: IChangeOrder): Observable<IOrder> {
 
-        //TODO: remove hardcoded businessOwnerId=4 (take from token)
-        //TODO: change backend, so orderId will be passed as a token
-        return this.http.put<IOrder>(`${Endpoints.changeState}?businessOwnerId=4&transactionId=${orderId}`, null)
+        return this.http.put<IOrder>(`${Endpoints.changeState}`, body)
             .pipe(
                 catchError(this.errorHandler.bind(this))
             )

@@ -16,54 +16,32 @@ import { v4 as uuidv4 } from "uuid";
 })
 export class DonateToCampaignPageComponent {
 
+    public campaignOptions$: Observable<ICampaign[]>;
+    public selectedCampaign: ICampaign;
+    public campaignLabel: string = "Select a campaign for donation";
+    public productOptions$: Observable<IProduct[]>;
+    public productLabel: string = "Select a product for donation";
+    public selectedProduct: IProduct;
+    public productQty: number;
+
     constructor(private route: ActivatedRoute,
         private campaignService: CampaignService,
         private productService: ProductService,
         private donationService: DonationService
     ) { }
 
-    @Input() campaignOptions: ICampaign[] | null;
-    @Input() selectedCampaignId: number;
-    @Input() compareWith: (c1: any, c2: any) => boolean;
 
-    @Input() productOptions: IProduct[] | null;
-
-
-    public unique: string = uuidv4();
-
-    public selectedCampaign: ICampaign;
-
-    public selectedProduct: IProduct;
-
-    public campaignOptions$: Observable<ICampaign[]>;
-    public campaignLabel: string = "Select a campaign for donation";
-    //public selectedCampaignId: number;
-
-    public productOptions$: Observable<IProduct[]>;
-    public productLabel: string = "Select a product for donation";
-    public selectedProductId: number;
-
-    public productQty: number;
-
-    ngOnInit(): void {
+    public ngOnInit(): void {
 
         this.campaignOptions$ = this.campaignService.getAll();
         this.productOptions$ = this.productService.getAll();
-        this.route.paramMap.subscribe(params => {
-            let campaignId = +this.route.snapshot.paramMap.get('campaignId')!;
-            this.campaignOptions$.subscribe(options => {
-                this.selectedCampaignId = options.find(c => c.id === campaignId)!.id;
-            });
-        });
     }
 
-    //TODO: UserId is hardcoded
-    public onSubmit(selectedCampaignId: number, selectedProductId: number, productQtyChange: number): void {
+    public onSubmit(selectedCampaign: ICampaign, selectedProduct: IProduct, productQty: number): void {
         let body: IDonation = {
-            userId: 4,
-            productId: selectedProductId,
-            campaignId: selectedCampaignId,
-            productQty: productQtyChange
+            productId: selectedProduct.id,
+            campaignId: selectedCampaign.id,
+            productQty: productQty
         }
         this.donationService.create(body)
             .subscribe(

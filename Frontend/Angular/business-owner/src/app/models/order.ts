@@ -10,3 +10,8 @@ export interface IOrder {
   productOwnerId: number;
   transactionState: string;
 }
+
+export interface IChangeOrder {
+    id: number;
+    stateId: number;
+}

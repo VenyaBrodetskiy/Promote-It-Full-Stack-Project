@@ -67,10 +67,8 @@ export class DonateProductComponent implements OnInit {
         });
     }
 
-    //TODO: UserId is hardcoded
     public onSubmit(selectedCampaignId: number, selectedProductId: number, productQtyChange: number): void {
         let body: IDonation = {
-            userId: 4,
             productId: selectedProductId,
             campaignId: selectedCampaignId,
             productQty: productQtyChange

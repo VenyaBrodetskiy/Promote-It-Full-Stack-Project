@@ -2,21 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { AuthenticatedRequest, authenticationToken, systemError } from "../../common/entities";
 import { ResponseHelper } from "../helpers/response.helper";
 import AuthenticationService from './authentication.service';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Environment } from "../helpers/env.helper";
-import { UserType } from "../../common/enums";
-
 
 interface localUser {
     login: string;
     password: string;
-}
-
-interface jwtBase {
-    userId: number;
-    userTypeId: UserType;
-    exp: number;
-    iat: number;
 }
 
 class AuthenticationController {
