@@ -2,7 +2,7 @@
 
 namespace TwitterAccessor.Models
 {
-    public class SystemCredentials
+    public class AuthCredentials
     {
         public string? Login { get; init; }
         public string? Password { get; init; } 

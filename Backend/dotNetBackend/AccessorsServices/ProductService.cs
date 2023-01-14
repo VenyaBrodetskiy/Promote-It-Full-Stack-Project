@@ -15,12 +15,12 @@ namespace dotNetBackend.AccessorsServices
             _db = db;
         }
 
-        public async Task<string> GetOwnerByProductId(int id) 
+        public async Task<string> GetOwnerByProductId(int productId) 
         {
             try
             {
                 return await _db.Products
-                    .Where(p => p.Id == id)
+                    .Where(p => p.Id == productId)
                     .Select(p => p.User.BusinessOwnerUser.TwitterHandle)
                     .FirstAsync();
             }
@@ -30,21 +30,11 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        public async Task<int> AddProduct(ProductDTO productDTO)
+        public async Task<int> AddProduct(int businessOwnerId, ProductDTO productDTO)
         {
             try
             {
-                // TODO: remove when we add Authorization / middleware
-                User user = await _db.Users
-                    .Where(row => row.Id == productDTO.UserId)
-                    .FirstAsync();
-                if (user.UserTypeId != (int)UserTypes.BusinessOwner)
-                {
-                    throw new ValidationException("Product wasn`t created. Type of user is wrong");
-                }
-                //
-
-                Product product = FromDto(productDTO);
+                Product product = FromDto(businessOwnerId, productDTO);
 
                 _db.Products.Add(product);
 
@@ -58,18 +48,18 @@ namespace dotNetBackend.AccessorsServices
             }
         }
 
-        private Product FromDto(ProductDTO productDTO)
+        private Product FromDto(int businessOwnerId, ProductDTO productDTO)
         {
             return new Product()
             {
                 Id = Const.NonExistId,
-                UserId = productDTO.UserId,
+                UserId = businessOwnerId,
                 Title = productDTO.Title,
                 Price = productDTO.Price,
                 CreateDate = DateTime.Now,
                 UpdateDate = DateTime.Now,
-                CreateUserId = productDTO.UserId,
-                UpdateUserId = productDTO.UserId,
+                CreateUserId = businessOwnerId,
+                UpdateUserId = businessOwnerId,
                 StatusId = (int)Statuses.Active
             };
         }

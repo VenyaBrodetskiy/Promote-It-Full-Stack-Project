@@ -18,7 +18,7 @@ namespace TwitterAccessor
 
         public async Task InvokeAsync(HttpContext httpContext, HttpClient httpClient)
         {
-            var systemCredentials = new SystemCredentials()
+            var systemCredentials = new AuthCredentials()
             {
                 Login = "system",
                 Password = "password"

@@ -16,7 +16,7 @@ namespace dotNetBackend.EngineServices
             _db = db;
         }
 
-        public async Task<bool> IsDonationPossible(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        public async Task<bool> IsDonationPossible(int businessOwnerId, ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             _logger.LogInformation("Validating donation...");
 
@@ -24,7 +24,7 @@ namespace dotNetBackend.EngineServices
                     .Where(row => row.Id == productToCampaignQtyDTO.ProductId)
                     .ToListAsync();
 
-            if (product[0].UserId != productToCampaignQtyDTO.UserId)
+            if (product[0].UserId != businessOwnerId)
             {
                 return false;
             }
