@@ -1,7 +1,7 @@
 import { ErrorService } from './error.service';
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
-import { catchError, Observable, throwError } from "rxjs";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { catchError, map, Observable, throwError } from "rxjs";
 import { Endpoints } from '../constants';
 import { IChangeOrder, IOrder } from '../models/order';
 
@@ -23,17 +23,16 @@ export class OrderService {
             )
     }
 
-    public changeState(body: IChangeOrder): Observable<IOrder> {
-
+    public changeState(body: IChangeOrder): Observable < HttpResponse < IOrder >> {
         return this.http.put<IOrder>(`${Endpoints.changeState}`, body)
             .pipe(
+                map(data => new HttpResponse({ body: data })),
                 catchError(this.errorHandler.bind(this))
-            )
+            );
     }
 
     private errorHandler(error: HttpErrorResponse) {
         this.ErrorService.handle(error.message)
         return throwError(() => error.message)
     }
-
 }

@@ -13,27 +13,27 @@ import { ErrorService } from 'src/app/services/error.service';
 })
 export class CreateProductComponent {
 
-    toggle: boolean = true;
     private unsubscribe$ = new Subject();
-    productTitleControl: FormControl;
-    productPriceControl: FormControl;
-    productTitle: string = '';
-    productPrice: number;
+    public toggle: boolean = true;
+    public productTitleControl: FormControl;
+    public productPriceControl: FormControl;
+    public productTitle: string = '';
+    public productPrice: number;
 
     constructor(
         private productService: ProductService,
-        private errorService: ErrorService) {
+        private errorService: ErrorService
+    ) {
         this.productTitleControl = new FormControl('', [Validators.required]);
         this.productPriceControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy(): void  {
         this.unsubscribe$.next(undefined);
         this.unsubscribe$.complete();
     }
 
     public onSubmit(): void {
-
         if (this.productTitleControl.valid && this.productPriceControl.valid) {
             this.errorService.clear();
             let productTitle = this.productTitleControl.value;
@@ -51,6 +51,7 @@ export class CreateProductComponent {
                             this.toggle = !this.toggle;
                             this.productTitleControl.reset();
                             this.productPriceControl.reset();
+                            console.log(response);
                         } else {
                             console.log("Error: ", response.status);
                         }

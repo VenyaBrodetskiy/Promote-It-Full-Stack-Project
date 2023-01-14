@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ErrorService } from './error.service';
 import { Injectable } from '@angular/core';
 import { IDonation } from '../models/donation';
@@ -15,9 +15,9 @@ export class DonationService {
         private ErrorService: ErrorService
     ) { }
 
-    public create(body: IDonation): Observable<number> {
+    public create(body: IDonation): Observable<HttpResponse<number>> {
 
-        return this.http.post<number>(`${Endpoints.donateProductToCampaign}`, body)
+        return this.http.post<number>(`${Endpoints.donateProductToCampaign}`, body, { observe: 'response' })
             .pipe(
                 catchError(this.errorHandler.bind(this))
             )
@@ -27,5 +27,4 @@ export class DonationService {
         this.ErrorService.handle(error.message)
         return throwError(() => error.message)
     }
-
 }

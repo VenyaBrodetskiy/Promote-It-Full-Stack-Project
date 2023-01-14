@@ -1,39 +1,57 @@
-<div>
-  <label for="unique" class="form-label" [innerHTML]="campaignLabel"></label>
+<div *ngIf="toggle; else donationAdded">
+    <div>
+        <label for="unique" class="form-label" [innerHTML]="campaignLabel"></label>
+        <select
+        class="form-select"
+        id="campaignSelect"
+        name="campaignSelect"
+        [(ngModel)]="selectedCampaign"
+        [attr.aria-label]="campaignLabel"
+        (ngModelChange)="onCampaignSelected()">
+            <option
+            *ngFor="let campaignOption of campaignOptions$ | async; index as i"
+            [ngValue]="campaignOption"
+            [innerHTML]="campaignOption.hashtag">
+            </option>
+        </select>
+    </div>
+
+    <div>
+    <label for="unique" class="form-label" [innerHTML]="productLabel"></label>
     <select
-    class="form-select"
-    id="campaignSelect"
-    name="campaignSelect"
-    [(ngModel)]="selectedCampaign"
-    [attr.aria-label]="campaignLabel">
+        class="form-select"
+        id="productSelect"
+        name="productSelect"
+        [(ngModel)]="selectedProduct"
+        [attr.aria-label]="productLabel"
+        (ngModelChange)="onProductSelected()">
         <option
-        *ngFor="let campaignOption of campaignOptions$ | async; index as i"
-        [ngValue]="campaignOption"
-        [innerHTML]="campaignOption.hashtag">
-        </option>
+            *ngFor="let productOption of productOptions$ | async; index as i"
+            [ngValue]="productOption"
+            [innerHTML]="productOption.title"></option>
     </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="productQtyInput" class="form-label">Input donated product qty</label>
+        <input type="number" class="form-control" id="productQtyInput" [formControl]="productQtyControl" [value]="productQty">
+    </div>
+    <div *ngIf="productQtyControl.invalid && productQtyControl.touched" class="alert alert-danger">
+        Qty must be a natural number
+    </div>
+
+    <button type="submit" class="btn btn-primary"
+        (click)="onSubmit(selectedCampaign, selectedProduct, productQty)"
+        [disabled]="!formValid || productQtyControl.invalid">Submit</button>
 </div>
 
-<div>
-  <label for="unique" class="form-label" [innerHTML]="productLabel"></label>
-  <select
-    class="form-select"
-    id="productSelect"
-    name="productSelect"
-    [(ngModel)]="selectedProduct"
-    [attr.aria-label]="productLabel">
-      <option
-        *ngFor="let productOption of productOptions$ | async; index as i"
-        [ngValue]="productOption"
-        [innerHTML]="productOption.title"></option>
-  </select>
-</div>
-
-<div class="mb-3">
-    <label for="productQtyInput" class="form-label">Input donated product qty</label>
-    <input type="number" class="form-control" id="productQtyInput" [(ngModel)]="productQty">
-</div>
-
-
-<button type="submit" class="btn btn-primary"
-    (click)="onSubmit(selectedCampaign, selectedProduct, productQty)">Submit</button>
+<ng-template #donationAdded>
+    <br/>
+    <div>
+        The donation was successfully added!
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary" (click)="onSubmitMore()">Donate more!</button>
+    </div>
+    <br />
+</ng-template>
