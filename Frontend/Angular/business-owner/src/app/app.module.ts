@@ -15,9 +15,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { CampaignPageComponent } from './pages/campaign-page/campaign-page.component';
 import { CreateProductComponent } from './components/create-product/create-product.component';
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
-import { DonateProductComponent } from './components/donate-product/donate-product.component';
-import { SelectComponent } from './components/select/select.component';
-import { SelectProductComponent } from './components/select-product/select-product.component';
 import { OrderComponent } from './components/order/order.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { LoginComponent } from './components/login/login.component';
@@ -48,9 +45,6 @@ const routes: Routes = [
         CampaignPageComponent,
         CreateProductComponent,
         CreateCampaignComponent,
-        DonateProductComponent,
-        SelectComponent,
-        SelectProductComponent,
         OrderComponent,
         OrderPageComponent,
         LoginComponent,

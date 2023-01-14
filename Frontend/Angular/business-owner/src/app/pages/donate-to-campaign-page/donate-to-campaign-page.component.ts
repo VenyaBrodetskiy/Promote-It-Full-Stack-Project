@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ICampaign } from 'src/app/models/campaign';
 import { IDonation } from 'src/app/models/donation';
 import { IProduct } from 'src/app/models/product';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { DonationService } from 'src/app/services/donation.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { ProductService } from 'src/app/services/product.service';
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,6 +18,9 @@ import { v4 as uuidv4 } from "uuid";
 })
 export class DonateToCampaignPageComponent {
 
+    private unsubscribe$ = new Subject();
+    public formValid = false;
+    public toggle: boolean = true;
     public campaignOptions$: Observable<ICampaign[]>;
     public selectedCampaign: ICampaign;
     public campaignLabel: string = "Select a campaign for donation";
@@ -23,33 +28,75 @@ export class DonateToCampaignPageComponent {
     public productLabel: string = "Select a product for donation";
     public selectedProduct: IProduct;
     public productQty: number;
+    public productQtyControl: FormControl;
 
-    constructor(private route: ActivatedRoute,
+    constructor(
         private campaignService: CampaignService,
         private productService: ProductService,
-        private donationService: DonationService
-    ) { }
+        private donationService: DonationService,
+        private errorService: ErrorService
+    ) {
+        this.productQtyControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
+    }
 
 
     public ngOnInit(): void {
-
         this.campaignOptions$ = this.campaignService.getAll();
         this.productOptions$ = this.productService.getAll();
     }
 
+    public ngOnDestroy(): void  {
+        this.unsubscribe$.next(undefined);
+        this.unsubscribe$.complete();
+    }
+
     public onSubmit(selectedCampaign: ICampaign, selectedProduct: IProduct, productQty: number): void {
-        let body: IDonation = {
-            productId: selectedProduct.id,
-            campaignId: selectedCampaign.id,
-            productQty: productQty
+        if (this.productQtyControl.valid) {
+            this.errorService.clear();
+            let body: IDonation = {
+                productId: selectedProduct.id,
+                campaignId: selectedCampaign.id,
+                productQty: productQty
+            }
+            this.donationService.create(body).pipe(
+                takeUntil(this.unsubscribe$)
+            )
+                .subscribe(
+                    response => {
+                        if (response.status === 200) {
+                            this.toggle = !this.toggle;
+                            this.productQtyControl.reset();
+                            console.log(response);
+                        } else {
+                            console.log("Error: ", response.status);
+                        }
+                    },
+                    error => {
+                        console.log("Error: ", error);
+                    }
+                );
+            console.log(body);
         }
-        this.donationService.create(body)
-            .subscribe(
-                response => {
-                    console.log(response);
-                }
-            );
-        console.log(body);
+    }
+
+    public onSubmitMore(): void {
+        this.toggle = !this.toggle;
+    }
+
+    public onCampaignSelected() {
+        this.formValid = this.selectedCampaign ? (this.selectedProduct ? true : false) : false;
+    }
+
+    public onProductSelected() {
+        this.formValid = this.selectedCampaign ? (this.selectedProduct ? true : false) : false;
+    }
+
+    private isNaturalNumber(control: FormControl) {
+        const value = control.value;
+        if (!value || value < 0) {
+            return { naturalNumber: true };
+        }
+        return null;
     }
 
 }

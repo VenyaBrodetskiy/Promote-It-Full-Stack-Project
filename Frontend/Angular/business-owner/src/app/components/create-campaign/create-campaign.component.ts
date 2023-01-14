@@ -20,7 +20,6 @@ export class CreateCampaignComponent {
   @Input() hashtag: string;
   @Input() landingPage: string;
 
-  //TODO: UserId is hardcoded
   public onSubmit(hashtag: string, landingPage: string): void {
     let body: INewCampaign = {
       hashtag: hashtag,
