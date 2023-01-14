@@ -1,9 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from "rxjs";
 import { Endpoints } from '../constants';
-import { IProduct } from '../models/product';
+import { INewProduct, IProduct } from '../models/product';
 import { ErrorService } from './error.service';
+
 
 @Injectable({
     providedIn: 'root'
@@ -17,16 +18,14 @@ export class ProductService {
 
     public getAll(): Observable<IProduct[]> {
 
-        //don`t have GetProducts in the backend, need to create
-        return this.http.get<IProduct[]>(`https://localhost:7121/api/BusinessOwner/GetProduct`)
+        return this.http.get<IProduct[]>(`${Endpoints.products}`)
             .pipe(
                 catchError(this.errorHandler.bind(this))
             )
     }
 
-    public create(body: IProduct): Observable<number> {
-
-        return this.http.post<number>('https://localhost:7121/api/BusinessOwner/AddProduct', body)
+    public create(body: INewProduct): Observable<HttpResponse<number>> {
+        return this.http.post<number>(`${Endpoints.donateNewProduct}`, body, { observe: 'response' })
             .pipe(
                 catchError(this.errorHandler.bind(this))
             )

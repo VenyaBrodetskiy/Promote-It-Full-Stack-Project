@@ -1,39 +1,39 @@
 <div>
   <label for="unique" class="form-label" [innerHTML]="campaignLabel"></label>
-<select
-  class="form-select"
-  [id]="unique"
-  [name]="unique"
-  [(ngModel)]="selectedCampaignId"
-  [attr.aria-label]="campaignLabel">
-    <option
-      *ngFor="let campaignOption of campaignOptions$ | async; index as i"
-      [ngValue]="campaignOption"
-      [innerHTML]="campaignOption.hashtag">
-    </option>
-</select>
+    <select
+    class="form-select"
+    id="campaignSelect"
+    name="campaignSelect"
+    [(ngModel)]="selectedCampaign"
+    [attr.aria-label]="campaignLabel">
+        <option
+        *ngFor="let campaignOption of campaignOptions$ | async; index as i"
+        [ngValue]="campaignOption"
+        [innerHTML]="campaignOption.hashtag">
+        </option>
+    </select>
 </div>
 
 <div>
   <label for="unique" class="form-label" [innerHTML]="productLabel"></label>
   <select
     class="form-select"
-    [id]="unique"
-    [name]="unique"
-    [(ngModel)]="selectedProductId"
+    id="productSelect"
+    name="productSelect"
+    [(ngModel)]="selectedProduct"
     [attr.aria-label]="productLabel">
       <option
         *ngFor="let productOption of productOptions$ | async; index as i"
-        [value]="productOption"
+        [ngValue]="productOption"
         [innerHTML]="productOption.title"></option>
   </select>
 </div>
-
 
 <div class="mb-3">
     <label for="productQtyInput" class="form-label">Input donated product qty</label>
     <input type="number" class="form-control" id="productQtyInput" [(ngModel)]="productQty">
 </div>
 
+
 <button type="submit" class="btn btn-primary"
-    (click)="onSubmit(selectedCampaignId, selectedProductId, productQty)">Submit</button>
+    (click)="onSubmit(selectedCampaign, selectedProduct, productQty)">Submit</button>

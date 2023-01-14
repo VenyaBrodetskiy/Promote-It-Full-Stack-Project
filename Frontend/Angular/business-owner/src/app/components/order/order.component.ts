@@ -1,37 +1,42 @@
 import { Component, Input } from '@angular/core'
 import { States } from 'src/app/constants';
-import { IOrder } from 'src/app/models/order';
+import { TransactionStates } from 'src/app/enums';
+import { IChangeOrder, IOrder } from 'src/app/models/order';
 import { OrderService } from 'src/app/services/order.service';
 
 @Component({
-  selector: 'bo-order',
-  templateUrl: './order.component.html',
-  styleUrls: ['./order.component.less']
+    selector: 'bo-order',
+    templateUrl: './order.component.html',
+    styleUrls: ['./order.component.less']
 })
 
 export class OrderComponent {
 
-  constructor(
-    private orderService: OrderService
-  ) { }
+    constructor(
+        private orderService: OrderService
+    ) { }
 
-  @Input() orderNumber: string;
-  @Input() order: IOrder;
+    @Input() orderNumber: string;
+    @Input() order: IOrder;
 
-  States = States;
-  isButtonDisabled = false;
+    States = States;
+    isButtonDisabled = false;
+    body: IChangeOrder;
 
-    //TODO: UserId is hardcoded
-  public onClick(orderId: number): void {
+    public onClick(orderId: number): void {
 
-    this.isButtonDisabled = true;
-    this.orderService.changeState(orderId)
-      .subscribe(
-        response => {
-          this.order = response;
-          console.log(response);
-        }
-      );
-    console.log(orderId);
-  }
+        this.isButtonDisabled = true;
+        this.body = {
+            id: orderId,
+            stateId: TransactionStates.Shipped
+        };
+        this.orderService.changeState(this.body)
+            .subscribe(
+                response => {
+                    this.order = response;
+                    console.log(response);
+                }
+            );
+        console.log(orderId);
+    }
 }
