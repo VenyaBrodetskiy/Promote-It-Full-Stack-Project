@@ -5,7 +5,7 @@ name: .NET backend
 
 on:
   workflow_dispatch:
-  push:
+#   push:
   pull_request:
     branches: [ "master" ]
 
@@ -22,7 +22,7 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Change directory to backend dotnet
-      run: cd Backend/dotNetBackend
+      run: cd Backend/dotNetBackend; dir
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
