@@ -123,6 +123,34 @@ namespace dotNetBackend.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ProductDTO>>> GetProducts()
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            int businessOwnerId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", businessOwnerId);
+
+            try
+            {
+                var result = await _productService.GetProductList(businessOwnerId);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
         [HttpPut]
         public async Task<ActionResult<OrderDTO>> ChangeTransactionState(TransactionChangeState transactionInfo)
         {
@@ -156,7 +184,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDTO>> AddProduct(ProductDTO productInfo)
+        public async Task<ActionResult<NewProductDTO>> AddProduct(NewProductDTO productInfo)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
@@ -179,7 +207,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDTO>> DonateProductsToCampaign(ProductToCampaignQtyDTO productToCampaignQtyDTO)
+        public async Task<ActionResult<ProductToCampaignQtyDTO>> DonateProductsToCampaign(ProductToCampaignQtyDTO productToCampaignQtyDTO)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 

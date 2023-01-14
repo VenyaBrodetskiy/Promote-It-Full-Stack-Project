@@ -35,6 +35,7 @@ class AuthMiddleware {
         }
         return next();
     }
+
 }
 
 export default new AuthMiddleware();
