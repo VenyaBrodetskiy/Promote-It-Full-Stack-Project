@@ -21,11 +21,11 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: Change directory to backend dotnet
-      run: cd Backend/dotNetBackend; dir
+#     - name: Change directory to backend dotnet
+#       run: cd Backend/dotNetBackend; dir
     - name: Restore dependencies
-      run: dotnet restore dotNetBackEnd.sln
+      run: dotnet restore Backend\dotNetBackend
     - name: Build
-      run: dotnet build --no-restore dotNetBackEnd.sln
+      run: dotnet build --no-restore Backend\dotNetBackend
     - name: Test
-      run: dotnet test --no-build --verbosity normal dotNetBackEnd.sln
+      run: dotnet test --no-build --verbosity normal Backend\dotNetBackend
