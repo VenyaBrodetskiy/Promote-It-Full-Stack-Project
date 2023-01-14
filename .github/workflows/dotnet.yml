@@ -1,30 +1,30 @@
-# # This workflow will build a .NET project
-# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-# name: backend build and test
+name: backend build and test
 
-# on:
-#   workflow_dispatch:
-# #   push:
-#   pull_request:
-#     branches: [ "master" ]
+on:
+  workflow_dispatch:
+#   push:
+  pull_request:
+    branches: [ "master" ]
 
-# jobs:
-#   build-and-test:
+jobs:
+  build-and-test:
 
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - name: Get repo code
-#       uses: actions/checkout@v3
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Get repo code
+      uses: actions/checkout@v3
 #     - name: Install node packages
 #       run: npm ci
 #       working-directory: Backend/NodeJs-server
 #     - name: run NodeJs server
 #       run: npm run dev &
 #       working-directory: Backend/NodeJs-server
-#     - name: Check if server is running
-#       run: curl -I localhost:6060
+    - name: Check if server is running
+      run: curl www.google.com
 #     - name: Setup .NET
 #       uses: actions/setup-dotnet@v3
 #       with:
