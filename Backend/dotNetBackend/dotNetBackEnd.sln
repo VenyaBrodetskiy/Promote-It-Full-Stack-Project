@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotNetBackend", "dotNetBackend.csproj", "{DAB97876-4FC9-443A-BC9D-DBD6C6371798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainService", "MainService\MainService.csproj", "{DAB97876-4FC9-443A-BC9D-DBD6C6371798}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitterAccessor", "..\TwitterAccessor\TwitterAccessor.csproj", "{4C1CF85F-3D5A-43E1-98F1-7D13D47AB009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitterAccessor", "TwitterAccessor\TwitterAccessor.csproj", "{4C1CF85F-3D5A-43E1-98F1-7D13D47AB009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "..\IntegrationTest\IntegrationTest.csproj", "{4EAC970B-E6AF-424F-90F7-6867144F0433}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{4EAC970B-E6AF-424F-90F7-6867144F0433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
