@@ -21,7 +21,7 @@ namespace dotNetBackend.AccessorsServices
             {
                 return await _db.Products
                     .Where(p => p.Id == productId)
-                    .Select(p => p.User.BusinessOwnerUser.TwitterHandle)
+                    .Select(p => p.User.BusinessOwnerUser!.TwitterHandle)
                     .FirstAsync();
             }
             catch (Exception) 
