@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dotNetBackend\dotNetBackend.csproj" />
+    <ProjectReference Include="..\MainService\MainService.csproj" />
     <ProjectReference Include="..\TwitterAccessor\TwitterAccessor.csproj" />
   </ItemGroup>
 
