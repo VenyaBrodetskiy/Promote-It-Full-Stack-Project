@@ -3,14 +3,18 @@
     public class Const
     {
         public const string BaseUrl = "api";
-        public const string TwitterCreateNewPost = "https://localhost:7133/create-tweet/";
         public const int NonExistId = 0;
     }
 
-    public class TokenClaims
+    public static class EndpointsTwitter
     {
-        public const string UserId = "userId";
-        public const string UserTypeId = "userTypeId";
+        public static string TwitterCreateNewPost { get; } = "https://localhost:7133/create-tweet/";
+    }
+
+    public static class TokenClaims
+    {
+        public static string UserId { get; } = "userId";
+        public static string UserTypeId { get; } = "userTypeId";
     }
 
     public class Policies
@@ -20,5 +24,6 @@
         public const string NonprofitOrganization = "NonprofitOrganization";
         public const string ProlobbyOwner = "ProlobbyOwner";
         public const string SystemBackendOnly = "SystemBackendOnly";
+        public const string ProlobbyAndSystem = "ProlobbyAndSystem";
     }
 }

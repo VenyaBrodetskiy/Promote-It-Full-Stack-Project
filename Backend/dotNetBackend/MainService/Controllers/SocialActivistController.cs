@@ -8,6 +8,7 @@ using dotNetBackend.Services;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using dotNetBackend.Helpers;
+using System.Net;
 
 namespace dotNetBackend.Controllers
 {
@@ -48,7 +49,7 @@ namespace dotNetBackend.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = Policies.SystemBackendOnly)]
+        [Authorize(Policy = Policies.ProlobbyAndSystem)]
         public async Task<ActionResult<List<SocialActivistDTO>>> GetAll()
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
@@ -110,7 +111,6 @@ namespace dotNetBackend.Controllers
         [Authorize(Policy = Policies.SocialActivist)]
         public async Task<ActionResult<UserToCampaignBalanceDTO>> GetBalance()
         {
-            // no validation of UserId here, it should do middleware (here on in Node.js server)
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
             int UserId = HttpHelper.GetUserId(HttpContext);
@@ -209,24 +209,32 @@ namespace dotNetBackend.Controllers
 
                     string socialActivistTwitterHandle = (await _socialActivistService.Get(transactionInfo.UserId))!.TwitterHandle;
                     string businessOwnerTwitterHandle = await _productService.GetOwnerByProductId(transactionInfo.ProductId);
-                    var response = await _httpClient.PostAsync(
-                        Const.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
+                    
+                    // try to make twitter post
+                    // if fail, send back transaction info + information, that twitter post failed
+                    HttpStatusCode twitterStatus;
+                    try
+                    {
+                        var response = await _httpClient.PostAsync(
+                        EndpointsTwitter.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
                         null);
-                    _logger.LogInformation(response.StatusCode.ToString());
+                        twitterStatus = response.StatusCode;
+                        _logger.LogInformation(twitterStatus.ToString());
 
-                    if (response.StatusCode.Equals(System.Net.HttpStatusCode.OK))
-                    {
-                        return Ok(new
-                        {
-                            TransactionId = id,
-                            NewBalance = newBalance,
-                            TwitterPostStatus = response.StatusCode.ToString()
-                        });
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        return Problem("transaction OK, but tweet wasn't posted");
+                        twitterStatus = HttpStatusCode.ServiceUnavailable;
+                        _logger.LogWarning("transaction OK, but tweet wasn't posted");
+                        _logger.LogError(ex.Message);
                     }
+
+                    return Ok(new TransactionResponse
+                    {
+                        TransactionId = id,
+                        NewBalance = newBalance,
+                        TwitterPostStatus = twitterStatus
+                    });
 
                 }
                 catch (ValidationException ex)

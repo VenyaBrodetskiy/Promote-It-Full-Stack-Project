@@ -83,6 +83,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Policies.SystemBackendOnly, policy => {
         policy.RequireClaim(TokenClaims.UserTypeId, UserTypes.System.ToString("D"));
     });
+    options.AddPolicy(Policies.ProlobbyAndSystem, policy => {
+        policy.RequireClaim(TokenClaims.UserTypeId, UserTypes.ProlobbyOwner.ToString("D"), UserTypes.System.ToString("D"));
+    });
+
 });
 builder.Services.AddCors();
 

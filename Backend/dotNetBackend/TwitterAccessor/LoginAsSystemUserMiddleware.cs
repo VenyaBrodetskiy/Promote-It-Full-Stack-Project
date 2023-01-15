@@ -24,7 +24,7 @@ namespace TwitterAccessor
                 Password = "password"
             };
 
-            var responseMessage = await httpClient.PostAsJsonAsync(Const.ApiLogin, systemCredentials);
+            var responseMessage = await httpClient.PostAsJsonAsync(EndpointsNodeJs.ApiLogin, systemCredentials);
 
             if (responseMessage.StatusCode == HttpStatusCode.Forbidden)
             {
