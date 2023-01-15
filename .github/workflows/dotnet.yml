@@ -5,7 +5,6 @@ name: .Net backend build and test
 
 on:
   workflow_dispatch:
-  push:
   pull_request:
     branches: [ "master" ]
 
