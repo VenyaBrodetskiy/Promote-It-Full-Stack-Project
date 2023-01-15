@@ -59,11 +59,9 @@ namespace TwitterAccessor.Services
             {
                 _token = token;
             }
+
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-            //var request = new HttpRequestMessage(HttpMethod.Get, Const.ApiGetCampaigns);
-            //request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-            //HttpResponseMessage campaignsResponse = await _httpClient.SendAsync(request);
-            var campaignsResponse = await _httpClient.GetAsync(Const.ApiGetCampaigns);
+            var campaignsResponse = await _httpClient.GetAsync(EndpointsNodeJs.ApiGetCampaigns);
             if (campaignsResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new Exception("Not Authorized");
@@ -72,7 +70,7 @@ namespace TwitterAccessor.Services
             CampaignInfo[]? campaigns = await campaignsResponse.Content.ReadFromJsonAsync<CampaignInfo[]>();
 
             // 2. get all users (social activists)
-            var socialActivistsResponse = await _httpClient.GetAsync(Const.ApiGetSocialActivists);
+            var socialActivistsResponse = await _httpClient.GetAsync(EndpointsMain.ApiGetSocialActivists);
             SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
 
             // 3. for each campaign change user balances
@@ -90,7 +88,7 @@ namespace TwitterAccessor.Services
             // 2. change balance in DB based on tweet qty
             foreach (var userToCampaign in userToCampaigns)
             {
-                var responseMessage = await _httpClient.PostAsJsonAsync(Const.ApiPostUpdateUserBalance, userToCampaign);
+                var responseMessage = await _httpClient.PostAsJsonAsync(EndpointsMain.ApiPostUpdateUserBalance, userToCampaign);
                 _logger.LogInformation("Status: {status}, Message: {message}", responseMessage.StatusCode, await responseMessage.Content.ReadAsStringAsync());
             };
         }

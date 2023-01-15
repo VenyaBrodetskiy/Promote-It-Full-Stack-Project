@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace dotNetBackend.DTO
 {
@@ -20,6 +21,15 @@ namespace dotNetBackend.DTO
         public int CampaignId { get; set; }
 
         public int StateId { get; set; }
+    }
+
+    public record TransactionResponse
+    {
+        public int TransactionId { get; set; }
+
+        public int NewBalance { get; set; }
+
+        public HttpStatusCode TwitterPostStatus { get; set; }
     }
 
     public record TransactionChangeState

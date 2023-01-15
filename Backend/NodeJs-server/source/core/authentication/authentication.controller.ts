@@ -51,7 +51,7 @@ class AuthenticationController {
 
     public getUserTypeId(req: Request, res: Response, next: NextFunction) {
 
-        return res.status(200).send({ userTypeId: (req as AuthenticatedRequest).userTypeId } );
+        return res.status(200).send({ userTypeId: (req as AuthenticatedRequest).userTypeId });
 
     }
 
