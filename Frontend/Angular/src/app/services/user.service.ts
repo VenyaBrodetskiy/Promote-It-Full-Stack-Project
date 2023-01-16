@@ -5,8 +5,6 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/htt
 import { Injectable } from '@angular/core';
 import { ErrorService } from './error.service';
 
-type user = IBusinessOwner | ISocialActivist | INonProfitOrg;
-
 @Injectable({
     providedIn: 'root'
 })
