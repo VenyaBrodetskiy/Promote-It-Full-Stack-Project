@@ -1,14 +1,16 @@
 <div *ngIf="toggle; else productAdded">
     <div class="mb-3">
-    <label for="productTitleInput" class="form-label">Product title</label>
-    <input type="text" class="form-control" id="productTitleInput" [formControl]="productTitleControl" [value]="productTitle">
+        <label for="productTitleInput" class="form-label">Product title</label>
+        <input type="text" class="form-control" id="productTitleInput" [formControl]="productTitleControl"
+            [value]="productTitle">
     </div>
     <div *ngIf="productTitleControl.invalid && productTitleControl.touched" class="alert alert-danger">
         Title is required
     </div>
     <div class="mb-3">
-    <label for="productPriceInput" class="form-label">Product price</label>
-    <input type="number" class="form-control" id="productPriceInput" [formControl]="productPriceControl" [value]="productPrice">
+        <label for="productPriceInput" class="form-label">Product price</label>
+        <input type="number" class="form-control" id="productPriceInput" [formControl]="productPriceControl"
+            [value]="productPrice">
     </div>
     <div *ngIf="productPriceControl.invalid && productPriceControl.touched" class="alert alert-danger">
         Price must be a natural number
@@ -28,4 +30,3 @@
     </div>
     <br />
 </ng-template>
-

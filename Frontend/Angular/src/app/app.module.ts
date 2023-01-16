@@ -20,17 +20,18 @@ import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { LoginComponent } from './components/login/login.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { AuthGuard } from './services/auth.guard';
+import { BusinessOwnerGuard } from './guards/businessowner.guard';
 import { DonateToCampaignPageComponent } from './pages/donate-to-campaign-page/donate-to-campaign-page.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
-    { path: '', redirectTo: States.login, pathMatch: 'full' },
+    { path: '', component: AppComponent, canActivate: [AuthGuard] },
     { path: States.login, component: LoginComponent },
-    { path: States.campaigns, component: CampaignPageComponent, canActivate: [AuthGuard] },
-    { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [AuthGuard] },
-    { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [AuthGuard] },
-    { path: States.orders, component: OrderPageComponent, canActivate: [AuthGuard] },
+    { path: States.campaigns, component: CampaignPageComponent, canActivate: [BusinessOwnerGuard] },
+    { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [BusinessOwnerGuard] },
+    { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [BusinessOwnerGuard] },
+    { path: States.orders, component: OrderPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: "**", component: LoginComponent }
 
 ]

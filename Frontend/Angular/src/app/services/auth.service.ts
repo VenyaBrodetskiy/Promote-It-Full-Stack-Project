@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from "rxjs";
+import { BehaviorSubject, catchError, map, Observable, shareReplay, tap, throwError } from "rxjs";
 import { Endpoints } from "src/app/constants";
-import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { IUser } from '../models/user';
 import { ErrorService } from './error.service';
 
@@ -19,16 +19,18 @@ interface IUserTypeResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthService {
 
-    private _userTypeId = new BehaviorSubject<string>('');
-    public userTypeId$ = this._userTypeId.asObservable();
-    private token: string;
-    private userTypeId: string;
     private _isLoggedIn = new BehaviorSubject<boolean>(false);
     public isLoggedIn$ = this._isLoggedIn.asObservable();
+
+    private _userTypeId = new BehaviorSubject<string>('');
+    public userTypeId$ = this._userTypeId.asObservable();
+
+    private token: string;
+    private userTypeId: string;
 
     constructor(
         private http: HttpClient,
@@ -38,9 +40,11 @@ export class AuthService {
     public login(user: IUser): Observable<HttpResponse<ILoginResponse>> {
         return this.http.post<ILoginResponse>(Endpoints.login, this.toServerUser(user), { observe: 'response' })
             .pipe(
+                catchError(this.errorHandler.bind(this)),
                 map((result: HttpResponse<ILoginResponse>) => {
                     this.token = result.body!.token;
                     localStorage.setItem('token', this.token);
+                    localStorage.setItem('isLoggedIn', 'true');
                     this._isLoggedIn.next(true);
                     return result;
                 })
@@ -74,6 +78,11 @@ export class AuthService {
             login: user.username,
             password: user.password
         }
+    }
+
+    private errorHandler(error: HttpErrorResponse) {
+        this.errorService.handle(error.message)
+        return throwError(() => error.message)
     }
 
 }

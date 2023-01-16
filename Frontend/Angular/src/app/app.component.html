@@ -1,10 +1,10 @@
 <div class="container">
-    <!-- <div class="menu-container" *ngIf="authService.isLoggedIn$ | async"> -->
-        <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
+    <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
         <bo-menu></bo-menu>
 
     </div>
     <div class="content-container">
+        <br />
         <router-outlet></router-outlet>
         <br />
         <bo-error></bo-error>

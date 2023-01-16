@@ -12,9 +12,9 @@ import { ProductService } from 'src/app/services/product.service';
 import { v4 as uuidv4 } from "uuid";
 
 @Component({
-  selector: 'bo-donate-to-campaign-page',
-  templateUrl: './donate-to-campaign-page.component.html',
-  styleUrls: ['./donate-to-campaign-page.component.less']
+    selector: 'bo-donate-to-campaign-page',
+    templateUrl: './donate-to-campaign-page.component.html',
+    styleUrls: ['./donate-to-campaign-page.component.less']
 })
 export class DonateToCampaignPageComponent {
 
@@ -45,7 +45,7 @@ export class DonateToCampaignPageComponent {
         this.productOptions$ = this.productService.getAll();
     }
 
-    public ngOnDestroy(): void  {
+    public ngOnDestroy(): void {
         this.unsubscribe$.next(undefined);
         this.unsubscribe$.complete();
     }
