@@ -21,6 +21,13 @@ export class CampaignService {
             )
     }
 
+    public getByNonProfitId(): Observable<ICampaign[]> {
+        return this.http.get<ICampaign[]>(`${Endpoints.npCampaigns}`)
+            .pipe(
+                catchError(this.errorHandler.bind(this))
+            )
+    }
+
     public create(body: INewCampaign): Observable<HttpResponse<number>> {
         return this.http.post<number>(`${Endpoints.campaigns}`, body, { observe: 'response' })
             .pipe(

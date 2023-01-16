@@ -35,6 +35,19 @@ class CampaignController {
             })
     }
 
+    public getCampaignsByNonProfitId(req: Request, res: Response, next: NextFunction) {
+
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        CampaignService.getCampaignsByNonProfitId((req as AuthenticatedRequest).userId)
+            .then((result: campaign[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
     public addCampaign(req: Request, res: Response, next: NextFunction) {
 
         // TODO: (very low priority) add validation, that landing page is working one 

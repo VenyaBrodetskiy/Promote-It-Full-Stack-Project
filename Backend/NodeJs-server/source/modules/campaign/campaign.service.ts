@@ -1,3 +1,4 @@
+import { nonProfitOrganization } from './../../common/entities';
 import { Statuses } from "../../common/enums";
 import { campaign, campaignWitnProducts, entityWithId, systemError } from "../../common/entities";
 import { CampaignQueries } from "./campaign.queries";
@@ -19,6 +20,7 @@ export interface localCampaignWitnProducts extends localCampaign {
 interface ICampaignService {
     getAllCampaigns(): Promise<campaign[]>;
     getAllCampaignsWithProducts(): Promise<campaignWitnProducts[]>;
+    getCampaignsByNonProfitId(nonProfitOrganizationId: number): Promise<campaign[]>
     addCampaign(campaign: campaign, userId: number): Promise<campaign>;
 }
 
@@ -51,6 +53,21 @@ class CampaignService implements ICampaignService {
                 .then((queryResult: localCampaignWitnProducts[]) => {
                     queryResult.forEach((campaign: localCampaignWitnProducts) => {
                         result.push(this.parseLocalCampaignWitnProducts(campaign))
+                    });
+                    resolve(result);
+                })
+                .catch((error: systemError) => reject(error));
+        });
+    }
+
+    public getCampaignsByNonProfitId(nonProfitOrganizationId: number): Promise<campaign[]> {
+        return new Promise<campaign[]>((resolve, reject) => {
+            const result: campaign[] = [];
+
+            SqlHelper.executeQueryArrayResult<localCampaign>(CampaignQueries.getCampaignsByNonProfitId, nonProfitOrganizationId, Statuses.Active)
+                .then((queryResult: localCampaign[]) => {
+                    queryResult.forEach((campaign: localCampaign) => {
+                        result.push(this.parseLocalCampaign(campaign))
                     });
                     resolve(result);
                 })

@@ -20,6 +20,10 @@ export class CampaignRoutes extends RouteConfig {
             AuthMiddleware.verifyToken([UserType.system, UserType.prolobbyOwner, UserType.socialActivist]),
             CampaignController.getAllCampaignsWitnProducts]);
 
+        this.app.route(`/${this.baseUrl}/non-profit`).get([
+            AuthMiddleware.verifyToken([UserType.system, UserType.nonProfitOrganization]),
+            CampaignController.getCampaignsByNonProfitId]);
+
         this.app.route(`/${this.baseUrl}`).post([
             AuthMiddleware.verifyToken([UserType.system, UserType.nonProfitOrganization]),
             CampaignController.addCampaign]);

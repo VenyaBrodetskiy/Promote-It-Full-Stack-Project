@@ -21,6 +21,12 @@ export class CampaignQueries {
         LEFT JOIN [product] ON [product_to_campaign_qty].[product_id] = [product].[id]
         LEFT JOIN [business_owner] ON [product].[user_id] = [business_owner].[user_id]
         WHERE [campaign].[status_id] = ?`;
+    
+    public static getCampaignsByNonProfitId: string = `
+        SELECT [id], [hashtag], [landing_page], [non_profit_organization].[name] as non_profit_organization_name
+        FROM [dbo].[campaign]
+        INNER JOIN [non_profit_organization] ON [campaign].[user_id] = [non_profit_organization].[user_id]
+        WHERE [campaign].[user_id] = ? AND [campaign].[status_id] = ?`;
 
     public static AddCampaign: string = `
         INSERT campaign 
