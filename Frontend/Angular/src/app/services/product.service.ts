@@ -17,7 +17,6 @@ export class ProductService {
     ) { }
 
     public getAll(): Observable<IProduct[]> {
-
         return this.http.get<IProduct[]>(`${Endpoints.products}`)
             .pipe(
                 catchError(this.errorHandler.bind(this))

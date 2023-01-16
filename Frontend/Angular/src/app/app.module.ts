@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorComponent } from './components/error/error.component';
 import { CreateProductPageComponent } from './pages/create-product-page/create-product-page.component';
-import { MenuComponent } from './components/menu/menu.component';
+import { MenuBoComponent } from './components/menu-bo/menu-bo.component';
 import { States } from './constants';
 import { RouterModule, Routes } from '@angular/router';
 import { CampaignPageComponent } from './pages/campaign-page/campaign-page.component';
@@ -23,15 +23,22 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { BusinessOwnerGuard } from './guards/businessowner.guard';
 import { DonateToCampaignPageComponent } from './pages/donate-to-campaign-page/donate-to-campaign-page.component';
 import { AuthGuard } from './guards/auth.guard';
+import { MenuNpComponent } from './components/menu-np/menu-np.component';
+import { CreateCampaignPageComponent } from './pages/create-campaign-page/create-campaign-page.component';
+import { NonprofitOrganizationGuard } from './guards/nonprofitorganization.guard';
 
 
 const routes: Routes = [
     { path: '', component: AppComponent, canActivate: [AuthGuard] },
     { path: States.login, component: LoginComponent },
+
     { path: States.campaigns, component: CampaignPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.orders, component: OrderPageComponent, canActivate: [BusinessOwnerGuard] },
+
+    { path: States.createCampaign, component: CreateCampaignPageComponent, canActivate: [NonprofitOrganizationGuard] },
+
     { path: "**", component: LoginComponent }
 
 ]
@@ -42,14 +49,16 @@ const routes: Routes = [
         CampaignComponent,
         ErrorComponent,
         CreateProductPageComponent,
-        MenuComponent,
+        MenuBoComponent,
         CampaignPageComponent,
         CreateProductComponent,
         CreateCampaignComponent,
         OrderComponent,
         OrderPageComponent,
         LoginComponent,
-        DonateToCampaignPageComponent
+        DonateToCampaignPageComponent,
+        MenuNpComponent,
+        CreateCampaignPageComponent
     ],
     imports: [
         BrowserModule,

@@ -27,7 +27,7 @@ class AuthenticationController {
                     Environment.TOKEN_SECRET,
                     {
                         expiresIn: "2h",
-                    }
+                    } 
                 );
 
                 return res.status(200).json({

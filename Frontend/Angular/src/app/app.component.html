@@ -1,7 +1,9 @@
 <div class="container">
     <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
-        <bo-menu></bo-menu>
-
+        <bo-menu-bo></bo-menu-bo>
+    </div>
+    <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
+        <bo-menu-np></bo-menu-np>
     </div>
     <div class="content-container">
         <br />
