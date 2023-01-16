@@ -26,6 +26,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { MenuNpComponent } from './components/menu-np/menu-np.component';
 import { CreateCampaignPageComponent } from './pages/create-campaign-page/create-campaign-page.component';
 import { NonprofitOrganizationGuard } from './guards/nonprofitorganization.guard';
+import { CampaignNpPageComponent } from './pages/campaign-np-page/campaign-np-page.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,8 @@ const routes: Routes = [
     { path: States.orders, component: OrderPageComponent, canActivate: [BusinessOwnerGuard] },
 
     { path: States.createCampaign, component: CreateCampaignPageComponent, canActivate: [NonprofitOrganizationGuard] },
+    { path: States.npCampaigns, component: CampaignNpPageComponent, canActivate: [NonprofitOrganizationGuard] },
+
 
     { path: "**", component: LoginComponent }
 
@@ -58,7 +61,8 @@ const routes: Routes = [
         LoginComponent,
         DonateToCampaignPageComponent,
         MenuNpComponent,
-        CreateCampaignPageComponent
+        CreateCampaignPageComponent,
+        CampaignNpPageComponent
     ],
     imports: [
         BrowserModule,

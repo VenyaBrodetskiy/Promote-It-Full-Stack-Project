@@ -36,6 +36,7 @@ export class Endpoints {
 
     //non-profit organization
     public static createCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
+    public static npCampaigns: string = `${Endpoints.baseUrlNode}campaign/non-profit/`;
 
 
     //TODO: remove?
