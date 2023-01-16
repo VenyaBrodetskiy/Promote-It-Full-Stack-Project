@@ -5,17 +5,17 @@ import { CampaignService } from 'src/app/services/campaign.service';
 
 
 @Component({
-  selector: 'bo-campaign-page',
-  templateUrl: './campaign-page.component.html',
-  styleUrls: ['./campaign-page.component.less']
+    selector: 'bo-campaign-page',
+    templateUrl: './campaign-page.component.html',
+    styleUrls: ['./campaign-page.component.less']
 })
 export class CampaignPageComponent implements OnInit {
-  campaigns$: Observable<ICampaign[]>;
+    campaigns$: Observable<ICampaign[]>;
 
-  constructor(private campaignService: CampaignService) {
-  }
+    constructor(private campaignService: CampaignService) {
+    }
 
-  ngOnInit(): void {
-    this.campaigns$ = this.campaignService.getAll();
-  }
+    ngOnInit(): void {
+        this.campaigns$ = this.campaignService.getAll();
+    }
 }

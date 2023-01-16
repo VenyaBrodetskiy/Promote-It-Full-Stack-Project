@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { UserType } from './enums';
-import { AuthGuard } from './services/auth.guard';
+import { BusinessOwnerGuard } from './guards/businessowner.guard';
 import { AuthService } from './services/auth.service';
-import { AuthStateService } from './services/authstate.service';
 
 @Component({
     selector: 'app-root',
@@ -11,7 +10,7 @@ import { AuthStateService } from './services/authstate.service';
 })
 export class AppComponent {
     public isLoggedIn = false;
-    public title = 'business-owner';
+    public title = 'promote-it-project';
     public userTypeId: string;
     public UserType = UserType;
     public BusinessOwner: string = String(UserType.BusinessOwner);
@@ -20,17 +19,14 @@ export class AppComponent {
     public ProlobbyOwner: string = String(UserType.ProlobbyOwner);
     public System: string = String(UserType.System);
 
-    constructor(private authGuard: AuthGuard,
-        public authService: AuthService
-    ) {
-        this.isLoggedIn = this.authGuard.canActivate();
-        this.authService.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
-        this.authService.userTypeId$.subscribe(userTypeId => this.userTypeId = userTypeId);
-    }
+    constructor(public authService: AuthService
+    ) { }
 
     ngOnInit() {
+        this.isLoggedIn = (localStorage.getItem('isLoggedIn') === 'true');
         this.authService.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
         this.authService.userTypeId$.subscribe(userTypeId => this.userTypeId = userTypeId);
+        window.addEventListener("beforeunload", (e) => this.authService.logout());
     }
 
 }

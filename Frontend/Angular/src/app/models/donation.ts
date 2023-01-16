@@ -1,5 +1,5 @@
 export interface IDonation {
-  productId: number;
-  campaignId: number;
-  productQty: number;
+    productId: number;
+    campaignId: number;
+    productQty: number;
 }

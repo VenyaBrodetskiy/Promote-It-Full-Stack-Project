@@ -43,7 +43,7 @@ export class LoginComponent {
                         this.authService.getUserType().pipe(
                             takeUntil(this.unsubscribe$)
                         )
-                            .subscribe( response => {
+                            .subscribe(response => {
                                 console.log(response);
                             });
                     } else {
@@ -55,10 +55,6 @@ export class LoginComponent {
                 }
             );
     }
-
-    // public onClearClick(): void {
-
-    // }
 
     onContinue() {
         if (this.isLoggedIn) {
@@ -72,5 +68,4 @@ export class LoginComponent {
             password: ""
         };
     }
-
 }

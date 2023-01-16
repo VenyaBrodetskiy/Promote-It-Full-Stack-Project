@@ -28,7 +28,7 @@ export class CreateProductComponent {
         this.productPriceControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
     }
 
-    public ngOnDestroy(): void  {
+    public ngOnDestroy(): void {
         this.unsubscribe$.next(undefined);
         this.unsubscribe$.complete();
     }

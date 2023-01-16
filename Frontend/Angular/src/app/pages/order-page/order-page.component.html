@@ -1,4 +1,2 @@
-<bo-order *ngFor="let order of orders$ | async; let i = index"
-  [order]="order"
-  [orderNumber]="'#' + (i+1)">
+<bo-order *ngFor="let order of orders$ | async; let i = index" [order]="order" [orderNumber]="'#' + (i+1)">
 </bo-order>

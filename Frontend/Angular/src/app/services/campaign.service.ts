@@ -27,7 +27,7 @@ export class CampaignService {
   //TODO: remove? for social activist
   public create(body: INewCampaign): Observable<number> {
 
-    return this.http.post<number>('http://localhost:6060/api/campaign/', body)
+      return this.http.post<number>(`${Endpoints.campaigns}`, body)
       .pipe(
         catchError(this.errorHandler.bind(this))
       )
