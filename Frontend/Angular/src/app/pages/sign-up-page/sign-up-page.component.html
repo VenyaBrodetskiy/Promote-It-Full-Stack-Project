@@ -1,0 +1,106 @@
+<div class="sign-up-page">
+    <div class="d-flex flex-column align-items-center">
+        <div class="mb-3 col-6 display-4">
+            Sign Up
+        </div>
+        <div class="mb-3 col-6">
+            <label for="login" class="form-label">Login</label>
+            <input type="text" class="form-control" id="login"
+                placeholder="Login" [(ngModel)]="user.login" required/>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password"
+                placeholder="Password" [(ngModel)]="user.password" />
+        </div>
+        <div class="mb-3 col-6">
+            <label for="userTypeSelect" class="form-label">Choose type of user</label>
+            <select class="form-select" id="userTypeSelect" name="userTypeSelect" [(ngModel)]="userTypeSelected"
+                [attr.aria-label]="userTypeSelected">
+                <option *ngFor="let userType of userTypes" [value]="userType" [innerText]="UserType[userType]"></option>
+            </select>
+        </div>
+
+        <div [ngSwitch]="userTypeSelected" class="mb-3 col-6">
+            <div *ngSwitchCase="UserType.BusinessOwner">
+                <!-- For Business Owner -->
+                <div class="mb-3">
+                    <label for="twitterHandle" class="form-label">Twitter Handle</label>
+                    <input type="text" class="form-control" id="twitterHandle"
+                        placeholder="@mytwitter" [(ngModel)]="businessOwner.twitterHandle" />
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name"
+                        placeholder="Alon" [(ngModel)]="businessOwner.name" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email"
+                        placeholder="mymail@example.com" [(ngModel)]="businessOwner.email" />
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary col-12" type="submit"
+                        (click)="onSignUpBusinessOwner()">Sign Up</button>
+                </div>
+
+            </div>
+            <div *ngSwitchCase="UserType.SocialActivist">
+                <!-- For Social Activist -->
+                <div class="mb-3">
+                    <label for="twitterHandle" class="form-label">Twitter Handle</label>
+                    <input type="text" class="form-control" id="twitterHandle"
+                        placeholder="@ElonMask" [(ngModel)]="socialActivist.twitterHandle" />
+                    <div class="invalid-feedback">Some text</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email"
+                        placeholder="ibought@twitter.com" [(ngModel)]="socialActivist.email" />
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address"
+                        placeholder="119313 San-Francisco" [(ngModel)]="socialActivist.address" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone"
+                        placeholder="+972533215080" [(ngModel)]="socialActivist.phoneNumber" />
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary col-12"
+                        (click)="onSignUpSocialActivist()">Sign Up</button>
+                </div>
+
+                {{ JSON.stringify(socialActivist)}}
+            </div>
+            <div *ngSwitchCase="UserType.NonprofitOrganization">
+                <!-- For Non profit -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name"
+                        placeholder="Alon" [(ngModel)]="nonProfitOrg.name" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email"
+                        placeholder="mymail@example.com" [(ngModel)]="nonProfitOrg.email" />
+                </div>
+                <div class="mb-3">
+                    <label for="website" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="website"
+                        placeholder="google.com" [(ngModel)]="nonProfitOrg.website"/>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary col-12"
+                        (click)="onSignUpNonProfit()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<div *ngIf="successService.success$ | async as success">
+    <ngb-alert type="success"
+        (closed)="successService.clear()">
+    {{ success }}
+    </ngb-alert>
+</div>

@@ -15,7 +15,7 @@ export class CampaignPageComponent implements OnInit {
     constructor(private campaignService: CampaignService) {
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.campaigns$ = this.campaignService.getAll();
     }
 }

@@ -2,6 +2,7 @@ export class States {
     private static _endpointBase: string = "http://localhost:4200"
     //all
     public static login: string = "login";
+    public static signUp: string = "signup";
 
     //business owner
     public static campaigns: string = "campaigns";
@@ -41,5 +42,7 @@ export class Endpoints {
 
     //TODO: remove?
     public static userById: string = `${Endpoints.baseUrlNode}user/`;
-
+    public static addBusinessOwner: string = `${Endpoints.baseUrlNode}user/add-business-owner`;
+    public static addSocialActivist: string = `${Endpoints.baseUrlNode}user/add-social-activist`;
+    public static addNonProfitUser: string = `${Endpoints.baseUrlNode}user/add-nonprofit-organization`;
 }
