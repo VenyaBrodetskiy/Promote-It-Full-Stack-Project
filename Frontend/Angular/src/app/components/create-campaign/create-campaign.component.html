@@ -1,9 +1,38 @@
-<div class="mb-3">
-    <label for="productTitleInput" class="form-label">hashtag</label>
-    <input type="text" class="form-control" id="campaignHashtag" [(ngModel)]="hashtag">
+<div *ngIf="toggle; else campaignAdded">
+    <div class="mb-3">
+        <label for="campaignHashtag" class="form-label">hashtag</label>
+        <input type="text" class="form-control" id="campaignHashtag" [formControl]="hashtagControl"
+            [value]="hashtag">
+    </div>
+    <div *ngIf="hashtagControl.hasError('required') && hashtagControl.touched" class="alert alert-danger">
+        hashtag is required.
+    </div>
+    <div *ngIf="hashtagControl.hasError('pattern')" class="alert alert-danger">
+        hashtag must start with "#" and can only contain letters, numbers, and underscores.
+    </div>
+    <div class="mb-3">
+        <label for="campaignLandingPage" class="form-label">landingPage</label>
+        <input type="text" class="form-control" id="campaignLandingPage" [formControl]="landingPageControl"
+            [value]="landingPage">
+    </div>
+    <div *ngIf="landingPageControl.hasError('required') && landingPageControl.touched" class="alert alert-danger">
+        landingPage is required.
+    </div>
+    <div *ngIf="landingPageControl.hasError('pattern') && landingPageControl.touched" class="alert alert-danger">
+        landingPage must start with "http://" or "https://" and be an URL.
+    </div>
+    <button type="submit" class="btn btn-primary" (click)="onSubmit()"
+        [disabled]="hashtagControl.invalid || landingPageControl.invalid"
+    >Submit</button>
 </div>
-<div class="mb-3">
-    <label for="productPriceInput" class="form-label">landingPage</label>
-    <input type="text" class="form-control" id="campaignLandingPage" [(ngModel)]="landingPage">
-</div>
-<button type="submit" class="btn btn-primary" (click)="onSubmit(hashtag, landingPage)">Submit</button>
+
+<ng-template #campaignAdded>
+    <br />
+    <div>
+        The campaign was successfully added!
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary" (click)="onSubmitMore()">Register more campaigns!</button>
+    </div>
+    <br />
+</ng-template>
