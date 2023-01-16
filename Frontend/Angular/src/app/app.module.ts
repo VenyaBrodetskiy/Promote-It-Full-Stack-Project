@@ -17,7 +17,7 @@ import { CreateProductComponent } from './components/create-product/create-produ
 import { CreateCampaignComponent } from './components/create-campaign/create-campaign.component';
 import { OrderComponent } from './components/order/order.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { BusinessOwnerGuard } from './guards/businessowner.guard';
@@ -27,12 +27,14 @@ import { MenuNpComponent } from './components/menu-np/menu-np.component';
 import { CreateCampaignPageComponent } from './pages/create-campaign-page/create-campaign-page.component';
 import { NonprofitOrganizationGuard } from './guards/nonprofitorganization.guard';
 import { CampaignNpPageComponent } from './pages/campaign-np-page/campaign-np-page.component';
+import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
+import { SuccessComponent } from './components/success/success.component';
 
 
 const routes: Routes = [
     { path: '', component: AppComponent, canActivate: [AuthGuard] },
-    { path: States.login, component: LoginComponent },
-
+    { path: States.login, component: LoginPageComponent },
+    { path: States.signUp, component: SignUpPageComponent },
     { path: States.campaigns, component: CampaignPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [BusinessOwnerGuard] },
@@ -42,7 +44,7 @@ const routes: Routes = [
     { path: States.npCampaigns, component: CampaignNpPageComponent, canActivate: [NonprofitOrganizationGuard] },
 
 
-    { path: "**", component: LoginComponent }
+    { path: "**", component: LoginPageComponent }
 
 ]
 
@@ -58,8 +60,10 @@ const routes: Routes = [
         CreateCampaignComponent,
         OrderComponent,
         OrderPageComponent,
-        LoginComponent,
+        LoginPageComponent,
         DonateToCampaignPageComponent,
+        SignUpPageComponent,
+        SuccessComponent,
         MenuNpComponent,
         CreateCampaignPageComponent,
         CampaignNpPageComponent

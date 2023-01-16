@@ -1,15 +1,16 @@
-<div class="container">
-    <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
+<bo-error></bo-error>
+<bo-success></bo-success>
+
+<div class="d-flex">
+    <div class="col-3" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
         <bo-menu-bo></bo-menu-bo>
     </div>
-    <div class="menu-container" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
+    <div class="col-3" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
         <bo-menu-np></bo-menu-np>
     </div>
-    <div class="content-container">
+    <div [ngClass]="isLoggedIn ? 'col-9' : 'col-12'">
         <br />
         <router-outlet></router-outlet>
-        <br />
-        <bo-error></bo-error>
         <br />
     </div>
 </div>

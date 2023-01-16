@@ -1,6 +1,6 @@
-<div *ngIf="errorService.error$ | async as error" class="alert alert-danger" role="alert">
-    Something bad happened. Please try again later.
-    <button type="button" (click)="errorService.clear()">
-        &times;
-    </button>
+<div *ngIf="errorService.error$ | async as error">
+    <ngb-alert type="danger"
+        (closed)="errorService.clear()">
+        Something bad happened. Please try again later. <br>
+    </ngb-alert>
 </div>

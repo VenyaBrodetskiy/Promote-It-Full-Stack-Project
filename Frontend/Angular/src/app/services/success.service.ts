@@ -4,15 +4,16 @@ import { Subject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class ErrorService {
-    error$ = new Subject<string>()
+export class SuccessService {
+    success$ = new Subject<string>()
 
     public handle(message: string) {
-        this.error$.next(message)
+        this.success$.next(message)
+        setTimeout(() => this.clear(), 2000);
     }
 
     public clear() {
-        this.error$.next('')
+        this.success$.next('')
     }
 
 }

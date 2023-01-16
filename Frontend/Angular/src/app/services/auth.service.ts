@@ -75,7 +75,7 @@ export class AuthService {
 
     private toServerUser(user: IUser): ILoginRequest {
         return {
-            login: user.username,
+            login: user.login,
             password: user.password
         }
     }
