@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { NON_EXISTING_ID } from "../../common/constants";
-import { campaign, AuthenticatedRequest, systemError, campaignWitnProducts } from "../../common/entities";
+import { campaign, AuthenticatedRequest, systemError, campaignWitnProducts, productsForCampaign } from "../../common/entities";
 import CampaignService from "./campaign.service";
 import LoggerService from "../../core/logger.service";
 import { ResponseHelper } from "../../core/helpers/response.helper";
+import { RequestHelper } from "../../core/helpers/request.helpers";
 
 class CampaignController {
 
@@ -46,6 +47,31 @@ class CampaignController {
             .catch((error: systemError) => {
                 return ResponseHelper.handleError(res, error);
             })
+    }
+
+    public getAllProductsForCampaign(req: Request, res: Response, next: NextFunction) {
+
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const numericParamOrError: number | systemError = RequestHelper.parseNumericInput(req.params.id);
+        if (typeof numericParamOrError === "number") {
+
+            if (numericParamOrError > 0) {
+                CampaignService.GetAllProductsForCampaign(numericParamOrError)
+                    .then((result: productsForCampaign[]) => {
+                        return res.status(200).json(result);
+                    })
+                    .catch((error: systemError) => {
+                        return ResponseHelper.handleError(res, error);
+                    })
+            }
+            else {
+                //TODO: 
+            }
+        }
+        else {
+            return ResponseHelper.handleError(res, numericParamOrError);
+        }
     }
 
     public addCampaign(req: Request, res: Response, next: NextFunction) {
