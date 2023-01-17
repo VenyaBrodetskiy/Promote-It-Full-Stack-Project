@@ -4,6 +4,8 @@ import { ResponseHelper } from "../helpers/response.helper";
 import AuthenticationService from './authentication.service';
 import jwt from 'jsonwebtoken';
 import { Environment } from "../helpers/env.helper";
+import LoggerService from "../../core/logger.service";
+
 
 interface localUser {
     login: string;
@@ -18,6 +20,8 @@ class AuthenticationController {
         // we use body (not url) in order 
         const user: localUser = req.body;
 
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
         AuthenticationService.login(user.login, user.password)
             .then((userData: authenticationToken) => {
                 // TODO: generate JWT token
@@ -27,7 +31,7 @@ class AuthenticationController {
                     Environment.TOKEN_SECRET,
                     {
                         expiresIn: "2h",
-                    } 
+                    }
                 );
 
                 return res.status(200).json({

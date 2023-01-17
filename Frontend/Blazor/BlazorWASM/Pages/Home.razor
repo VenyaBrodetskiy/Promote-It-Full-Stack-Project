@@ -1,0 +1,45 @@
+﻿@page "/"
+
+
+<AuthorizeView Roles="ProLobbyOwner">
+    <Authorized>
+        <PageTitle>Home</PageTitle>
+
+        <div class="mb-3 display-4">
+            Hello! Please choose report.
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <PageTitle>Sign In</PageTitle>
+
+        <div class="d-flex flex-column align-items-center">
+            <div class="mb-3 col-6 display-4">
+                Please log in
+            </div>
+            <div class="col-6">
+                <input type="text" class="form-control" id="login"
+                       placeholder="Login" @bind-value="@_user.Login" />
+            </div>
+
+            <div class="mt-1 mb-3 col-6">
+                <input type="password" class="form-control" id="password"
+                       placeholder="Password" @bind-value="@_user.Password" />
+            </div>
+
+            <div class="mb-3 col-6 d-flex flex-column">
+                <button class="btn btn-primary my-1" @onclick="OnLoginClick">Login</button>
+            </div>
+
+        </div>
+
+        @if (ShowAuthError)
+        {
+            <div class="alert alert-danger" role="alert">
+                <p>@Error</p>
+            </div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+}
