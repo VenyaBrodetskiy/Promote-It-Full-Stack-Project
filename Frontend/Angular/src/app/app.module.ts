@@ -27,6 +27,11 @@ import { MenuNpComponent } from './components/menu-np/menu-np.component';
 import { CreateCampaignPageComponent } from './pages/create-campaign-page/create-campaign-page.component';
 import { NonprofitOrganizationGuard } from './guards/nonprofitorganization.guard';
 import { CampaignNpPageComponent } from './pages/campaign-np-page/campaign-np-page.component';
+import { MenuSaComponent } from './components/menu-sa/menu-sa.component';
+import { TableLineComponent } from './components/table-line/table-line.component';
+import { ProductsOfCampaignComponent } from './components/products-of-campaign/products-of-campaign.component';
+import { SocialActivistGuard } from './guards/socialactivist.guard';
+import { BalancePageComponent } from './pages/balance-page/balance-page.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { SuccessComponent } from './components/success/success.component';
 
@@ -43,6 +48,7 @@ const routes: Routes = [
     { path: States.createCampaign, component: CreateCampaignPageComponent, canActivate: [NonprofitOrganizationGuard] },
     { path: States.npCampaigns, component: CampaignNpPageComponent, canActivate: [NonprofitOrganizationGuard] },
 
+    { path: States.balance, component: BalancePageComponent, canActivate: [SocialActivistGuard] },
 
     { path: "**", component: LoginPageComponent }
 
@@ -66,7 +72,11 @@ const routes: Routes = [
         SuccessComponent,
         MenuNpComponent,
         CreateCampaignPageComponent,
-        CampaignNpPageComponent
+        CampaignNpPageComponent,
+        MenuSaComponent,
+        TableLineComponent,
+        ProductsOfCampaignComponent,
+        BalancePageComponent
     ],
     imports: [
         BrowserModule,

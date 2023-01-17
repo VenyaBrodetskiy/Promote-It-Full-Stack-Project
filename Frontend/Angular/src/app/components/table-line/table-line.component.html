@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-between border-bottom">
+    <div class="mb-3 col-3">
+        <div [innerText]="row.productTitle"></div>
+    </div>
+    <div class="mb-3 col-3">
+        <div [innerText]="row.companyName"></div>
+    </div>
+    <div class="mb-3 col-2">
+        <div [innerText]="row.productPrice"></div>
+    </div>
+    <div class="mb-3 col-2">
+        <div [innerText]="row.productQty"></div>
+    </div>
+    <div class="mb-3 col-1">
+        <button type="button" class="btn btn-info"
+        (click)="onClick(TransactionStates.Ordered)">Buy</button>
+    </div>
+    <div class="mb-3 col-1">
+        <button type="button" class="btn btn-info"
+        (click)="onClick(TransactionStates.Donated)">Donate</button>
+    </div>
+</div>
