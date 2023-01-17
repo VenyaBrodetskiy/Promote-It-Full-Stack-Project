@@ -34,13 +34,14 @@ import { SocialActivistGuard } from './guards/socialactivist.guard';
 import { BalancePageComponent } from './pages/balance-page/balance-page.component';
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { SuccessComponent } from './components/success/success.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 
 const routes: Routes = [
     { path: '', component: AppComponent, canActivate: [AuthGuard] },
     { path: States.login, component: LoginPageComponent },
     { path: States.signUp, component: SignUpPageComponent },
-    { path: States.campaigns, component: CampaignPageComponent, canActivate: [BusinessOwnerGuard] },
+    { path: States.campaigns, component: CampaignPageComponent, canActivate: [BusinessOwnerGuard]},
     { path: States.donateNewProduct, component: CreateProductPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.donateToCampaign, component: DonateToCampaignPageComponent, canActivate: [BusinessOwnerGuard] },
     { path: States.orders, component: OrderPageComponent, canActivate: [BusinessOwnerGuard] },
@@ -76,7 +77,8 @@ const routes: Routes = [
         MenuSaComponent,
         TableLineComponent,
         ProductsOfCampaignComponent,
-        BalancePageComponent
+        BalancePageComponent,
+        LoadingComponent
     ],
     imports: [
         BrowserModule,

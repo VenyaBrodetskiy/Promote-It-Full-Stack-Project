@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
     public isLoggedIn = false;
+    public loading = false;
     public title = 'promote-it-project';
     public userTypeId: string;
     public UserType = UserType;
@@ -23,10 +24,12 @@ export class AppComponent {
     ) { }
 
     ngOnInit() {
+        this.loading = true;
         this.isLoggedIn = (localStorage.getItem('isLoggedIn') === 'true');
         this.authService.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);
         this.authService.userTypeId$.subscribe(userTypeId => this.userTypeId = userTypeId);
         window.addEventListener("beforeunload", (e) => this.authService.logout());
+        this.loading = false;
     }
 
 }

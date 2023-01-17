@@ -17,7 +17,6 @@ export class States {
 
     //social activist
     public static balance: string = "get-balance";
-    public static createTransaction: string = "purchase-product";
 
 }
 
@@ -31,7 +30,6 @@ export class Endpoints {
 
     //business owner
     public static campaigns: string = `${Endpoints.baseUrlNode}campaign/`;
-
     public static donateNewProduct: string = `${Endpoints.baseUrlC}BusinessOwner/AddProduct`;
     public static donateProductToCampaign: string = `${Endpoints.baseUrlC}BusinessOwner/DonateProductsToCampaign`;
     public static orders: string = `${Endpoints.baseUrlC}BusinessOwner/GetOrders`;
@@ -47,6 +45,8 @@ export class Endpoints {
     public static balance: string = "get-balance";
     public static createTransaction: string = `${Endpoints.baseUrlC}SocialActivist/CreateTransaction`;
     public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/get-all/`;
+    public static getBalanceByCampaignId: string = `${Endpoints.baseUrlC}SocialActivist/GetBalanceByCampaignId/`;
+
 
 
     //TODO: remove?

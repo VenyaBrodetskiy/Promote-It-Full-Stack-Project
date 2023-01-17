@@ -1,3 +1,54 @@
-<bo-products-of-campaign
-    [campaignId]="campaignId">
-</bo-products-of-campaign>
+
+    <div class="d-flex border-bottom align-items-center">
+        <div class="m-1 col-3">
+            <label for="campaignSelect" class="form-label" [innerHTML]="campaignLabel"></label>
+            <select
+                class="form-select"
+                id="campaignSelect"
+                name="campaignSelect"
+                [(ngModel)]="selectedCampaign"
+                [attr.aria-label]="campaignLabel"
+                (ngModelChange)="onCampaignSelected()">
+                    <option
+                        *ngFor="let campaignOption of campaignOptions$ | async; index as i"
+                        [ngValue]="campaignOption"
+                    [innerHTML]="campaignOption.hashtag">
+                </option>
+            </select>
+        </div>
+        <div class="m-1 col-1">
+            <div>&nbsp;</div>
+        </div>
+        <div class="card m-1 col-4">
+            <div class="card-body">
+                <h5 class="card-title">Your balance for this campaign is:</h5>
+                <p class="card-text" [innerHTML]="balance$ | async"></p>
+            </div>
+        </div>
+    </div>
+
+    <br/><br />
+    <div class="d-flex border-bottom align-items-center">
+        <div class="m-1 col-2">
+            <div>Product title</div>
+        </div>
+        <div class="m-1 col-2">
+            <div>Company name</div>
+        </div>
+        <div class="m-1 col-1">
+            <div>Price</div>
+        </div>
+        <div class="m-1 col-1">
+            <div>Qty</div>
+        </div>
+        <div class="m-1 col-1">
+            <div>&nbsp;</div>
+        </div>
+        <div class="m-1 col-1">
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <bo-products-of-campaign
+        [campaignId]="campaignId">
+    </bo-products-of-campaign>

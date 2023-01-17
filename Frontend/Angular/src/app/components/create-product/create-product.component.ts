@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { INewProduct } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
     selector: 'bo-create-product',
@@ -22,7 +23,8 @@ export class CreateProductComponent {
 
     constructor(
         private productService: ProductService,
-        private errorService: ErrorService
+        private errorService: ErrorService,
+        private loadingService: LoadingService,
     ) {
         this.productTitleControl = new FormControl('', [Validators.required]);
         this.productPriceControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
@@ -35,6 +37,7 @@ export class CreateProductComponent {
 
     public onSubmit(): void {
         if (this.productTitleControl.valid && this.productPriceControl.valid) {
+            this.loadingService.loadingOn();
             this.errorService.clear();
             let productTitle = this.productTitleControl.value;
             let productPrice = this.productPriceControl.value;
@@ -45,21 +48,23 @@ export class CreateProductComponent {
             this.productService.create(body).pipe(
                 takeUntil(this.unsubscribe$)
             )
-                .subscribe(
-                    response => {
+                .subscribe({
+                    next: response => {
                         if (response.status === 200) {
                             this.toggle = !this.toggle;
                             this.productTitleControl.reset();
                             this.productPriceControl.reset();
                             console.log(response);
                         } else {
-                            console.log("Error: ", response.status);
+                            console.log("Error: ", response.status, response.body);
                         }
+                        this.loadingService.loadingOff();
                     },
-                    error => {
+                    error: error => {
                         console.log("Error: ", error);
+                        this.loadingService.loadingOff();
                     }
-                );
+                });
         }
     }
 

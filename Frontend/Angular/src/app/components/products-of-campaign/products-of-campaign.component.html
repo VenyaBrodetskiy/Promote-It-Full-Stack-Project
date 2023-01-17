@@ -1,3 +1,24 @@
-<bo-table-line
-    *ngFor="let row of rows$ | async; let i = index" [row]="row"
-></bo-table-line>
+<div *ngIf="campaignId; else chooseCampaign">
+    <div *ngIf="rows$ | async">
+        <ng-container *ngIf="(rows$ | async)?.length">
+            <bo-table-line
+                *ngFor="let row of rows$ | async; let i = index" [row]="row"
+            ></bo-table-line>
+        </ng-container>
+
+    </div>
+
+    <ng-container *ngIf="(rows$ | async)?.length === 0">
+        <div class="alert alert-info" role="alert">
+            No products donated to this campaign :(
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #chooseCampaign>
+    <div class="alert alert-info" role="alert">
+        Please chooose campaign to check your balance and avaliable products
+    </div>
+</ng-template>
+
+

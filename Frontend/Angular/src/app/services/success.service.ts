@@ -7,9 +7,9 @@ import { Subject } from 'rxjs';
 export class SuccessService {
     success$ = new Subject<string>()
 
-    public handle(message: string) {
+    public handle(message: string, time: number) {
         this.success$.next(message)
-        setTimeout(() => this.clear(), 2000);
+        setTimeout(() => this.clear(), time);
     }
 
     public clear() {

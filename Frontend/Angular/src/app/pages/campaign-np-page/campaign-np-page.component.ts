@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { ICampaign } from 'src/app/models/campaign';
 import { CampaignService } from 'src/app/services/campaign.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'bo-campaign-np-page',
@@ -11,10 +12,16 @@ import { CampaignService } from 'src/app/services/campaign.service';
 export class CampaignNpPageComponent {
     campaigns$: Observable<ICampaign[]>;
 
-    constructor(private campaignService: CampaignService) {
+    constructor(
+        private campaignService: CampaignService,
+        private loadingService: LoadingService,
+    ) {
     }
 
     ngOnInit(): void {
-        this.campaigns$ = this.campaignService.getByNonProfitId();
+        this.loadingService.loadingOn();
+        this.campaigns$ = this.campaignService.getByNonProfitId().pipe(
+            finalize(() => this.loadingService.loadingOff())
+        );
     }
 }

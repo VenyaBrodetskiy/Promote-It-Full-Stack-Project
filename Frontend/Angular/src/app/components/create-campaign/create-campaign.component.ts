@@ -4,6 +4,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { FormControl, Validators } from '@angular/forms';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
     selector: 'bo-create-campaign',
@@ -21,7 +22,8 @@ export class CreateCampaignComponent {
 
     constructor(
         private campaignService: CampaignService,
-        private errorService: ErrorService
+        private errorService: ErrorService,
+        private loadingService: LoadingService,
     ) {
         this.hashtagControl = new FormControl('', [Validators.required, Validators.pattern(/^#[a-zA-Z0-9_]{1,280}$/)]);
         this.landingPageControl = new FormControl('', [Validators.required, Validators.pattern(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)]);
@@ -34,6 +36,7 @@ export class CreateCampaignComponent {
 
 
     public onSubmit(): void {
+        this.loadingService.loadingOn();
         if (this.hashtagControl.valid && this.landingPageControl.valid) {
             this.errorService.clear();
             let hashtag = this.hashtagControl.value;
@@ -53,11 +56,13 @@ export class CreateCampaignComponent {
                             this.landingPageControl.reset();
                             console.log(response);
                         } else {
-                            console.log("Error: ", response.status);
+                            console.log("Error: ", response.status, response.body);
                         }
+                        this.loadingService.loadingOff();
                     },
                     error: error => {
                         console.log("Error: ", error);
+                        this.loadingService.loadingOff();
                     }
                 });
             console.log(body);
