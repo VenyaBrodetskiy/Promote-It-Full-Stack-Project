@@ -41,12 +41,12 @@ export class Endpoints {
 
     //non-profit organization
     public static createCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
-    public static npCampaigns: string = `${Endpoints.baseUrlNode}campaign/non-profit/`;
+    public static npCampaigns: string = `${Endpoints.baseUrlNode}campaign/non-profit`;
 
     //social activist
     public static balance: string = "get-balance";
     public static createTransaction: string = `${Endpoints.baseUrlC}SocialActivist/CreateTransaction`;
-    public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
+    public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/get-all/`;
 
 
     //TODO: remove?
