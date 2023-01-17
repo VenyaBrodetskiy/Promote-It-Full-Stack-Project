@@ -46,7 +46,7 @@ export class Endpoints {
     //social activist
     public static balance: string = "get-balance";
     public static createTransaction: string = `${Endpoints.baseUrlC}SocialActivist/CreateTransaction`;
-    public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
+    public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/get-all/`;
 
 
     //TODO: remove?
