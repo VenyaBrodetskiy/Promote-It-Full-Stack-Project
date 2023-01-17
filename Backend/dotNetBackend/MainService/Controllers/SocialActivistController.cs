@@ -30,12 +30,12 @@ namespace dotNetBackend.Controllers
             ILogger<SocialActivistController> logger,
             HttpClient httpClient,
             MasaProjectDbContext db,
-            SocialActivistService SAService, 
+            SocialActivistService SAService,
             UserToCampaignBalanceService UtCBService,
             ProductToCampaignQtyService PtCQtyService,
             TransactionService TService,
             TransactionValidationService TVService,
-            ProductService ProductService) 
+            ProductService ProductService)
         {
             _logger = logger;
             _httpClient = httpClient;
@@ -120,6 +120,35 @@ namespace dotNetBackend.Controllers
             try
             {
                 var result = await _userToCampaignService.GetUserBalances(UserId);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpGet("{CampaignId}")]
+        [Authorize(Policy = Policies.SocialActivist)]
+        public async Task<ActionResult<UserToCampaignBalanceDTO>> GetBalanceByCampaignId(int CampaignId)
+        {
+            _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
+
+            int UserId = HttpHelper.GetUserId(HttpContext);
+
+            _logger.LogInformation("User id from token: {UserId}", UserId);
+
+            try
+            {
+                var result = await _userToCampaignService.GetBalance(UserId, CampaignId);
 
                 if (result == null)
                 {

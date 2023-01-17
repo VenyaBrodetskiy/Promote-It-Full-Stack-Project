@@ -3,6 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { States } from 'src/app/constants';
 import { TransactionStates } from 'src/app/enums';
 import { IChangeOrder, IOrder } from 'src/app/models/order';
+import { LoadingService } from 'src/app/services/loading.service';
 import { OrderService } from 'src/app/services/order.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class OrderComponent {
     public body: IChangeOrder;
 
     constructor(
-        private orderService: OrderService
+        private orderService: OrderService,
+        private loadingService: LoadingService,
     ) { }
 
     public ngOnDestroy(): void {
@@ -30,6 +32,7 @@ export class OrderComponent {
     }
 
     public onClick(orderId: number): void {
+        this.loadingService.loadingOn();
         this.isButtonDisabled = true;
         this.body = {
             id: orderId,
@@ -38,19 +41,21 @@ export class OrderComponent {
         this.orderService.changeState(this.body).pipe(
             takeUntil(this.unsubscribe$)
         )
-            .subscribe(
-                response => {
+            .subscribe({
+                next: response => {
                     if (response.status === 200) {
                         this.order = response.body!;
                         console.log(response);
                     } else {
-                        console.log("Error: ", response.status);
+                        console.log("Error: ", response.status, response.body);
                     }
+                    this.loadingService.loadingOn();
                 },
-                error => {
+                error: error => {
                     console.log("Error: ", error);
+                    this.loadingService.loadingOn();
                 }
-            );
+            });
         console.log(orderId);
     }
 }

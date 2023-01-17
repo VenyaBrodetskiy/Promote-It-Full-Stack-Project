@@ -6,6 +6,7 @@ import { IUser } from 'src/app/models/user';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { States } from 'src/app/constants';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
     selector: 'bo-sign-up-page',
@@ -55,28 +56,31 @@ export class SignUpPageComponent {
     constructor(
         private userService: UserService,
         private router: Router,
-        private successService: SuccessService
+        private successService: SuccessService,
+        private loadingService: LoadingService,
     ) {
     }
 
     public onSignUpBusinessOwner() {
         this.businessOwner.login = this.user.login;
         this.businessOwner.password = this.user.password;
-
+        this.loadingService.loadingOn();
         this.userService.addBusinessOwner(this.businessOwner)
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
                         console.log(response);
                         console.log("Added user: ", response.body);
-                        this.successService.handle("Signed up sucessfully. Please Log in");
+                        this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
                         console.log("Error: ", response.status, response.body);
                     }
+                    this.loadingService.loadingOff();
                 },
                 error: (error) => {
                     console.log("Error: ", error);
+                    this.loadingService.loadingOff();
                 }
             })
     }
@@ -84,21 +88,23 @@ export class SignUpPageComponent {
     public onSignUpSocialActivist() {
         this.socialActivist.login = this.user.login;
         this.socialActivist.password = this.user.password;
-
+        this.loadingService.loadingOn();
         this.userService.addSocialActivist(this.socialActivist)
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
                         console.log(response);
                         console.log("Added user: ", response.body);
-                        this.successService.handle("Signed up sucessfully. Please Log in");
+                        this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
                         console.log("Error: ", response.status, response.body);
                     }
+                    this.loadingService.loadingOff();
                 },
                 error: (error) => {
                     console.log("Error: ", error);
+                    this.loadingService.loadingOff();
                 }
             })
     }
@@ -106,21 +112,23 @@ export class SignUpPageComponent {
     public onSignUpNonProfit() {
         this.nonProfitOrg.login = this.user.login;
         this.nonProfitOrg.password = this.user.password;
-
+        this.loadingService.loadingOn();
         this.userService.addNonProfitUser(this.nonProfitOrg)
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
                         console.log(response);
                         console.log("Added user: ", response.body);
-                        this.successService.handle("Signed up sucessfully. Please Log in");
+                        this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
                         console.log("Error: ", response.status, response.body);
                     }
+                    this.loadingService.loadingOff();
                 },
                 error: (error) => {
                     console.log("Error: ", error);
+                    this.loadingService.loadingOff();
                 }
             })
     }

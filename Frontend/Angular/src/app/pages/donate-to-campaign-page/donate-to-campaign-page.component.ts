@@ -8,6 +8,7 @@ import { IProduct } from 'src/app/models/product';
 import { CampaignService } from 'src/app/services/campaign.service';
 import { DonationService } from 'src/app/services/donation.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { LoadingService } from 'src/app/services/loading.service';
 import { ProductService } from 'src/app/services/product.service';
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,7 +35,8 @@ export class DonateToCampaignPageComponent {
         private campaignService: CampaignService,
         private productService: ProductService,
         private donationService: DonationService,
-        private errorService: ErrorService
+        private errorService: ErrorService,
+        private loadingService: LoadingService,
     ) {
         this.productQtyControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
     }
@@ -52,6 +54,7 @@ export class DonateToCampaignPageComponent {
 
     public onSubmit(selectedCampaign: ICampaign, selectedProduct: IProduct, productQty: number): void {
         if (this.productQtyControl.valid) {
+            this.loadingService.loadingOn();
             this.errorService.clear();
             let body: IDonation = {
                 productId: selectedProduct.id,
@@ -61,20 +64,22 @@ export class DonateToCampaignPageComponent {
             this.donationService.create(body).pipe(
                 takeUntil(this.unsubscribe$)
             )
-                .subscribe(
-                    response => {
+                .subscribe({
+                    next: response => {
                         if (response.status === 200) {
                             this.toggle = !this.toggle;
                             this.productQtyControl.reset();
                             console.log(response);
                         } else {
-                            console.log("Error: ", response.status);
+                            console.log("Error: ", response.status, response.body);
                         }
+                        this.loadingService.loadingOff();
                     },
-                    error => {
+                    error: error => {
                         console.log("Error: ", error);
+                        this.loadingService.loadingOff();
                     }
-                );
+                });
             console.log(body);
         }
     }

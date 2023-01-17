@@ -1,5 +1,5 @@
 <div *ngIf="successService.success$ | async as success">
-    <ngb-alert type="success"
+    <ngb-alert class="text-center" type="success"
         (closed)="successService.clear()">
     {{ success }}
     </ngb-alert>

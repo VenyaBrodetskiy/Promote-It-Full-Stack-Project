@@ -1,6 +1,6 @@
 <div *ngIf="toggle; else donationAdded">
     <div>
-        <label for="unique" class="form-label" [innerHTML]="campaignLabel"></label>
+        <label for="campaignSelect" class="form-label" [innerHTML]="campaignLabel"></label>
         <select class="form-select" id="campaignSelect" name="campaignSelect" [(ngModel)]="selectedCampaign"
             [attr.aria-label]="campaignLabel" (ngModelChange)="onCampaignSelected()">
             <option *ngFor="let campaignOption of campaignOptions$ | async; index as i" [ngValue]="campaignOption"
@@ -10,7 +10,7 @@
     </div>
 
     <div>
-        <label for="unique" class="form-label" [innerHTML]="productLabel"></label>
+        <label for="productSelect" class="form-label" [innerHTML]="productLabel"></label>
         <select class="form-select" id="productSelect" name="productSelect" [(ngModel)]="selectedProduct"
             [attr.aria-label]="productLabel" (ngModelChange)="onProductSelected()">
             <option *ngFor="let productOption of productOptions$ | async; index as i" [ngValue]="productOption"

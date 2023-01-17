@@ -1,5 +1,5 @@
 <div *ngIf="errorService.error$ | async as error">
-    <ngb-alert type="danger"
+    <ngb-alert class="text-center" type="danger"
         (closed)="errorService.clear()">
         Something bad happened. Please try again later. <br>
     </ngb-alert>

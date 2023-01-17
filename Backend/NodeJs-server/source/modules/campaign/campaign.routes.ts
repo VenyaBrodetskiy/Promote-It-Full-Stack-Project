@@ -13,7 +13,7 @@ export class CampaignRoutes extends RouteConfig {
     configureRoutes() {
 
         this.app.route(`/${this.baseUrl}`).get([
-            AuthMiddleware.verifyToken([UserType.system, UserType.businessOwner]),
+            AuthMiddleware.verifyToken([UserType.system, UserType.businessOwner, UserType.socialActivist]),
             CampaignController.getAllCampaigns]);
 
         this.app.route(`/${this.baseUrl}/get-all/:id`).get([

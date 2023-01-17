@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AuthStateService } from 'src/app/services/authstate.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { SuccessService } from 'src/app/services/success.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 @Component({
@@ -26,24 +27,26 @@ export class LoginPageComponent {
         private errorService: ErrorService,
         private router: Router,
         private authStateService: AuthStateService,
-        private successService: SuccessService
+        private successService: SuccessService,
+        private loadingService: LoadingService,
     ) {
         this.user = {} as any;
         this.initialize();
     }
 
     public onLoginClick(): void {
+        this.loadingService.loadingOn();
         this.errorService.clear();
         this.authService.login(this.user).pipe(
             takeUntil(this.unsubscribe$)
         )
-            .subscribe(
-                response => {
+            .subscribe({
+                next: response => {
                     if (response.status === 200) {
                         this.toggle = !this.toggle;
                         this.isLoggedIn = true;
                         this.authStateService.setIsLoggedIn(this.isLoggedIn);
-                        this.successService.handle("Logged in sucessfully");
+                        this.successService.handle("Logged in sucessfully", 2000);
                         console.log("Logged in");
                         this.authService.getUserType().pipe(
                             takeUntil(this.unsubscribe$)
@@ -52,13 +55,15 @@ export class LoginPageComponent {
                                 console.log(response);
                             });
                     } else {
-                        console.log("Error: ", response.status);
+                        console.log("Error: ", response.status, response.body);
                     }
+                    this.loadingService.loadingOff();
                 },
-                error => {
+                error: error => {
                     console.log("Error: ", error);
+                    this.loadingService.loadingOff();
                 }
-            );
+            });
     }
 
     public onSignUpClick(): void {
