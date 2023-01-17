@@ -15,6 +15,10 @@ export class States {
     public static createCampaign: string = "create-campaign";
     public static npCampaigns: string = "np-campaigns";
 
+    //social activist
+    public static balance: string = "get-balance";
+    public static createTransaction: string = "purchase-product";
+
 }
 
 export class Endpoints {
@@ -38,6 +42,11 @@ export class Endpoints {
     //non-profit organization
     public static createCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
     public static npCampaigns: string = `${Endpoints.baseUrlNode}campaign/non-profit/`;
+
+    //social activist
+    public static balance: string = "get-balance";
+    public static createTransaction: string = `${Endpoints.baseUrlC}SocialActivist/CreateTransaction`;
+    public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/`;
 
 
     //TODO: remove?

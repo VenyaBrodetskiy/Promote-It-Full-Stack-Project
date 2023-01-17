@@ -9,6 +9,9 @@
         <div class="col-3" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
             <bo-menu-np></bo-menu-np>
         </div>
+        <div class="col-3" *ngIf="isLoggedIn && (userTypeId == SocialActivist)">
+            <bo-menu-sa></bo-menu-sa>
+    </div>
         <div [ngClass]="isLoggedIn ? 'col-9' : 'col-12'">
             <br />
             <router-outlet></router-outlet>

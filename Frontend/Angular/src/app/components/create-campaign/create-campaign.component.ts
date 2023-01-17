@@ -1,9 +1,3 @@
-// TODO: now is not used. created for checking if the problem is with addProduct in frontend or in backend, because same method, but different back
-// addProduct - C#, addCampaign - nodeJS
-// kept in case this front will be expanded to social activist. if not - need to remove
-// when remove - refactor
-
-
 import { INewCampaign } from 'src/app/models/campaign';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -51,8 +45,8 @@ export class CreateCampaignComponent {
             this.campaignService.create(body).pipe(
                 takeUntil(this.unsubscribe$)
             )
-                .subscribe(
-                    response => {
+                .subscribe({
+                    next: response => {
                         if (response.status === 200) {
                             this.toggle = !this.toggle;
                             this.hashtagControl.reset();
@@ -62,10 +56,10 @@ export class CreateCampaignComponent {
                             console.log("Error: ", response.status);
                         }
                     },
-                    error => {
+                    error: error => {
                         console.log("Error: ", error);
                     }
-                );
+                });
             console.log(body);
         }
     }

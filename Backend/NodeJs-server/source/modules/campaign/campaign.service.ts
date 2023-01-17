@@ -1,4 +1,4 @@
-import { nonProfitOrganization } from './../../common/entities';
+import { nonProfitOrganization, productsForCampaign } from './../../common/entities';
 import { Statuses } from "../../common/enums";
 import { campaign, campaignWitnProducts, entityWithId, systemError } from "../../common/entities";
 import { CampaignQueries } from "./campaign.queries";
@@ -15,6 +15,14 @@ export interface localCampaignWitnProducts extends localCampaign {
     product_title: string;
     business_owner_name: string;
     product_qty: number;
+}
+
+interface localProductsForCampaign extends entityWithId {
+    product_id: number;
+    product_title: string;
+    product_price: string;
+    product_qty: string;
+    campany_name: string;
 }
 
 interface ICampaignService {
@@ -53,6 +61,21 @@ class CampaignService implements ICampaignService {
                 .then((queryResult: localCampaignWitnProducts[]) => {
                     queryResult.forEach((campaign: localCampaignWitnProducts) => {
                         result.push(this.parseLocalCampaignWitnProducts(campaign))
+                    });
+                    resolve(result);
+                })
+                .catch((error: systemError) => reject(error));
+        });
+    }
+
+    public GetAllProductsForCampaign(campaignId: number): Promise<productsForCampaign[]> {
+        return new Promise<productsForCampaign[]>((resolve, reject) => {
+            const result: productsForCampaign[] = [];
+
+            SqlHelper.executeQueryArrayResult<localProductsForCampaign>(CampaignQueries.GetAllProductsForCampaign, campaignId, Statuses.Active)
+                .then((queryResult: localProductsForCampaign[]) => {
+                    queryResult.forEach((obj: localProductsForCampaign) => {
+                        result.push(this.parseLocalProductsForCampaign(obj))
                     });
                     resolve(result);
                 })
@@ -100,6 +123,17 @@ class CampaignService implements ICampaignService {
             hashtag: campaign.hashtag,
             landingPage: campaign.landing_page,
             nonProfitOrganizationName: campaign.non_profit_organization_name,
+        }
+    }
+
+    private parseLocalProductsForCampaign(result: localProductsForCampaign): productsForCampaign {
+        return {
+            id: result.id,
+            productId: result.product_id,
+            productTitle: result.product_title,
+            productPrice: result.product_price,
+            productQty: result.product_qty,
+            companyName: result.campany_name
         }
     }
 

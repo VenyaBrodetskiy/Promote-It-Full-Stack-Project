@@ -17,10 +17,14 @@ export interface campaignWitnProducts extends campaign {
 
 }
 
-// export interface jwtUserData {
-//     userId: number;
-//     userTypeId: UserType;
-// }
+// id - campaignId
+export interface productsForCampaign extends entityWithId {
+    productId: number;
+    productTitle: string;
+    productPrice: string;
+    productQty: string;
+    companyName: string;
+}
 
 export interface user extends entityWithId {
     userTypeId: number;
