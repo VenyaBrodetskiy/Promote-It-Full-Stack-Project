@@ -1,0 +1,60 @@
+﻿@page "/campaigns"
+@attribute [Authorize(Roles = "ProLobbyOwner")]
+
+
+<PageTitle>Campaigns</PageTitle>
+
+<h4 class="display-4 border-4 border-bottom">Campaigns</h4>
+
+@if (campaigns == null)
+{
+    @if (ShowError)
+    {
+        <div class="alert alert-danger text-wrap" role="alert">
+            @Error
+        </div>
+    }
+    else
+    { 
+        <div class="">
+            <Loading />
+        </div>
+    }
+}
+else
+{
+    <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="m-1 mx-3 fs-5 fw-bold">
+            id
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            #hashtag
+        </div>
+        <div class="m-1 col-4 fs-5 fw-bold">
+            Website
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Owner
+        </div>
+
+    </div>
+
+    @foreach (var campaign in campaigns)
+    {
+        <div class="d-flex align-items-center border-bottom justify-content-between">
+            <div class="m-1 mx-3 text-break">
+                @campaign.Id
+            </div>
+            <div class="m-1 col-3 text-break">
+                @campaign.Hashtag
+            </div>
+            <div class="m-1 col-4 text-break">
+                @campaign.LandingPage
+            </div>
+            <div class="m-1 col-3 text-break">
+                @campaign.NonProfitOrganizationName
+            </div>
+
+        </div>
+    }
+}

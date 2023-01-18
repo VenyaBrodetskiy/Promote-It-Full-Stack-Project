@@ -1,0 +1,16 @@
+﻿[
+  {
+    "User": "Danya",
+    "PublishedOn": "2018-05-01",
+    "Link": "short.link",
+    "Retweets": 3,
+    "Body": "Here is text of big great tweet #hashhash @tagthisuser old old GOGOGOGO"
+  },
+  {
+    "User": "Danya2",
+    "PublishedOn": "2017-05-01",
+    "Link": "short.link2",
+    "Retweets": 0,
+    "Body": "Here is text of big great big greatbig greatbig great tweet #hashhash @tagthisuser old old GOGOGOGO"
+  }
+]

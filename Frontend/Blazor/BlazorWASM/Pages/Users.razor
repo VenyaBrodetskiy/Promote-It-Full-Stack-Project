@@ -1,0 +1,162 @@
+﻿@page "/users"
+@attribute [Authorize(Roles = "ProLobbyOwner")]
+
+<PageTitle>Users</PageTitle>
+
+@if (boUsers == null || npUsers == null || saUsers == null)
+{
+    <h4 class="display-4 border-4 border-bottom">Users</h4>
+    <div class="">
+            <Loading />
+    </div>
+}
+
+@if (boUsers == null)
+{
+    @if (ShowError)
+    {
+        <div class="alert alert-danger text-wrap" role="alert">
+            @Error
+        </div>
+    }
+}
+else
+{
+    <h4 class="display-4 border-4 border-bottom">Business owners</h4>
+
+    <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="m-1 mx-3 fs-5 fw-bold">
+            id
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Name
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Email
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Twitter
+        </div>
+    </div>
+
+    @foreach (var boUser in boUsers)
+    {
+        <div class="d-flex align-items-center border-bottom justify-content-between">
+            <div class="m-1 mx-3 text-break">
+                @boUser.Id
+            </div>
+            <div class="m-1 col-3 text-break">
+                @boUser.Name
+            </div>
+            <div class="m-1 col-3 text-break">
+                @boUser.Email
+            </div>
+            <div class="m-1 col-3 text-break">
+                @boUser.TwitterHandle
+            </div>
+        </div>
+    }
+
+}
+
+@if (npUsers == null)
+{
+    @if (ShowError)
+    {
+        <div class="alert alert-danger text-wrap" role="alert">
+            @Error
+        </div>
+    }
+}
+else
+{
+    <h4 class="mt-5 display-4 border-4 border-bottom">Non profit organizations</h4>
+
+    <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="m-1 mx-3 fs-5 fw-bold">
+            id
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Name
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Email
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Website
+        </div>
+    </div>
+
+    @foreach (var npUser in npUsers)
+    {
+        <div class="d-flex align-items-center border-bottom justify-content-between">
+            <div class="m-1 mx-3 text-break">
+                @npUser.Id
+            </div>
+            <div class="m-1 col-3 text-break">
+                @npUser.Name
+            </div>
+            <div class="m-1 col-3 text-break">
+                @npUser.Email
+            </div>
+            <div class="m-1 col-3 text-break">
+                @npUser.Website
+            </div>
+        </div>
+    }
+
+}
+
+@if (saUsers == null)
+{
+    @if (ShowError)
+    {
+        <div class="alert alert-danger text-wrap" role="alert">
+            @Error
+        </div>
+    }
+}
+else
+{
+    <h4 class="mt-5 display-4 border-4 border-bottom">Bloggers</h4>
+
+    <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="m-1 mx-3 fs-5 fw-bold">
+            id
+        </div>
+        <div class="m-1 col-2 fs-5 fw-bold">
+            Twitter
+        </div>
+        <div class="m-1 col-2 fs-5 fw-bold">
+            Email
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Address
+        </div>
+        <div class="m-1 col-2 fs-5 fw-bold">
+            Phone
+        </div>
+    </div>
+
+    @foreach (var saUser in saUsers)
+    {
+        <div class="d-flex align-items-center border-bottom justify-content-between">
+            <div class="m-1 mx-3 text-break">
+                @saUser.Id
+            </div>
+            <div class="m-1 col-2 text-break">
+                @saUser.TwitterHandle
+            </div>
+            <div class="m-1 col-2 text-break">
+                @saUser.Email
+            </div>
+            <div class="m-1 col-3 text-break">
+                @saUser.Address
+            </div>
+            <div class="m-1 col-2 text-break">
+                @saUser.PhoneNumber
+            </div>
+        </div>
+    }
+
+}

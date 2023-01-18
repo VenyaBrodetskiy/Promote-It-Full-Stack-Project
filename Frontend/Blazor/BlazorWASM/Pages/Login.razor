@@ -1,0 +1,50 @@
+﻿@page "/"
+
+
+<AuthorizeView Roles="ProLobbyOwner">
+    <Authorized>
+        @*<div class="col-12 alert alert-warning text-wrap" role="alert">
+            It seems that you are not a ProLobby owner
+        </div>*@
+    </Authorized>
+    <NotAuthorized>
+        <PageTitle>Sign In</PageTitle>
+
+        <div class="d-flex flex-column align-items-center">
+            <div class="mb-3 col-6 display-4">
+                Please log in
+            </div>
+            <div class="col-6">
+                <input type="text" class="form-control" id="login"
+                       placeholder="Login" @bind-value="@_user.Login" />
+            </div>
+
+            <div class="mt-1 mb-3 col-6">
+                <input type="password" class="form-control" id="password"
+                       placeholder="Password" @bind-value="@_user.Password" />
+            </div>
+
+            <div class="mb-3 col-6">
+                <button class="btn btn-primary my-1" @onclick="OnLoginClick">Login</button>
+            </div>
+
+            @if (loading)
+            {
+                <Loading />
+            }
+            
+            @if (ShowAuthError)
+            {
+                <div class="col-6 alert alert-danger text-wrap" role="alert">
+                    @Error
+                </div>
+            }
+        </div>
+
+        
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

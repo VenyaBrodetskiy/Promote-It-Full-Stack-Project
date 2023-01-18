@@ -1,0 +1,65 @@
+﻿@page "/tweets"
+@attribute [Authorize(Roles = "ProLobbyOwner")]
+
+
+<PageTitle>Tweets</PageTitle>
+
+<h4 class="display-4 border-4 border-bottom">Tweets</h4>
+
+@if (tweets == null)
+{
+    @if (ShowError)
+    {
+        <div class="alert alert-danger text-wrap" role="alert">
+            @Error
+        </div>
+    }
+    else
+    { 
+        <div class="">
+            <Loading />
+        </div>
+    }
+}
+else
+{
+    <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="m-1 mx-3 fs-5 fw-bold">
+            User
+        </div>
+        <div class="m-1 col-1 fs-5 fw-bold">
+            Date
+        </div>
+        <div class="m-1 col-1 fs-5 fw-bold">
+            Link
+        </div>
+        <div class="m-1 col-1 fs-5 fw-bold">
+            Retweets
+        </div>
+        <div class="m-1 col-3 fs-5 fw-bold">
+            Text
+        </div>
+
+    </div>
+
+    @foreach (var tweet in tweets)
+    {
+        <div class="d-flex align-items-center border-bottom justify-content-between">
+            <div class="m-1 mx-3 text-break">
+                @tweet.User
+            </div>
+            <div class="m-1 col-1 text-break">
+                @tweet.PublishedOn
+            </div>
+            <div class="m-1 col-1 text-break">
+                @tweet.Link
+            </div>
+            <div class="m-1 col-1 text-break">
+                @tweet.Retweets
+            </div>
+            <div class="m-1 col-3 text-break">
+                @tweet.Body
+            </div>
+        </div>
+    }
+}
