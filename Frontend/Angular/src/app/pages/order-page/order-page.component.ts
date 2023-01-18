@@ -10,14 +10,14 @@ import { OrderService } from 'src/app/services/order.service';
     styleUrls: ['./order-page.component.less']
 })
 export class OrderPageComponent implements OnInit {
-    orders$: Observable<IOrder[]>;
+    public orders$: Observable<IOrder[]>;
 
     constructor(
         private orderService: OrderService,
         private loadingService: LoadingService,
     ) { }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.loadingService.loadingOn();
         this.orders$ = this.orderService.getAll().pipe(
             finalize(() => this.loadingService.loadingOff())

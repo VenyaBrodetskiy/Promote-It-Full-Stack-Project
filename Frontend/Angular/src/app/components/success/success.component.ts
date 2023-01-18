@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class SuccessComponent {
 
-    constructor(public successService: SuccessService) {
-
-    }
+    constructor(
+        public successService: SuccessService
+    ) { }
 }

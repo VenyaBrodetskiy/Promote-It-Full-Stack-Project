@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class LoadingService {
 
-    loading$ = new Subject<boolean>()
+    public loading$ = new Subject<boolean>()
 
     public loadingOn() {
         this.loading$.next(true);

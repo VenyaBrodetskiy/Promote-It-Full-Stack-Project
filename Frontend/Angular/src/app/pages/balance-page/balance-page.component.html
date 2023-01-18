@@ -1,5 +1,5 @@
 
-    <div class="d-flex border-bottom align-items-center">
+    <div class="d-flex align-items-center">
         <div class="m-1 col-3">
             <label for="campaignSelect" class="form-label" [innerHTML]="campaignLabel"></label>
             <select
@@ -16,14 +16,9 @@
                 </option>
             </select>
         </div>
-        <div class="m-1 col-1">
-            <div>&nbsp;</div>
-        </div>
-        <div class="card m-1 col-4">
-            <div class="card-body">
-                <h5 class="card-title">Your balance for this campaign is:</h5>
-                <p class="card-text" [innerHTML]="balance$ | async"></p>
-            </div>
+        <div class="m-1 col-1">&nbsp;</div>
+        <div class="m-1 col-4 display-6">
+            Your balance: {{ balance$ | async }}
         </div>
     </div>
 
@@ -50,5 +45,7 @@
     </div>
 
     <bo-products-of-campaign
-        [campaignId]="campaignId">
+        (balanceChanged)="changedBalance()"
+        [campaignId]="campaignId"
+        [userBalance]="(balance$ | async)!">
     </bo-products-of-campaign>

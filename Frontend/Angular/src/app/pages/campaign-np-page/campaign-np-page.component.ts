@@ -10,7 +10,7 @@ import { LoadingService } from 'src/app/services/loading.service';
   styleUrls: ['./campaign-np-page.component.less']
 })
 export class CampaignNpPageComponent {
-    campaigns$: Observable<ICampaign[]>;
+    public campaigns$: Observable<ICampaign[]>;
 
     constructor(
         private campaignService: CampaignService,
@@ -18,7 +18,7 @@ export class CampaignNpPageComponent {
     ) {
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.loadingService.loadingOn();
         this.campaigns$ = this.campaignService.getByNonProfitId().pipe(
             finalize(() => this.loadingService.loadingOff())

@@ -7,6 +7,8 @@ import { ErrorService } from '../../services/error.service';
     styleUrls: ['./error.component.less']
 })
 export class ErrorComponent {
-    constructor(public errorService: ErrorService) { }
+    constructor(
+        public errorService: ErrorService
+    ) { }
 
 }

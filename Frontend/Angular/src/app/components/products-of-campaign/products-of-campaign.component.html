@@ -3,6 +3,8 @@
         <ng-container *ngIf="(rows$ | async)?.length">
             <bo-table-line
                 *ngFor="let row of rows$ | async; let i = index" [row]="row"
+                (balanceChanged)="checkBalance()"
+                [userBalance]="userBalanceForComponent"
             ></bo-table-line>
         </ng-container>
 
