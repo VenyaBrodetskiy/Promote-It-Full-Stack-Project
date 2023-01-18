@@ -7,6 +7,8 @@ import { LoadingService } from 'src/app/services/loading.service';
   styleUrls: ['./loading.component.less']
 })
 export class LoadingComponent {
-    constructor(public loadingService: LoadingService) { }
+    constructor(
+        public loadingService: LoadingService
+    ) { }
 
 }

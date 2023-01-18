@@ -1,5 +1,5 @@
 <ng-container *ngIf="isRowAvailable">
-   <div class="d-flex border-bottom align-items-center">
+    <div class="d-flex align-items-center border-bottom">
         <div class="m-1 col-2">
             <div [innerText]="row!.productTitle"></div>
         </div>
@@ -12,13 +12,15 @@
         <div class="m-1 col-1">
             <div [innerText]="row!.productQty"></div>
         </div>
-        <div class="m-1 col-1">
-            <button type="button" class="btn btn-info"
-            (click)="onClick(TransactionStates.Ordered)">Buy</button>
-        </div>
-        <div class="m-1 col-1">
-            <button type="button" class="btn btn-info"
-            (click)="onClick(TransactionStates.Donated)">Donate</button>
+        <div class="m-1 col-2">
+            <button type="button" class="btn btn-info mx-1"
+                [disabled]="toggle"
+                (click)="onClick(TransactionStates.Ordered)"
+                >Buy</button>
+            <button type="button" class="btn btn-info mx-1"
+                [disabled]="toggle"
+                (click)="onClick(TransactionStates.Donated)"
+                >Donate</button>
         </div>
     </div>
 </ng-container>

@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { defaultIfEmpty, finalize, map, Observable, Subject, tap } from 'rxjs';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { defaultIfEmpty, finalize, map, Observable, Subject } from 'rxjs';
 import { IBalance } from 'src/app/models/balance';
 import { ICampaign } from 'src/app/models/campaign';
 import { BalanceService } from 'src/app/services/balance.service';
 import { CampaignService } from 'src/app/services/campaign.service';
-import { ErrorService } from 'src/app/services/error.service';
 import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
@@ -23,11 +22,10 @@ export class BalancePageComponent {
         balance: 0
     }];
     public balance$: Observable<number>;
-    //public balance: number;
+
 
     constructor(
         private campaignService: CampaignService,
-        private errorService: ErrorService,
         private loadingService: LoadingService,
         private balanceService: BalanceService,
     ) { }
@@ -49,23 +47,50 @@ export class BalancePageComponent {
             this.campaignId = this.selectedCampaign.id;
             this.loadingService.loadingOn();
             this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
-                tap(balances => { if (!balances[0]) balances = this.zeroBalance }),
-                map(balances => balances[0].balance),
-                defaultIfEmpty(0),
+                defaultIfEmpty(this.zeroBalance),
+                map(balances => {
+                    if (balances.length > 0) {
+                        return balances[0].balance
+                    } else {
+                        return this.zeroBalance[0].balance
+                    }
+                }),
                 finalize(() => this.loadingService.loadingOff())
             );
             console.log(this.balance$);
         }
     }
 
-    // ngOnChanges() {
-    //     if (this.campaignId) {
-    //         this.loadingService.loadingOn();
-    //         this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
-    //             finalize(() => this.loadingService.loadingOff())
-    //         );
-    //         console.log("onChanges", this.campaignId);
-    //     }
+    public changedBalance() {
+        this.loadingService.loadingOn();
+        this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
+            defaultIfEmpty(this.zeroBalance),
+            map(balances => {
+                if (balances.length > 0) {
+                    return balances[0].balance
+                } else {
+                    return this.zeroBalance[0].balance
+                }
+            }),
+            finalize(() => this.loadingService.loadingOff())
+        );
+        console.log(this.balance$);
+    }
+
+    // public checkBalance() {
+    //     this.loadingService.loadingOn();
+    //     this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
+    //         defaultIfEmpty(this.zeroBalance),
+    //         map(balances => {
+    //             if (balances.length > 0) {
+    //                 return balances[0].balance
+    //             } else {
+    //                 return this.zeroBalance[0].balance
+    //             }
+    //         }),
+    //         finalize(() => this.loadingService.loadingOff())
+    //     );
+    //     console.log(this.balance$);
     // }
 
 }

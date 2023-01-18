@@ -1,5 +1,5 @@
 import { LoadingService } from 'src/app/services/loading.service';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TransactionStates } from 'src/app/enums';
 import { IProductForCampaignRow } from 'src/app/models/table-line';
@@ -8,6 +8,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SuccessService } from 'src/app/services/success.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'bo-table-line',
@@ -19,7 +20,11 @@ export class TableLineComponent {
     private unsubscribe$ = new Subject();
     public isRowAvailable: boolean = true;
     public TransactionStates = TransactionStates;
+    public toggle: boolean;
     @Input() row: IProductForCampaignRow | undefined;
+    @Input() userBalance: number;
+    @Output() balanceChanged = new EventEmitter();
+
 
     constructor(
         private transactionService: TransactionService,
@@ -28,6 +33,19 @@ export class TableLineComponent {
         private productService: ProductService,
         private loadingService: LoadingService,
     ) { }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes["userBalance"] && changes["row"]) {
+            let changeUserBalance = changes["userBalance"].currentValue;
+            let changeProductPrice = Number(changes["row"].currentValue.productPrice);
+            this.toggle = (changeProductPrice > changeUserBalance);
+        }
+        // else if (changes["userBalance"]) {
+        //     let changeUserBalance = changes["userBalance"].currentValue;
+        //     let changeProductPrice = Number(changes["row"].previousValue.productPrice);
+        //     this.toggle = (changeProductPrice > changeUserBalance);
+        // }
+    }
 
     public onClick(StateId: TransactionStates): void {
         this.loadingService.loadingOn();
@@ -51,18 +69,21 @@ export class TableLineComponent {
             .subscribe({
                 next: response => {
                     if (response.status === 200) {
+                        this.balanceChanged.emit();
                         this.successService.handle(message, 10000);
-                        this.productService.getProductsForCampaign(campaignId).pipe(
-                            takeUntil(this.unsubscribe$)
-                        )
-                            .subscribe({
-                                next: response => {
-                                    if (response.length && response.find(product => product.id === productId))
-                                        this.row = response.find(product => product.id === productId);
-                                    else
-                                        this.isRowAvailable = false;
-                                }
-                            });
+                        // this.productService.getProductsForCampaign(campaignId).pipe(
+                        //     takeUntil(this.unsubscribe$)
+                        // )
+                        //     .subscribe({
+                        //         next: response => {
+                        //             if (response.length && response.find(product => product.id === productId)) {
+                        //                 this.row = response.find(product => product.id === productId);
+                        //             }
+
+                        //             else
+                        //                 this.isRowAvailable = false;
+                        //         }
+                        //     });
                         console.log(response);
                     } else {
                         console.log("Error: ", response.status, response.body);

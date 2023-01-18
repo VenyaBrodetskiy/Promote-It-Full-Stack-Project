@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
     providedIn: 'root'
 })
 export class SuccessService {
-    success$ = new Subject<string>()
+    public success$ = new Subject<string>()
 
     public handle(message: string, time: number) {
         this.success$.next(message)
