@@ -1,0 +1,14 @@
+﻿[
+  {
+    "Id": 1,
+    "Name": "MyName",
+    "Email": "dfdv@fvdfv.com",
+    "TwitterHandle": "#fdkdfv"
+  },
+  {
+    "Id": 2,
+    "Name": "MyName2",
+    "Email": "dfdsadsfdv@fvdfv.com",
+    "TwitterHandle": "#asd123"
+  }
+]

@@ -4,7 +4,7 @@ using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 using System.Reflection.Metadata;
-using static BlazorWASM.Pages.Home;
+using static BlazorWASM.Pages.Login;
 using static System.Net.WebRequestMethods;
 
 namespace BlazorWASM.Services

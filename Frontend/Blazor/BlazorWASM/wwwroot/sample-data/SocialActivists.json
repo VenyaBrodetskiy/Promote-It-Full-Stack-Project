@@ -1,0 +1,16 @@
+﻿[
+  {
+    "Id": 1,
+    "TwitterHandle": "#fdkdfv",
+    "Email": "dfdv@fvdfv.com",
+    "Address": "dfdv@fvdfv.com Long adress Long adress",
+    "PhoneNumber": "84952616"
+  },
+  {
+    "Id": 2,
+    "TwitterHandle": "#twitter",
+    "Email": "aaaa@fvdfv.com",
+    "Address": "Long adress Long adress Long adress",
+    "PhoneNumber": "546165165"
+  }
+]

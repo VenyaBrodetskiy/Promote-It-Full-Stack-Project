@@ -1,0 +1,14 @@
+﻿[
+  {
+    "id": 1,
+    "hashtag": "#savethepoorolims",
+    "landingPage": "https://www.greenpeace.org/",
+    "nonProfitOrganizationName": "@Greenpeace"
+  },
+  {
+    "id": 2,
+    "hashtag": "#trytofindthishash01",
+    "landingPage": "old",
+    "nonProfitOrganizationName": "NationalGeographic"
+  }
+]
