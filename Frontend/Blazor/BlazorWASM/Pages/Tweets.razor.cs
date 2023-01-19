@@ -19,12 +19,15 @@ namespace BlazorWASM.Pages
             try
             {
                 ShowError = false;
-                //var response = await http.GetAsync("");
-                //response.EnsureSuccessStatusCode();
 
-                //tweets = await response.Content.ReadFromJsonAsync<Tweet[]>();
+                // for tests
+                // tweets = await http.GetFromJsonAsync<Tweet[]>("/sample-data/Tweets.json");
 
-                tweets = await http.GetFromJsonAsync<Tweet[]>("/sample-data/Tweets.json");
+                var response = await http.GetAsync("https://localhost:7133/getAllTweets");
+                response.EnsureSuccessStatusCode();
+
+                tweets = await response.Content.ReadFromJsonAsync<Tweet[]>();
+
 
             }
             catch (Exception ex)

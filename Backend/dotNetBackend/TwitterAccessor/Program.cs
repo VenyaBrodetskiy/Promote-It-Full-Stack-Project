@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tweetinvi.Parameters;
 using TwitterAccessor;
@@ -20,6 +21,7 @@ internal class Program
         builder.Services.AddSingleton<TwitterService>();
 
         builder.Services.AddHttpClient();
+        builder.Services.AddCors();
 
         var app = builder.Build();
 
@@ -31,6 +33,8 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseCors(
+            options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
         // Login as SystemUser
         app.UseMiddleware<LoginAsSystemUserMiddleware>();
@@ -59,6 +63,33 @@ internal class Program
                 }
             })
         .WithName("Create Tweet when Social Activist bought product from Business owner")
+        .WithOpenApi();
+
+        app.MapGet("/getAllTweets",
+            async ([FromServices] TwitterService twitterService, HttpContext httpContext) =>
+            {
+                app.Logger.LogInformation("{Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
+
+                try
+                {
+                    string? token = httpContext.Request.Headers.Authorization;
+                    if (token == null)
+                    {
+                        return Results.BadRequest("Couldn't find token");
+                    }
+                    app.Logger.LogInformation("Asking twitterService to handle request");
+
+                    var tweets = await twitterService.GetAllTweets(token);
+                    app.Logger.LogInformation("twitterService returned response");
+                    return Results.Ok(tweets);
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogInformation(ex.Message);
+                    return Results.Problem(ex.Message);
+                }
+            })
+        .WithName("GetAllTweets")
         .WithOpenApi();
 
         //app.MapPut("/UpdateBalancesByCampaignHashtag", 
