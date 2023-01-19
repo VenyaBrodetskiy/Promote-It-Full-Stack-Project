@@ -57,7 +57,7 @@ class CampaignController {
         if (typeof numericParamOrError === "number") {
 
             if (numericParamOrError > 0) {
-                CampaignService.GetAllProductsForCampaign(numericParamOrError)
+                CampaignService.getAllProductsForCampaign(numericParamOrError)
                     .then((result: productsForCampaign[]) => {
                         return res.status(200).json(result);
                     })
