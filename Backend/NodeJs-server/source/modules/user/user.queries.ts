@@ -1,5 +1,20 @@
 export class UserQueries {
 
+    public static GetAllBusinessOwners: string = `
+        SELECT [user_id] as id, [twitter_handle], [name], [email]
+        FROM [dbo].[business_owner]
+        WHERE [business_owner].[status_id] = ?`;
+    
+    public static GetAllSocialActivists: string = `
+        SELECT [user_id] as id, [twitter_handle], [email], [address], [phone_number]
+        FROM [dbo].[social_activist]
+        WHERE [social_activist].[status_id] = ?`;
+    
+    public static GetAllNonProfitOrganizations: string = `
+        SELECT [user_id] as id, [name], [email], [website]
+        FROM [dbo].[non_profit_organization]
+        WHERE [non_profit_organization].[status_id] = ?`;
+
     public static AddUser: string = `
         INSERT [user] 
             (login, password, user_type_id,

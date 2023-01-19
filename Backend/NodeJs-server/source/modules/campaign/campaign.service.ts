@@ -30,6 +30,7 @@ interface ICampaignService {
     getAllCampaignsWithProducts(): Promise<campaignWitnProducts[]>;
     getCampaignsByNonProfitId(nonProfitOrganizationId: number): Promise<campaign[]>
     addCampaign(campaign: campaign, userId: number): Promise<campaign>;
+    getAllProductsForCampaign(campaignId: number): Promise<productsForCampaign[]>;
 }
 
 
@@ -68,7 +69,7 @@ class CampaignService implements ICampaignService {
         });
     }
 
-    public GetAllProductsForCampaign(campaignId: number): Promise<productsForCampaign[]> {
+    public getAllProductsForCampaign(campaignId: number): Promise<productsForCampaign[]> {
         return new Promise<productsForCampaign[]>((resolve, reject) => {
             const result: productsForCampaign[] = [];
 

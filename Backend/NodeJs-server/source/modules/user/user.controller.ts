@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
 import { NON_EXISTING_ID, SYSTEM_USER_ID } from "../../common/constants";
 import { UserType, AppError } from "../../common/enums";
-import { systemError, businessOwner, socialActivist, nonProfitOrganization } from "../../common/entities";
+import { systemError, businessOwner, socialActivist, nonProfitOrganization, businessOwnerDTO, socialActivistDTO, nonProfitOrganizationDTO } from "../../common/entities";
 import UserService from "./user.service";
 import ErrorService from "../../core/error.service";
 import LoggerService from "../../core/logger.service";
@@ -11,6 +11,45 @@ import { ResponseHelper } from "../../core/helpers/response.helper";
 class UserController {
 
     constructor() { }
+
+    public getBusinessOwner(req: Request, res: Response, next: NextFunction) {
+
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        UserService.getBusinessOwner()
+            .then((result: businessOwnerDTO[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
+    public getSocialActivist(req: Request, res: Response, next: NextFunction) {
+
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        UserService.getSocialActivist()
+            .then((result: socialActivistDTO[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
+
+    public getNonProfitOrganization(req: Request, res: Response, next: NextFunction) {
+
+        LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        UserService.getNonProfitOrganization()
+            .then((result: nonProfitOrganizationDTO[]) => {
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                return ResponseHelper.handleError(res, error);
+            })
+    }
 
     public addBusinessOwner(req: Request, res: Response, next: NextFunction) {
 

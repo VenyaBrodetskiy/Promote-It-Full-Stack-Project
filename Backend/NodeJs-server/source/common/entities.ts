@@ -51,6 +51,25 @@ export interface nonProfitOrganization extends user {
     website: string;
 }
 
+export interface socialActivistDTO extends entityWithId {
+    twitterHandle: string;
+    email: string;
+    address: string;
+    phoneNumber: string;
+}
+
+export interface businessOwnerDTO extends entityWithId {
+    twitterHandle: string;
+    name: string;
+    email: string;
+}
+
+export interface nonProfitOrganizationDTO extends entityWithId {
+    name: string;
+    email: string;
+    website: string;
+}
+
 export interface systemError {
     key: AppError
     code: number;
