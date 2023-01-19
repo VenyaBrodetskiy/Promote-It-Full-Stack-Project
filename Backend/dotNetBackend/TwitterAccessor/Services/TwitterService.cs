@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Timers;
 using Tweetinvi.Models.V2;
 using TwitterAccessor.Common;
+using TwitterAccessor.Models;
 using Timer = System.Timers.Timer;
 
 namespace TwitterAccessor.Services
@@ -51,7 +52,49 @@ namespace TwitterAccessor.Services
                 _logger.LogError(ex.Message);
             }
         }
+        public async Task<List<TweetDTO>> GetAllTweets(string token)
+        {
+            // 1. get all campaigns
+            if (_token == null)
+            {
+                _token = token;
+            }
 
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            var campaignsResponse = await _httpClient.GetAsync(EndpointsNodeJs.ApiGetCampaigns);
+            if (campaignsResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Not Authorized");
+            }
+
+            CampaignInfo[]? campaigns = await campaignsResponse.Content.ReadFromJsonAsync<CampaignInfo[]>();
+            if (campaigns == null || campaigns.Length == 0)
+            {
+                throw new Exception($"Couldn't read social activists from response body.");
+            }
+
+            // 2. get all users (social activists)
+            var socialActivistsResponse = await _httpClient.GetAsync(EndpointsMain.ApiGetSocialActivists);
+            if (!socialActivistsResponse.IsSuccessStatusCode)
+            {
+                throw new Exception($"Couldn't get Social activists, status: {socialActivistsResponse.StatusCode}");
+            }    
+            SocialActivistDTO[]? socialActivists = await socialActivistsResponse.Content.ReadFromJsonAsync<SocialActivistDTO[]>();
+            if (socialActivists == null)
+            {
+                throw new Exception($"Couldn't read social activists from response body.");
+            }
+
+            var AllTweets = new List<TweetDTO>();
+            // 3. for each campaign check tweets by campaign hashtag
+            foreach (var campaign in campaigns)
+            {
+                var tweetsByHashtag = await GetTweetsByHashtag(campaign, socialActivists);
+                AllTweets.AddRange(tweetsByHashtag);
+            }
+
+            return AllTweets;
+        }
         public async Task ChangeUserBalancesForAllCampaigns(string token)
         {
             // 1. get all campaigns
@@ -133,6 +176,38 @@ namespace TwitterAccessor.Services
             });
 
             return userToCampaigns;
+        }
+
+        private async Task<List<TweetDTO>> GetTweetsByHashtag(CampaignInfo campaign, SocialActivistDTO[] socialActivists)
+        {
+            var TweetsByHashtag = new List<TweetDTO>();
+
+            // 1. get all tweets by Hashtag
+            SearchTweetsV2Response searchResponse = await _tweetinviService.userClient.SearchV2.SearchTweetsAsync(campaign.Hashtag);
+            if (searchResponse.Tweets.Length == 0) return TweetsByHashtag;
+
+            // 2. filter authorsSA ot tweets, who are SocialActivists
+            List<string> userTwitterHandles = socialActivists.Select(sa => sa.TwitterHandle).ToList();
+            var authorsSA = searchResponse.Includes.Users
+                .Where(author => userTwitterHandles.Contains($"@{author.Username}")).ToList();
+
+            // 3. filter tweets made by SocialActivists
+            authorsSA.ForEach(author =>
+            {
+                var tweetsBySa = searchResponse.Tweets
+                    .Where(tweet => tweet.AuthorId == author.Id)
+                    .Select(tweet => new TweetDTO()
+                    {
+                        User = author.Username,
+                        PublishedOn = tweet.CreatedAt.DateTime,
+                        Link = $"https://twitter.com/{author.Username}/status/{tweet.Id}",
+                        Retweets = tweet.PublicMetrics.RetweetCount + tweet.PublicMetrics.QuoteCount,
+                        Body = tweet.Text
+                    }).ToList();
+                TweetsByHashtag.AddRange(tweetsBySa);
+            });
+
+            return TweetsByHashtag;
         }
     }
 }

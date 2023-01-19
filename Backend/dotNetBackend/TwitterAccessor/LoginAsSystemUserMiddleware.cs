@@ -36,6 +36,7 @@ namespace TwitterAccessor
             else
             {
                 TokenModel? token = await responseMessage.Content.ReadFromJsonAsync<TokenModel>();
+                //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
                 httpContext.Request.Headers.Authorization = token.Token;
                 await _next.Invoke(httpContext);
             }
