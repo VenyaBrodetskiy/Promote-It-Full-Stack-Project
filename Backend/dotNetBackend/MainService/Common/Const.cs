@@ -8,7 +8,7 @@
 
     public static class EndpointsTwitter
     {
-        public static string TwitterCreateNewPost { get; } = "https://localhost:7133/create-tweet/";
+        public static string TwitterCreateNewPost { get; } = "https://localhost:7128/create-tweet/";
     }
 
     public static class TokenClaims

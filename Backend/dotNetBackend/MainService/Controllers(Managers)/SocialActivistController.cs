@@ -244,11 +244,13 @@ namespace dotNetBackend.Controllers
                     HttpStatusCode twitterStatus;
                     try
                     {
+                        _logger.LogInformation("Calling twitter accessor to create tweet");
                         var response = await _httpClient.PostAsync(
                         EndpointsTwitter.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
                         null);
+                        response.EnsureSuccessStatusCode();
                         twitterStatus = response.StatusCode;
-                        _logger.LogInformation(twitterStatus.ToString());
+                        _logger.LogInformation("Tweet was posted sucessfully");
 
                     }
                     catch (Exception ex)
