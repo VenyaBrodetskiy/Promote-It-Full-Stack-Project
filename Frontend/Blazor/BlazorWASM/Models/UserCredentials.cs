@@ -1,8 +1,12 @@
-﻿namespace BlazorWASM.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BlazorWASM.Entities
 {
     public class UserCredentials
     {
-        public string Login { get; set; } = "";
-        public string Password { get; set; } = "";
+        [Required(ErrorMessage = "Login is required field")]
+        public string Login { get; set; } 
+        [Required(ErrorMessage = "Password is required field")]
+        public string Password { get; set; } 
     }
 }

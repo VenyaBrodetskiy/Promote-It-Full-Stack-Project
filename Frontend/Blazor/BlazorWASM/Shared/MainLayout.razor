@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <AuthorizeView Roles="ProLobbyOwner">
+    <AuthorizeView Roles=@Roles.ProlobbyOwner>
     <Authorized>
         <div class="bg-dark">
             <NavMenu />

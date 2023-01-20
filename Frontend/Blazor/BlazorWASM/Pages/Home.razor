@@ -1,5 +1,6 @@
-﻿@page "/home"
-@attribute [Authorize(Roles = "ProLobbyOwner")]
+﻿@attribute [Route(Page.Home)]
+@attribute [Authorize(Roles = Roles.ProlobbyOwner)]
+
 <h3 class="text-primary">Home</h3>
 <PageTitle>Home</PageTitle>
 

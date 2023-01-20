@@ -1,4 +1,5 @@
-﻿using BlazorWASM.Entities;
+﻿using BlazorWASM.Constants;
+using BlazorWASM.Entities;
 using BlazorWASM.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +16,9 @@ namespace BlazorWASM.Pages
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
+        public ILogger<Login> logger { get; set; }
 
         [CascadingParameter]
         public Task<AuthenticationState> AuthState { get; set; }
@@ -34,30 +38,35 @@ namespace BlazorWASM.Pages
             {
                 loading = true;
                 ShowAuthError = false;
+                logger.LogInformation("Login user started...");
+
                 var result = await AuthenticationService.LoginUser(_user);
+
+                logger.LogInformation("Asking for AuthState");
 
                 var authState = await AuthState;
                 var role = authState.User.FindFirst(ClaimTypes.Role);
-                if (role != null && role.Value == "ProLobbyOwner")
+                if (role != null && role.Value == Roles.ProlobbyOwner)
                 {
-                    NavigationManager.NavigateTo("/home");
+                    logger.LogInformation("Role is {Role}. Navigating to {Page}", Roles.ProlobbyOwner, Page.Home);
+                    NavigationManager.NavigateTo(Page.Home);
                 }
                 else
                 {
                     Error = "It seems that you are not a ProLobby owner. Please change account";
                     ShowAuthError = true;
-                    StateHasChanged();
+                    logger.LogWarning(Error);
 
+                    StateHasChanged();
                 }
                 loading = false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Couldn't log in");
                 Error = ex.Message;
                 ShowAuthError = true;
                 loading = false;
+                logger.LogError("Couldn't log in, Exception message: {message}", Error);
             }
         }
     }

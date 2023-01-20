@@ -1,5 +1,7 @@
-﻿using BlazorWASM.Entities;
+﻿using BlazorWASM.Constants;
+using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace BlazorWASM.Pages
@@ -8,6 +10,9 @@ namespace BlazorWASM.Pages
     {
         [Inject]
         private HttpClient http { get; set; } = default!;
+
+        [Inject]
+        private ILogger<Users> logger { get; set; }
 
         private BusinessOwner[]? boUsers;
         private NonProfitUser[]? npUsers;
@@ -20,15 +25,28 @@ namespace BlazorWASM.Pages
         {
             try
             {
+                logger.LogInformation("Component Initialized");
                 ShowError = false;
-                //var response = await http.GetAsync("http://localhost:6060/api/campaign/");
-                //response.EnsureSuccessStatusCode();
 
-                //users = await response.Content.ReadFromJsonAsync<Campaign[]>();
+                logger.LogInformation("Sending request to {endpoint}", Endpoints.BusinessOwners);
+                var responseBO = await http.GetAsync(Endpoints.BusinessOwners);
+                responseBO.EnsureSuccessStatusCode();
+                boUsers = await responseBO.Content.ReadFromJsonAsync<BusinessOwner[]>();
 
-                boUsers = await http.GetFromJsonAsync<BusinessOwner[]>("/sample-data/BusinessOwners.json");
-                npUsers = await http.GetFromJsonAsync<NonProfitUser[]>("/sample-data/NonProfitUsers.json");
-                saUsers = await http.GetFromJsonAsync<SocialActivist[]>("/sample-data/SocialActivists.json");
+                logger.LogInformation("Sending request to {endpoint}", Endpoints.NonProfit);
+                var responseNP = await http.GetAsync(Endpoints.NonProfit);
+                responseNP.EnsureSuccessStatusCode();
+                npUsers = await responseNP.Content.ReadFromJsonAsync<NonProfitUser[]>();
+
+                logger.LogInformation("Sending request to {endpoint}", Endpoints.SocialActivists);
+                var responseSA = await http.GetAsync(Endpoints.SocialActivists);
+                responseSA.EnsureSuccessStatusCode();
+                saUsers = await responseSA.Content.ReadFromJsonAsync<SocialActivist[]>();
+
+                // testing sample data
+                // boUsers = await http.GetFromJsonAsync<BusinessOwners[]>("/sample-data/BusinessOwners.json");
+                // npUsers = await http.GetFromJsonAsync<NonProfitUser[]>("/sample-data/NonProfitUsers.json");
+                // saUsers = await http.GetFromJsonAsync<SocialActivist[]>("/sample-data/SocialActivists.json");
 
             }
             catch (Exception ex)

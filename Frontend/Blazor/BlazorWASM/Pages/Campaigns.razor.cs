@@ -1,5 +1,7 @@
-﻿using BlazorWASM.Entities;
+﻿using BlazorWASM.Constants;
+using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace BlazorWASM.Pages
@@ -8,6 +10,9 @@ namespace BlazorWASM.Pages
     {
         [Inject]
         private HttpClient http { get; set; } = default!;
+
+        [Inject]
+        private ILogger<Campaigns> logger { get; set; }
 
         private Campaign[]? campaigns;
 
@@ -19,7 +24,8 @@ namespace BlazorWASM.Pages
             try
             {
                 ShowError = false;
-                var response = await http.GetAsync("http://localhost:6060/api/campaign/");
+                logger.LogInformation("Component initialized. Sending request to {endpoint}", Endpoints.Campaigns);
+                var response = await http.GetAsync(Endpoints.Campaigns);
                 response.EnsureSuccessStatusCode();
 
                 campaigns = await response.Content.ReadFromJsonAsync<Campaign[]>();

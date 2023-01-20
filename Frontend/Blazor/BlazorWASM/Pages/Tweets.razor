@@ -1,10 +1,11 @@
-﻿@page "/tweets"
-@attribute [Authorize(Roles = "ProLobbyOwner")]
+﻿@attribute [Route(Page.Tweets)]
+@attribute [Authorize(Roles = Roles.ProlobbyOwner)]
+
 
 
 <PageTitle>Tweets</PageTitle>
 
-<h4 class="display-4 border-4 border-bottom">Tweets</h4>
+<h4 class="display-4 border-4 border-bottom text-primary">Tweets</h4>
 
 @if (tweets == null)
 {

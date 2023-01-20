@@ -1,5 +1,7 @@
-﻿using BlazorWASM.Entities;
+﻿using BlazorWASM.Constants;
+using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace BlazorWASM.Pages
@@ -8,7 +10,9 @@ namespace BlazorWASM.Pages
     {
         [Inject]
         private HttpClient http { get; set; } = default!;
-
+        [Inject]
+        private ILogger<Tweets> logger { get; set; }
+        
         private Tweet[]? tweets;
 
         public bool ShowError { get; set; }
@@ -22,8 +26,9 @@ namespace BlazorWASM.Pages
 
                 // for tests
                 // tweets = await http.GetFromJsonAsync<Tweet[]>("/sample-data/Tweets.json");
+                logger.LogInformation("Component initialized. Sending request to {endpoint}", Endpoints.AllTweets);
 
-                var response = await http.GetAsync("https://localhost:7133/getAllTweets");
+                var response = await http.GetAsync(Endpoints.AllTweets);
                 response.EnsureSuccessStatusCode();
 
                 tweets = await response.Content.ReadFromJsonAsync<Tweet[]>();

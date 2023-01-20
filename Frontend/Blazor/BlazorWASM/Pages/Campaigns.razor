@@ -1,5 +1,5 @@
-﻿@page "/campaigns"
-@attribute [Authorize(Roles = "ProLobbyOwner")]
+﻿@attribute [Route(Page.Campaigns)]
+@attribute [Authorize(Roles = Roles.ProlobbyOwner)]
 
 
 <PageTitle>Campaigns</PageTitle>

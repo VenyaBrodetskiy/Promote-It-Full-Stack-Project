@@ -1,4 +1,5 @@
 ﻿@using BlazorWASM.Services
+@inject ILogger<NavMenu> logger;
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -52,7 +53,17 @@
 
     private async Task OnLogoutClick()
     {
-        await AuthenticationService.Logout();
-        NavigationManager.NavigateTo("/");
+        try
+        {
+            logger.LogInformation("Logout user started...");
+            await AuthenticationService.Logout();
+            logger.LogInformation("Logged out successfully, navigating to {page}", Page.Login);
+            NavigationManager.NavigateTo(Page.Login);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Smth wrong while trying to log out: {message}", ex.Message);
+        }
+        
     }
 }
