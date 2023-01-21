@@ -36,6 +36,7 @@ import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component
 import { SuccessComponent } from './components/success/success.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { CampaignSaPageComponent } from './pages/campaign-sa-page/campaign-sa-page.component';
 
 
 const routes: Routes = [
@@ -51,6 +52,7 @@ const routes: Routes = [
     { path: States.npCampaigns, component: CampaignNpPageComponent, canActivate: [NonprofitOrganizationGuard] },
 
     { path: States.balance, component: BalancePageComponent, canActivate: [SocialActivistGuard] },
+    { path: States.saCampaigns, component: CampaignSaPageComponent, canActivate: [SocialActivistGuard] },
 
     { path: "**", component: LoginPageComponent }
 
@@ -79,7 +81,8 @@ const routes: Routes = [
         TableLineComponent,
         ProductsOfCampaignComponent,
         BalancePageComponent,
-        LoadingComponent
+        LoadingComponent,
+        CampaignSaPageComponent
     ],
     imports: [
         BrowserModule,

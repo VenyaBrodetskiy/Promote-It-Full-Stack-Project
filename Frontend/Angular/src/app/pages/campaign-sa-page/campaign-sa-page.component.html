@@ -1,0 +1,6 @@
+<h4 class="display-4 border-4 border-bottom text-primary">Active campaigns</h4>
+<div class="row">
+    <bo-campaign class="col-4" *ngFor="let campaign of campaigns$ | async; let i = index"
+        [campaign]="campaign"></bo-campaign>
+</div>
+
