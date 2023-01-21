@@ -21,18 +21,19 @@
     <div *ngIf="landingPageControl.hasError('pattern') && landingPageControl.touched" class="alert alert-danger">
         landingPage must start with "http://" or "https://" and be an URL.
     </div>
-    <button type="submit" class="btn btn-primary" (click)="onSubmit()"
+    <button type="submit" class="btn btn-secondary" (click)="onSubmit()"
         [disabled]="hashtagControl.invalid || landingPageControl.invalid"
     >Submit</button>
 </div>
 
 <ng-template #campaignAdded>
-    <br />
     <div>
-        The campaign was successfully added!
+        <h6
+            class="display-6 border-3 border-bottom text-secondary"
+            >The campaign was successfully added!
+        </h6>
     </div>
-    <div>
-        <button type="submit" class="btn btn-primary" (click)="onSubmitMore()">Register more campaigns!</button>
+    <div class="d-grid gap-2 col-3">
+        <button type="submit" class="btn btn-secondary" (click)="onSubmitMore()">Register more campaigns!</button>
     </div>
-    <br />
 </ng-template>

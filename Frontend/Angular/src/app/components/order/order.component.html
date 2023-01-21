@@ -9,7 +9,7 @@
         <p class="card-text" [innerText]="'Address: ' + order.address"></p>
         <p class="card-text" [innerText]="'Phone number: ' + order.phoneNumber"></p>
         <p class="card-text" [innerText]="'Order status: ' + order.transactionState"></p>
-        <button type="button" class="btn btn-primary" [disabled]="isButtonDisabled" (click)="onClick(order.id)">Change
+        <button type="button" class="btn btn-secondary" [disabled]="isButtonDisabled" (click)="onClick(order.id)">Change
             order status for 'Shipped'
         </button>
     </div>

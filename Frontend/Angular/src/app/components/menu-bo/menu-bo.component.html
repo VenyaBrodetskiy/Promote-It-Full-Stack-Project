@@ -1,8 +1,38 @@
-<br />
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.campaigns">All campaigns</button></div>
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.orders">Your orders</button></div>
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.donateToCampaign">Donate your product to
-        campaign</button></div>
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.donateNewProduct">Register new product for
-        donation</button></div>
-<div><button type="button" class="btn btn-secondary" (click)="onLogoutClick()">Logout</button></div>
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">Business owner page</a>
+        <button title="Navigation menu" class="navbar-toggler">
+        </button>
+    </div>
+</div>
+
+<div class="nav-scrollable">
+    <nav class="flex-column">
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.campaigns">
+                All campaigns
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.orders">
+                Your orders
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.donateToCampaign">
+                Donate to campaign
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.donateNewProduct">
+                Register new product
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" (click)="onLogoutClick()">
+                Logout
+            </button>
+        </div>
+    </nav>
+</div>
+

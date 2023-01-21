@@ -1,4 +1,28 @@
-<br />
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.createCampaign">Register new campaign</button></div>
-<div><button type="button" class="btn btn-secondary" [routerLink]="States.npCampaigns">Your campaigns</button></div>
-<div><button type="button" class="btn btn-secondary" (click)="onLogoutClick()">Logout</button></div>
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">Non profit organization page</a>
+        <button title="Navigation menu" class="navbar-toggler">
+        </button>
+    </div>
+</div>
+
+<div class="nav-scrollable">
+    <nav class="flex-column">
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.createCampaign">
+                Register new campaign
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" [routerLink]="States.npCampaigns">
+                Your campaigns
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-dark" (click)="onLogoutClick()">
+                Logout
+            </button>
+        </div>
+    </nav>
+</div>

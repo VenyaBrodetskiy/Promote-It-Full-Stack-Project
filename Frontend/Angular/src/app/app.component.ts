@@ -42,7 +42,7 @@ export class AppComponent {
                     this.logger.info('isLoggedIn in app component updated by auth');
                 },
                 error: error => {
-                    this.logger.error(`Error during getting isLoggedIn for app ${error.message}`, error);
+                    this.logger.error(`Error during getting isLoggedIn for app`, error.message, error);
                 }
             });
         this.authService.userTypeId$.pipe(
@@ -54,7 +54,7 @@ export class AppComponent {
                     this.logger.info('userTypeId in app component updated by auth');
                 },
                 error: error => {
-                    this.logger.error(`Error during getting userTypeId for app ${error.message}`, error);
+                    this.logger.error(`Error during getting userTypeId for app`, error.message, error);
                 }
             });
         // this.authService.isLoggedIn$.subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn);

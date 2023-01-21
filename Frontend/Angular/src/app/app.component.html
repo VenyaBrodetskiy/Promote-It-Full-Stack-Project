@@ -1,22 +1,23 @@
 <div class="biggest-wrapper">
-    <bo-error></bo-error>
-    <bo-success></bo-success>
-    <bo-loading></bo-loading>
+
 
     <div class="d-flex">
-        <div class="col-3" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
+        <div class="bg-dark" *ngIf="isLoggedIn && (userTypeId == BusinessOwner)">
             <bo-menu-bo></bo-menu-bo>
         </div>
-        <div class="col-3" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
+        <div class="bg-dark" *ngIf="isLoggedIn && (userTypeId == NonprofitOrganization)">
             <bo-menu-np></bo-menu-np>
         </div>
-        <div class="col-3" *ngIf="isLoggedIn && (userTypeId == SocialActivist)">
+        <div class="bg-dark" *ngIf="isLoggedIn && (userTypeId == SocialActivist)">
             <bo-menu-sa></bo-menu-sa>
-    </div>
-        <div [ngClass]="isLoggedIn ? 'col-9' : 'col-12'">
-            <br />
+        </div>
+        <div class="container-fluid">
+
+            <bo-success></bo-success>
             <router-outlet></router-outlet>
-            <br />
+            <bo-error></bo-error>
+            <bo-loading></bo-loading>
+
         </div>
     </div>
 

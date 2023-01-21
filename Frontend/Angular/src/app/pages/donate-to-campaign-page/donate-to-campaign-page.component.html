@@ -1,3 +1,5 @@
+<h4 class="display-4 border-4 border-bottom text-primary">Donate to campaign</h4>
+
 <div *ngIf="toggle; else donationAdded">
     <div>
         <label for="campaignSelect" class="form-label" [innerHTML]="campaignLabel"></label>
@@ -27,17 +29,19 @@
         Qty must be a natural number
     </div>
 
-    <button type="submit" class="btn btn-primary" (click)="onSubmit(selectedCampaign, selectedProduct, productQty)"
+    <button type="submit" class="btn btn-secondary" (click)="onSubmit(selectedCampaign, selectedProduct, productQty)"
         [disabled]="!formValid || productQtyControl.invalid">Submit</button>
 </div>
 
 <ng-template #donationAdded>
     <br />
     <div>
+        <h6 class="display-6 border-3 border-bottom text-secondary">
         The donation was successfully added!
+        </h6>
     </div>
-    <div>
-        <button type="submit" class="btn btn-primary" (click)="onSubmitMore()">Donate more!</button>
+    <div class="d-grid gap-2 col-3">
+        <button type="submit" class="btn btn-secondary" (click)="onSubmitMore()">Donate more!</button>
     </div>
     <br />
 </ng-template>
