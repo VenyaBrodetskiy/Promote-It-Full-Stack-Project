@@ -3,7 +3,7 @@
     public static class Endpoints
     {
         // C# server
-        public static string AllTweets { get; } = "https://localhost:7133/getAllTweets";
+        public static string AllTweets { get; } = "https://localhost:7121/api/ProlobbyOwner/GetAllTweets";
 
         // NodeJs server
         public static string Login { get; } = "http://localhost:6060/api/auth/login";

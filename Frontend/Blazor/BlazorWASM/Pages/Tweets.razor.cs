@@ -39,7 +39,7 @@ namespace BlazorWASM.Pages
             {
                 Error = ex.Message;
                 ShowError = true;
-                Console.WriteLine(ex.Message);
+                logger.LogError(ex.Message);
             }
         }
     }

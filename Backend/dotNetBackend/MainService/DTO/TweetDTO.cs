@@ -1,4 +1,4 @@
-﻿namespace TwitterAccessor.Models
+﻿namespace dotNetBackend.DTO
 {
     public record TweetDTO
     {
