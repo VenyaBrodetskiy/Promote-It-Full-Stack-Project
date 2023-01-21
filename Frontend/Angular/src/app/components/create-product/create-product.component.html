@@ -15,18 +15,18 @@
     <div *ngIf="productPriceControl.invalid && productPriceControl.touched" class="alert alert-danger">
         Price must be a natural number
     </div>
-    <button type="submit" class="btn btn-primary" (click)="onSubmit()"
+    <button type="submit" class="btn btn-secondary" (click)="onSubmit()"
         [disabled]="productTitleControl.invalid || productPriceControl.invalid">Submit</button>
     <br />
 </div>
 
 <ng-template #productAdded>
-    <br />
     <div>
-        The product was successfully added!
+        <h6 class="display-6 border-3 border-bottom text-secondary"
+        >The product was successfully added!
+        </h6>
     </div>
-    <div>
-        <button type="submit" class="btn btn-primary" (click)="onSubmitMore()">Register more products!</button>
+    <div class="d-grid gap-2 col-3">
+        <button type="submit" class="btn btn-secondary" (click)="onSubmitMore()">Register more products!</button>
     </div>
-    <br />
 </ng-template>

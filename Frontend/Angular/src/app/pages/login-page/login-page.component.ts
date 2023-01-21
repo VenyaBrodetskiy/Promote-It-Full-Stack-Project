@@ -19,7 +19,6 @@ import { NGXLogger } from 'ngx-logger';
 export class LoginPageComponent {
     private unsubscribe$ = new Subject();
     public user: IUser;
-    public toggle: boolean = true;
     public isLoggedIn: boolean = false;
     public States = States;
 
@@ -36,6 +35,21 @@ export class LoginPageComponent {
         this.initialize();
     }
 
+    public ngOnInit() {
+        this.authService.isLoggedIn$.pipe(
+            takeUntil(this.unsubscribe$)
+        )
+            .subscribe({
+                next: isLoggedIn => {
+                    this.isLoggedIn = isLoggedIn;
+                    this.logger.info('isLoggedIn in login page updated by auth');
+                },
+                error: error => {
+                    this.logger.error(`Error during getting isLoggedIn for login page`, error.message, error);
+                }
+            });
+    }
+
     public onLoginClick(): void {
         this.loadingService.loadingOn();
         this.errorService.clear();
@@ -45,7 +59,6 @@ export class LoginPageComponent {
             .subscribe({
                 next: response => {
                     if (response.status === 200) {
-                        this.toggle = !this.toggle;
                         this.isLoggedIn = true;
                         this.authStateService.setIsLoggedIn(this.isLoggedIn);
                         this.successService.handle("Logged in sucessfully", 2000);

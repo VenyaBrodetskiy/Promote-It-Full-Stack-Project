@@ -13,11 +13,11 @@
             <div [innerText]="row!.productQty"></div>
         </div>
         <div class="m-1 col-2">
-            <button type="button" class="btn btn-info mx-1"
+            <button type="button" class="btn btn-primary mx-1"
                 [disabled]="toggle"
                 (click)="onClick(TransactionStates.Ordered)"
                 >Buy</button>
-            <button type="button" class="btn btn-info mx-1"
+            <button type="button" class="btn btn-primary mx-1"
                 [disabled]="toggle"
                 (click)="onClick(TransactionStates.Donated)"
                 >Donate</button>
