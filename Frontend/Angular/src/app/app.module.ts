@@ -35,6 +35,7 @@ import { BalancePageComponent } from './pages/balance-page/balance-page.componen
 import { SignUpPageComponent } from './pages/sign-up-page/sign-up-page.component';
 import { SuccessComponent } from './components/success/success.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 
 const routes: Routes = [
@@ -89,6 +90,10 @@ const routes: Routes = [
         HttpClientModule,
         NgbModule,
         RouterModule.forChild(routes),
+        LoggerModule.forRoot({
+            level: NgxLoggerLevel.TRACE,
+            serverLogLevel: NgxLoggerLevel.OFF
+        }),
     ],
     providers: [
         {

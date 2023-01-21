@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { States } from 'src/app/constants';
 import { LoadingService } from 'src/app/services/loading.service';
+import { NGXLogger } from 'ngx-logger';
+import { Subject, takeUntil } from 'rxjs';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
     selector: 'bo-sign-up-page',
@@ -52,82 +55,91 @@ export class SignUpPageComponent {
     ];
 
     public JSON = JSON;
+    private unsubscribe$ = new Subject();
 
     constructor(
         private userService: UserService,
         private router: Router,
+        private errorService: ErrorService,
         private successService: SuccessService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) {
     }
 
     public onSignUpBusinessOwner() {
+        this.loadingService.loadingOn();
+        this.errorService.clear();
         this.businessOwner.login = this.user.login;
         this.businessOwner.password = this.user.password;
-        this.loadingService.loadingOn();
-        this.userService.addBusinessOwner(this.businessOwner)
+        this.userService.addBusinessOwner(this.businessOwner).pipe(
+            takeUntil(this.unsubscribe$)
+        )
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        console.log(response);
-                        console.log("Added user: ", response.body);
+                        this.logger.info(`Added user: ${response.body}`);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        console.log("Error: ", response.status, response.body);
+                        this.logger.error(`Did not add business owner: ${response.status}, ${response.body}`, response);
                     }
                     this.loadingService.loadingOff();
                 },
                 error: (error) => {
-                    console.log("Error: ", error);
+                    this.logger.error(`Did not add business owner: ${error.message}`, error);
                     this.loadingService.loadingOff();
                 }
             })
     }
 
     public onSignUpSocialActivist() {
+        this.loadingService.loadingOn();
+        this.errorService.clear();
         this.socialActivist.login = this.user.login;
         this.socialActivist.password = this.user.password;
-        this.loadingService.loadingOn();
-        this.userService.addSocialActivist(this.socialActivist)
+        this.userService.addSocialActivist(this.socialActivist).pipe(
+            takeUntil(this.unsubscribe$)
+        )
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        console.log(response);
-                        console.log("Added user: ", response.body);
+                        this.logger.info(`Added user: ${response.body}`);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        console.log("Error: ", response.status, response.body);
+                        this.logger.error(`Did not add social activist: ${response.status}, ${response.body}`, response);
                     }
                     this.loadingService.loadingOff();
                 },
                 error: (error) => {
-                    console.log("Error: ", error);
+                    this.logger.error(`Did not add social activist: ${error.message}`, error);
                     this.loadingService.loadingOff();
                 }
             })
     }
 
     public onSignUpNonProfit() {
+        this.loadingService.loadingOn();
+        this.errorService.clear();
         this.nonProfitOrg.login = this.user.login;
         this.nonProfitOrg.password = this.user.password;
-        this.loadingService.loadingOn();
-        this.userService.addNonProfitUser(this.nonProfitOrg)
+        this.userService.addNonProfitUser(this.nonProfitOrg).pipe(
+            takeUntil(this.unsubscribe$)
+        )
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        console.log(response);
-                        console.log("Added user: ", response.body);
+                        this.logger.info(`Added user: ${response.body}`);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        console.log("Error: ", response.status, response.body);
+                        this.logger.error(`Did not add non profit organization: ${response.status}, ${response.body}`, response);
                     }
                     this.loadingService.loadingOff();
                 },
                 error: (error) => {
-                    console.log("Error: ", error);
+                    this.logger.error(`Did not add non profit organization: ${error.message}`, error);
                     this.loadingService.loadingOff();
                 }
             })
