@@ -8,6 +8,7 @@ import { AuthStateService } from 'src/app/services/authstate.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { SuccessService } from 'src/app/services/success.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { NGXLogger } from 'ngx-logger';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class LoginPageComponent {
         private authStateService: AuthStateService,
         private successService: SuccessService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) {
         this.user = {} as any;
         this.initialize();
@@ -47,30 +49,37 @@ export class LoginPageComponent {
                         this.isLoggedIn = true;
                         this.authStateService.setIsLoggedIn(this.isLoggedIn);
                         this.successService.handle("Logged in sucessfully", 2000);
-                        console.log("Logged in");
+                        this.logger.info('Logged in sucessfully');
                         this.authService.getUserType().pipe(
                             takeUntil(this.unsubscribe$)
                         )
                             .subscribe(response => {
-                                console.log(response);
+                                this.logger.info('Got user type sucessfully', response);
                             });
                     } else {
-                        console.log("Error: ", response.status, response.body);
+                        this.logger.error(`Did not get user type: ${response.status}, ${response.body}`, response);
                     }
                     this.loadingService.loadingOff();
                 },
                 error: error => {
-                    console.log("Error: ", error);
+                    this.logger.error(`Did not get user type: ${error.message}`, error);
                     this.loadingService.loadingOff();
                 }
             });
     }
 
     public onSignUpClick(): void {
+        this.logger.info(`Navigating to sign Up page`);
         this.router.navigate([States.signUp]);
     }
 
+    public ngOnDestroy() {
+        this.unsubscribe$.next(null);
+        this.unsubscribe$.complete();
+    }
+
     private initialize(): void {
+        this.logger.info(`Initilizing the user with empty string`);
         this.user = {
             login: "",
             password: ""

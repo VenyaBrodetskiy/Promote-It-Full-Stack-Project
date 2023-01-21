@@ -4,6 +4,7 @@
         <div class="mb-3 col-6 display-4">
             Please log in
         </div>
+
         <div class="col-6">
             <input type="text" class="form-control" id="login"
                 placeholder="Login" [(ngModel)]="user.login" />
@@ -17,8 +18,8 @@
         <div class="mb-3 col-6 d-flex flex-column">
             <button class="btn btn-primary my-1" (click)="onLoginClick()">Login</button>
             <button class="btn btn-info my-1" [routerLink]="States.signUp" (click)="onSignUpClick()">Sign Up</button>
-
         </div>
+
     </div>
 </div>
 

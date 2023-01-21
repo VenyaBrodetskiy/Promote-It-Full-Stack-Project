@@ -4,6 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { Endpoints } from '../constants';
 import { ITransaction } from '../models/transaction';
 import { ErrorService } from './error.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable({
     providedIn: 'root'
@@ -12,18 +13,18 @@ export class TransactionService {
 
     constructor(
         private http: HttpClient,
-        private errorService: ErrorService
+        private errorService: ErrorService,
+        private logger: NGXLogger
     ) { }
 
     public create(body: ITransaction): Observable<HttpResponse<ITransaction>> {
+        this.logger.info(`Creating new transaction: ${body}`);
         return this.http.post<ITransaction>(`${Endpoints.createTransaction}`, body, { observe: 'response' })
             .pipe(
-                catchError(this.errorHandler.bind(this))
+                catchError(error => {
+                    this.errorService.handle(error.message);
+                    return throwError(() => error);
+                }),
             );
-    }
-
-    private errorHandler(error: HttpErrorResponse) {
-        this.errorService.handle(error.message);
-        return throwError(() => error.message);
     }
 }
