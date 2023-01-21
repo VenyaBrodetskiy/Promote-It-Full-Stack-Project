@@ -17,6 +17,7 @@ export class States {
 
     //social activist
     public static balance: string = "get-balance";
+    public static saCampaigns: string = "sa-campaigns";
 
 }
 
