@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PromoteIt.Accessors.Twitter;
+using Tweetinvi.Models.V2;
 using Tweetinvi.Parameters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,5 +51,31 @@ app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,1
     })
 .WithName("Create Tweet when Social Activist bought product from Business owner")
 .WithOpenApi();
+
+app.MapGet("/getTweetsByHashtag/{hashtag:regex(#[a-zA-Z0-9_])}", 
+    async (string hashtag, [FromServices] TweetinviService tweetinviService) =>
+    {
+        try
+        {
+            app.Logger.LogInformation("Asking twitter to give all tweets by hashtag {hash}", hashtag);
+            SearchTweetsV2Response searchResponse = await tweetinviService.userClient.SearchV2.SearchTweetsAsync(hashtag);
+            if (searchResponse.Tweets.Length == 0)
+            {
+                return Results.Ok();
+            }
+            else
+            {
+                return Results.Ok(searchResponse);
+            }
+        }
+        catch (Exception ex)
+        {
+            app.Logger.LogError(ex.Message);
+            return Results.Problem(ex.Message);
+        }
+    })
+.WithName("Returns all tweets by hashtag")
+.WithOpenApi();
+
 
 app.Run();
