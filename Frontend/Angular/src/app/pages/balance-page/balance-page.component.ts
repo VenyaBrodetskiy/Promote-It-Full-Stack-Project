@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { defaultIfEmpty, finalize, map, Observable, Subject } from 'rxjs';
+import { defaultIfEmpty, finalize, map, Observable, Subject, takeUntil } from 'rxjs';
 import { IBalance } from 'src/app/models/balance';
 import { ICampaign } from 'src/app/models/campaign';
 import { BalanceService } from 'src/app/services/balance.service';
@@ -35,6 +35,7 @@ export class BalancePageComponent {
     public ngOnInit(): void {
         this.loadingService.loadingOn();
         this.campaignOptions$ = this.campaignService.getAll().pipe(
+            takeUntil(this.unsubscribe$),
             finalize(() => {
                 this.loadingService.loadingOff();
                 this.logger.info('Finished loading campaign options');
@@ -50,29 +51,14 @@ export class BalancePageComponent {
     public onCampaignSelected() {
         if (this.selectedCampaign) {
             this.campaignId = this.selectedCampaign.id;
-            this.loadingService.loadingOn();
-            this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
-                defaultIfEmpty(this.zeroBalance),
-                map(balances => {
-                    if (balances.length > 0) {
-                        this.logger.info(`The balance for campaignId ${this.campaignId} is ${balances[0].balance}`);
-                        return balances[0].balance
-                    } else {
-                        this.logger.info(`The balance for campaignId ${this.campaignId} is 0`);
-                        return this.zeroBalance[0].balance
-                    }
-                }),
-                finalize(() =>{
-                    this.loadingService.loadingOff();
-                    this.logger.info(`Finished loading balance for campaign id: ${this.campaignId}`);
-                })
-            );
+            this.changedBalance();
         }
     }
 
     public changedBalance() {
         this.loadingService.loadingOn();
         this.balance$ = this.balanceService.getBalanceByCampaignId(this.campaignId).pipe(
+            takeUntil(this.unsubscribe$),
             defaultIfEmpty(this.zeroBalance),
             map(balances => {
                 if (balances.length > 0) {
@@ -89,4 +75,5 @@ export class BalancePageComponent {
             })
         );
     }
+
 }

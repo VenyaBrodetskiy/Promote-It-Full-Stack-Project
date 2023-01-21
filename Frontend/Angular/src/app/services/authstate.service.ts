@@ -18,7 +18,7 @@ export class AuthStateService {
     }
 
     public setIsLoggedIn(value: boolean) {
-        this.logger.info(`Setting isLoggedIn: ${value}`);
+        this.logger.info(`Setting isLoggedIn: `,value);
         this.isLoggedIn.next(value);
     }
 }

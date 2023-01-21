@@ -47,10 +47,10 @@ export class Endpoints {
     public static getProductsForCampaign: string = `${Endpoints.baseUrlNode}campaign/get-all/`;
     public static getBalanceByCampaignId: string = `${Endpoints.baseUrlC}SocialActivist/GetBalanceByCampaignId/`;
 
-
-
-    //TODO: remove?
+    //not used
     public static userById: string = `${Endpoints.baseUrlNode}user/`;
+
+    //add user
     public static addBusinessOwner: string = `${Endpoints.baseUrlNode}user/add-business-owner`;
     public static addSocialActivist: string = `${Endpoints.baseUrlNode}user/add-social-activist`;
     public static addNonProfitUser: string = `${Endpoints.baseUrlNode}user/add-nonprofit-organization`;

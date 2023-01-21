@@ -64,8 +64,7 @@ export class SignUpPageComponent {
         private successService: SuccessService,
         private loadingService: LoadingService,
         private logger: NGXLogger
-    ) {
-    }
+    ) { }
 
     public onSignUpBusinessOwner() {
         this.loadingService.loadingOn();
@@ -78,11 +77,11 @@ export class SignUpPageComponent {
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        this.logger.info(`Added user: ${response.body}`);
+                        this.logger.info(`Added user: `, response.body);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        this.logger.error(`Did not add business owner: ${response.status}, ${response.body}`, response);
+                        this.logger.error(`Did not add business owner: `, response.status, response.body, response);
                     }
                     this.loadingService.loadingOff();
                 },
@@ -104,11 +103,11 @@ export class SignUpPageComponent {
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        this.logger.info(`Added user: ${response.body}`);
+                        this.logger.info(`Added user: `, response.body);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        this.logger.error(`Did not add social activist: ${response.status}, ${response.body}`, response);
+                        this.logger.error(`Did not add social activist: `, response.status, response.body, response);
                     }
                     this.loadingService.loadingOff();
                 },
@@ -130,11 +129,11 @@ export class SignUpPageComponent {
             .subscribe({
                 next: (response) => {
                     if (response.status === 200) {
-                        this.logger.info(`Added user: ${response.body}`);
+                        this.logger.info(`Added user: `, response.body);
                         this.successService.handle("Signed up sucessfully. Please Log in", 3000);
                         this.router.navigate([States.login]);
                     } else {
-                        this.logger.error(`Did not add non profit organization: ${response.status}, ${response.body}`, response);
+                        this.logger.error(`Did not add non profit organization: `, response.status, response.body, response);
                     }
                     this.loadingService.loadingOff();
                 },

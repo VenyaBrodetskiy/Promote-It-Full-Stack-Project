@@ -5,6 +5,7 @@ import { CampaignService } from 'src/app/services/campaign.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { FormControl, Validators } from '@angular/forms';
 import { LoadingService } from 'src/app/services/loading.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
     selector: 'bo-create-campaign',
@@ -24,16 +25,11 @@ export class CreateCampaignComponent {
         private campaignService: CampaignService,
         private errorService: ErrorService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) {
         this.hashtagControl = new FormControl('', [Validators.required, Validators.pattern(/^#[a-zA-Z0-9_]{1,280}$/)]);
         this.landingPageControl = new FormControl('', [Validators.required, Validators.pattern(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/)]);
     }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next(undefined);
-        this.unsubscribe$.complete();
-    }
-
 
     public onSubmit(): void {
         this.loadingService.loadingOn();
@@ -51,21 +47,20 @@ export class CreateCampaignComponent {
                 .subscribe({
                     next: response => {
                         if (response.status === 200) {
+                            this.logger.info(`Added campaign: ${body}`, response.body);
                             this.toggle = !this.toggle;
                             this.hashtagControl.reset();
                             this.landingPageControl.reset();
-                            console.log(response);
                         } else {
-                            console.log("Error: ", response.status, response.body);
+                            this.logger.error(`Did not add campaign: ${body}`, response.status, response.body, response);
                         }
                         this.loadingService.loadingOff();
                     },
                     error: error => {
-                        console.log("Error: ", error);
+                        this.logger.error(`Did not add campaign: ${body}, ${error.message}`, error);
                         this.loadingService.loadingOff();
                     }
                 });
-            console.log(body);
         }
     }
 
@@ -73,4 +68,8 @@ export class CreateCampaignComponent {
         this.toggle = !this.toggle;
     }
 
+    public ngOnDestroy(): void {
+        this.unsubscribe$.next(undefined);
+        this.unsubscribe$.complete();
+    }
 }

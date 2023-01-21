@@ -5,6 +5,8 @@ import { TransactionStates } from 'src/app/enums';
 import { IChangeOrder, IOrder } from 'src/app/models/order';
 import { LoadingService } from 'src/app/services/loading.service';
 import { OrderService } from 'src/app/services/order.service';
+import { NGXLogger } from 'ngx-logger';
+
 
 @Component({
     selector: 'bo-order',
@@ -24,12 +26,8 @@ export class OrderComponent {
     constructor(
         private orderService: OrderService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) { }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next(undefined);
-        this.unsubscribe$.complete();
-    }
 
     public onClick(orderId: number): void {
         this.loadingService.loadingOn();
@@ -45,17 +43,24 @@ export class OrderComponent {
                 next: response => {
                     if (response.status === 200) {
                         this.order = response.body!;
-                        console.log(response);
+                        this.logger.info(`Changes state of orderId: ${orderId}`, response.body);
                     } else {
-                        console.log("Error: ", response.status, response.body);
+                        this.logger.error(`Did not change state of orderId: ${orderId}`, response.status, response.body, response);
+                        this.isButtonDisabled = false;
                     }
-                    this.loadingService.loadingOn();
+                    this.loadingService.loadingOff();
                 },
                 error: error => {
-                    console.log("Error: ", error);
-                    this.loadingService.loadingOn();
+                    this.logger.error(`Did not change state of orderId: ${orderId}, ${error.message}`, error);
+                    this.isButtonDisabled = false;
+                    this.loadingService.loadingOff();
                 }
             });
-        console.log(orderId);
+
+    }
+
+    public ngOnDestroy(): void {
+        this.unsubscribe$.next(undefined);
+        this.unsubscribe$.complete();
     }
 }

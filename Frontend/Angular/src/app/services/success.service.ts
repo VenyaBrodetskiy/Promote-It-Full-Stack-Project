@@ -14,7 +14,7 @@ export class SuccessService {
     ) { }
 
     public handle(message: string, time: number) {
-        this.logger.info(`Handling success message: ${message}`);
+        this.logger.info(`Handling success message: `, message);
         this.success$.next(message)
         setTimeout(() => this.clear(), time);
     }

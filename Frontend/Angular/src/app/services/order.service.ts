@@ -29,7 +29,7 @@ export class OrderService {
     }
 
     public changeState(body: IChangeOrder): Observable < HttpResponse < IOrder >> {
-        this.logger.info(`Changing state of the order: ${body}`);
+        this.logger.info(`Changing state of the order: `, body);
         return this.http.put<IOrder>(`${Endpoints.changeState}`, body)
             .pipe(
                 map(data => new HttpResponse({ body: data })),

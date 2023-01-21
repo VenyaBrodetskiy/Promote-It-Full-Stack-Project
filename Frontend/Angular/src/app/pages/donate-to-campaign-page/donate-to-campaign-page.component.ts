@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { finalize, Observable, Subject, takeUntil } from 'rxjs';
 import { ICampaign } from 'src/app/models/campaign';
 import { IDonation } from 'src/app/models/donation';
 import { IProduct } from 'src/app/models/product';
@@ -10,7 +9,7 @@ import { DonationService } from 'src/app/services/donation.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ProductService } from 'src/app/services/product.service';
-import { v4 as uuidv4 } from "uuid";
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
     selector: 'bo-donate-to-campaign-page',
@@ -37,14 +36,28 @@ export class DonateToCampaignPageComponent {
         private donationService: DonationService,
         private errorService: ErrorService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) {
         this.productQtyControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
     }
 
 
     public ngOnInit(): void {
-        this.campaignOptions$ = this.campaignService.getAll();
-        this.productOptions$ = this.productService.getAll();
+        this.loadingService.loadingOn();
+        this.campaignOptions$ = this.campaignService.getAll().pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => {
+                this.loadingService.loadingOff();
+                this.logger.info(`Finished getting all campaigns`);
+            })
+        );
+        this.productOptions$ = this.productService.getAll().pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => {
+                this.loadingService.loadingOff();
+                this.logger.info(`Finished getting all products`);
+            })
+        );
     }
 
     public ngOnDestroy(): void {
@@ -69,23 +82,23 @@ export class DonateToCampaignPageComponent {
                         if (response.status === 200) {
                             this.toggle = !this.toggle;
                             this.productQtyControl.reset();
-                            console.log(response);
+                            this.logger.info(`Added donation: `, response.body);
                         } else {
-                            console.log("Error: ", response.status, response.body);
+                            this.logger.error(`Did not add donation: `, response.status, response.body, response);
                         }
                         this.loadingService.loadingOff();
                     },
                     error: error => {
-                        console.log("Error: ", error);
+                        this.logger.error(`Did not add donation: `, error.message, error);
                         this.loadingService.loadingOff();
                     }
                 });
-            console.log(body);
         }
     }
 
     public onSubmitMore(): void {
         this.toggle = !this.toggle;
+        this.errorService.clear();
     }
 
     public onCampaignSelected() {
@@ -103,5 +116,4 @@ export class DonateToCampaignPageComponent {
         }
         return null;
     }
-
 }

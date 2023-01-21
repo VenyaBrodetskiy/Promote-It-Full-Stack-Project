@@ -6,6 +6,7 @@ import { INewProduct } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
     selector: 'bo-create-product',
@@ -25,14 +26,10 @@ export class CreateProductComponent {
         private productService: ProductService,
         private errorService: ErrorService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) {
         this.productTitleControl = new FormControl('', [Validators.required]);
         this.productPriceControl = new FormControl('', [Validators.required, this.isNaturalNumber]);
-    }
-
-    public ngOnDestroy(): void {
-        this.unsubscribe$.next(undefined);
-        this.unsubscribe$.complete();
     }
 
     public onSubmit(): void {
@@ -51,17 +48,17 @@ export class CreateProductComponent {
                 .subscribe({
                     next: response => {
                         if (response.status === 200) {
+                            this.logger.info(`Added product: `, response.body);
                             this.toggle = !this.toggle;
                             this.productTitleControl.reset();
                             this.productPriceControl.reset();
-                            console.log(response);
                         } else {
-                            console.log("Error: ", response.status, response.body);
+                            this.logger.error(`Did not add product: `, response.status, response.body, response);
                         }
                         this.loadingService.loadingOff();
                     },
                     error: error => {
-                        console.log("Error: ", error);
+                        this.logger.error(`Did not add product: ${error.message}`, error);
                         this.loadingService.loadingOff();
                     }
                 });
@@ -80,4 +77,8 @@ export class CreateProductComponent {
         return null;
     }
 
+    public ngOnDestroy(): void {
+        this.unsubscribe$.next(undefined);
+        this.unsubscribe$.complete();
+    }
 }
