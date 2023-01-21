@@ -23,7 +23,7 @@ namespace dotNetBackend.Services
                     .Select(sa => ToDto(sa))
                     .ToListAsync();
 
-                return result;
+                //return result;
             }
             catch (Exception)
             {
