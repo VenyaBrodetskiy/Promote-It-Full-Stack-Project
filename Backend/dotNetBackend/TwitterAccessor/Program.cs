@@ -39,58 +39,58 @@ internal class Program
         // Login as SystemUser
         app.UseMiddleware<LoginAsSystemUserMiddleware>();
 
-        app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}",
-            async (
-                string socialActivistTwitterHandle,
-                string businessOwnerTwitterHandle,
-                [FromServices] TweetinviService tweetinviService) =>
-            {
-                var tweet = new PublishTweetParameters()
-                {
-                    Text = $"This tweet is created automatically. {socialActivistTwitterHandle} used points to buy {businessOwnerTwitterHandle} product"
-                };
+        //app.MapPost("/create-tweet/{socialActivistTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}/{businessOwnerTwitterHandle:regex(@[a-zA-Z0-9_]{{0,15}})}",
+        //    async (
+        //        string socialActivistTwitterHandle,
+        //        string businessOwnerTwitterHandle,
+        //        [FromServices] TweetinviService tweetinviService) =>
+        //    {
+        //        var tweet = new PublishTweetParameters()
+        //        {
+        //            Text = $"This tweet is created automatically. {socialActivistTwitterHandle} used points to buy {businessOwnerTwitterHandle} product"
+        //        };
 
-                try
-                {
-                    var responseTweet = await tweetinviService.userClient.Tweets.PublishTweetAsync(tweet);
-                    app.Logger.LogInformation("tweet is published: {tweet}", responseTweet.Text);
-                    return Results.Ok(responseTweet.Text);
-                }
-                catch (Exception ex)
-                {
-                    app.Logger.LogInformation(ex.Message);
-                    return Results.Problem(ex.Message);
-                }
-            })
-        .WithName("Create Tweet when Social Activist bought product from Business owner")
-        .WithOpenApi();
+        //        try
+        //        {
+        //            var responseTweet = await tweetinviService.userClient.Tweets.PublishTweetAsync(tweet);
+        //            app.Logger.LogInformation("tweet is published: {tweet}", responseTweet.Text);
+        //            return Results.Ok(responseTweet.Text);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            app.Logger.LogInformation(ex.Message);
+        //            return Results.Problem(ex.Message);
+        //        }
+        //    })
+        //.WithName("Create Tweet when Social Activist bought product from Business owner")
+        //.WithOpenApi();
 
-        app.MapGet("/getAllTweets",
-            async ([FromServices] TwitterService twitterService, HttpContext httpContext) =>
-            {
-                app.Logger.LogInformation("{Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
+        //app.MapGet("/getAllTweets",
+        //    async ([FromServices] TwitterService twitterService, HttpContext httpContext) =>
+        //    {
+        //        app.Logger.LogInformation("{Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
 
-                try
-                {
-                    string? token = httpContext.Request.Headers.Authorization;
-                    if (token == null)
-                    {
-                        return Results.BadRequest("Couldn't find token");
-                    }
-                    app.Logger.LogInformation("Asking twitterService to handle request");
+        //        try
+        //        {
+        //            string? token = httpContext.Request.Headers.Authorization;
+        //            if (token == null)
+        //            {
+        //                return Results.BadRequest("Couldn't find token");
+        //            }
+        //            app.Logger.LogInformation("Asking twitterService to handle request");
 
-                    var tweets = await twitterService.GetAllTweets(token);
-                    app.Logger.LogInformation("twitterService returned response");
-                    return Results.Ok(tweets);
-                }
-                catch (Exception ex)
-                {
-                    app.Logger.LogInformation(ex.Message);
-                    return Results.Problem(ex.Message);
-                }
-            })
-        .WithName("GetAllTweets")
-        .WithOpenApi();
+        //            var tweets = await twitterService.GetAllTweets(token);
+        //            app.Logger.LogInformation("twitterService returned response");
+        //            return Results.Ok(tweets);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            app.Logger.LogInformation(ex.Message);
+        //            return Results.Problem(ex.Message);
+        //        }
+        //    })
+        //.WithName("GetAllTweets")
+        //.WithOpenApi();
 
         //app.MapPut("/UpdateBalancesByCampaignHashtag", 
         //    async (

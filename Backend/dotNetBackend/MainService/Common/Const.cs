@@ -6,9 +6,11 @@
         public const int NonExistId = 0;
     }
 
-    public static class EndpointsTwitter
+    public static class Endpoints
     {
         public static string TwitterCreateNewPost { get; } = "https://localhost:7128/create-tweet/";
+        public static string TwitterEngineGetAllTweets { get; } = "https://localhost:7109/get-all-tweets";
+        public static string AccessorGetSocialActivists { get; } = "https://localhost:7170/get-all-social-activists";
     }
 
     public static class TokenClaims

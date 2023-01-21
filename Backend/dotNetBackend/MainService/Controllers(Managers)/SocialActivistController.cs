@@ -246,7 +246,7 @@ namespace dotNetBackend.Controllers
                     {
                         _logger.LogInformation("Calling twitter accessor to create tweet");
                         var response = await _httpClient.PostAsync(
-                        EndpointsTwitter.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
+                        Endpoints.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
                         null);
                         response.EnsureSuccessStatusCode();
                         twitterStatus = response.StatusCode;

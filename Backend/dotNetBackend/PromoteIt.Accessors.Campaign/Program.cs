@@ -1,44 +1,74 @@
-var builder = WebApplication.CreateBuilder(args);
+// !important
+// using Models from MainService is not good, this is temporary solution
+// later need to remove DB context from MainService at all, only accessors should work directly with DB
+using dotNetBackend.Common;
+using dotNetBackend.Models;
+using Microsoft.EntityFrameworkCore;
+using PromoteIt.Accessors.Campaign.Models;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-app.UseHttpsRedirection();
+        // Add services to the container.
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+        builder.Services.AddDbContext<MasaProjectDbContext>(options =>
+        {
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+        var app = builder.Build();
 
-app.Run();
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        app.UseHttpsRedirection();
+
+        // "applicationUrl": "https://localhost:7009;http://localhost:5225",
+
+        app.MapGet("/get-all-campaigns", async (MasaProjectDbContext db, HttpContext httpContext) =>
+        {
+            app.Logger.LogInformation("{Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
+
+            try
+            {
+                var result = await db.Campaigns
+                    .Where(c => c.StatusId == (int)Statuses.Active)
+                    .Select(c => ToDto(c))
+                    .ToListAsync();
+
+                return Results.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogError(ex.Message);
+
+                return Results.Problem(ex.Message);
+            }
+        })
+        .WithName("Get all campaigns")
+        .WithOpenApi();
+
+        app.Run();
+    }
+
+    private static CampaignDTO ToDto(Campaign campaign)
+    {
+        return new CampaignDTO()
+        {
+            Id = campaign.Id,
+            Hashtag = campaign.Hashtag,
+            LandingPage = campaign.LandingPage,
+            NonProfitOrganizationName = campaign.Hashtag
+        };
+    }
 }

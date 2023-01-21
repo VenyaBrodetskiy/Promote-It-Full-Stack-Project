@@ -1,6 +1,6 @@
 ﻿namespace TwitterAccessor.Models
 {
-    public class TokenModel
+    public record TokenModel
     {
         public string? Token { get; set; }
     }

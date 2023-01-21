@@ -1,6 +1,6 @@
-﻿namespace TwitterAccessor.Models
+﻿namespace PromoteIt.Engines.Twitter.Models
 {
-    public record TweetDTO
+    public record FilteredTweetDTO
     {
         public string? User { get; set; }
         public DateTime PublishedOn { get; set; }

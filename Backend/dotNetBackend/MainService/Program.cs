@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using dotNetBackend.Common;
+using MainService.EngineServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,7 +100,7 @@ builder.Services.AddScoped<TransactionValidationService>();
 builder.Services.AddScoped<BusinessOwnerService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<DonationValidationService>();
-
+builder.Services.AddScoped<TwitterEngineService>();
 
 var app = builder.Build();
 
