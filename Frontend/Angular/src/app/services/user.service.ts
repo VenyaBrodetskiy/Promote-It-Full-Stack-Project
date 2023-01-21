@@ -18,17 +18,17 @@ export class UserService {
     ) { }
 
     public addBusinessOwner(user: IBusinessOwner): Observable<HttpResponse<number>> {
-        this.logger.info(`Adding new business owner: ${user}`);
+        this.logger.info(`Adding new business owner: `, user);
         return this.addUser<IBusinessOwner>(user, Endpoints.addBusinessOwner);
     }
 
     public addSocialActivist(user: ISocialActivist): Observable<HttpResponse<number>> {
-        this.logger.info(`Adding new social activist: ${user}`);
+        this.logger.info(`Adding new social activist: `, user);
         return this.addUser<ISocialActivist>(user, Endpoints.addSocialActivist);
     }
 
     public addNonProfitUser(user: INonProfitOrg): Observable<HttpResponse<number>> {
-        this.logger.info(`Adding new non profit organization: ${user}`);
+        this.logger.info(`Adding new non profit organization: `, user);
         return this.addUser<INonProfitOrg>(user, Endpoints.addNonProfitUser);
     }
 

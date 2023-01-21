@@ -18,7 +18,7 @@ export class TransactionService {
     ) { }
 
     public create(body: ITransaction): Observable<HttpResponse<ITransaction>> {
-        this.logger.info(`Creating new transaction: ${body}`);
+        this.logger.info(`Creating new transaction: `, body);
         return this.http.post<ITransaction>(`${Endpoints.createTransaction}`, body, { observe: 'response' })
             .pipe(
                 catchError(error => {

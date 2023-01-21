@@ -57,7 +57,7 @@ export class LoginPageComponent {
                                 this.logger.info('Got user type sucessfully', response);
                             });
                     } else {
-                        this.logger.error(`Did not get user type: ${response.status}, ${response.body}`, response);
+                        this.logger.error(`Did not get user type: `, response.status, response.body, response);
                     }
                     this.loadingService.loadingOff();
                 },

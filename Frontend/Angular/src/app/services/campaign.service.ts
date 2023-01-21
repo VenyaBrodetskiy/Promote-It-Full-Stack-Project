@@ -39,7 +39,7 @@ export class CampaignService {
     }
 
     public create(body: INewCampaign): Observable<HttpResponse<number>> {
-        this.logger.info(`Creating new campaign: ${body}`);
+        this.logger.info(`Creating new campaign: `, body);
         return this.http.post<number>(`${Endpoints.campaigns}`, body, { observe: 'response' })
             .pipe(
                 catchError(error => {

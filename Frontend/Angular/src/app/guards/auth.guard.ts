@@ -17,16 +17,13 @@ export class AuthGuard implements CanActivate {
                     this.router.navigate([`/${States.campaigns}`]);
                     break;
                 case String(UserType.SocialActivist):
-                    this.router.navigate(['/socialactivist']);
+                    this.router.navigate([`/${States.balance}`]);
                     break;
                 case String(UserType.NonprofitOrganization):
-                    this.router.navigate(['/nonprofitorganization']);
+                    this.router.navigate([`/${States.npCampaigns}`]);
                     break;
                 case String(UserType.ProlobbyOwner):
-                    this.router.navigate(['/prolobbyowner']);
-                    break;
-                case String(UserType.System):
-                    this.router.navigate(['/system']);
+                    this.router.navigate([`/${States.login}`]);
                     break;
                 default:
                     this.router.navigate([`/${States.login}`]);

@@ -30,5 +30,10 @@ export class OrderPageComponent implements OnInit {
             })
         );
     }
+
+    public ngOnDestroy(): void {
+        this.unsubscribe$.next(undefined);
+        this.unsubscribe$.complete();
+    }
 }
 

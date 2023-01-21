@@ -18,7 +18,7 @@ export class DonationService {
     ) { }
 
     public create(body: IDonation): Observable<HttpResponse<number>> {
-        this.logger.info(`Donating product to campaign: ${body}`);
+        this.logger.info(`Donating product to campaign: `, body);
         return this.http.post<number>(`${Endpoints.donateProductToCampaign}`, body, { observe: 'response' })
             .pipe(
                 catchError(error => {

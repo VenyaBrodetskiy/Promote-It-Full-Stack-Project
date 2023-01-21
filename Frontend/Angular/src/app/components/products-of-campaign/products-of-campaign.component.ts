@@ -4,6 +4,7 @@ import { finalize, Observable } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { EventEmitter } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'bo-products-of-campaign',
@@ -15,13 +16,14 @@ export class ProductsOfCampaignComponent {
     @Input() campaignId: number;
     @Input() userBalance: number;
     @Output() balanceChanged = new EventEmitter();
-    products: IProductForCampaignRow[];
-    rows$: Observable<IProductForCampaignRow[]>;
+    public products: IProductForCampaignRow[];
+    public rows$: Observable<IProductForCampaignRow[]>;
     public userBalanceForComponent: number;
 
     constructor(
         private productService: ProductService,
         private loadingService: LoadingService,
+        private logger: NGXLogger
     ) { }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -30,22 +32,28 @@ export class ProductsOfCampaignComponent {
             let change = changes["campaignId"].currentValue;
             this.loadingService.loadingOn();
             this.rows$ = this.productService.getProductsForCampaign(change).pipe(
-                finalize(() => this.loadingService.loadingOff())
+                finalize(() => {
+                    this.loadingService.loadingOff();
+                    this.logger.info(`Finished getting all products for campaignId: ${this.campaignId}`);
+                })
             );
-            console.log("onChanges", change);
+            this.logger.info(`campaignId was changed in product-of-campaign`, change);
         }
 
         if (changes["userBalance"]) {
             let change = changes["userBalance"].currentValue;
             this.userBalanceForComponent = change;
+            this.logger.info(`userBalance was changed in product-of-campaign`, change);
         }
-
     }
 
     public checkBalance() {
         this.balanceChanged.emit();
         this.rows$ = this.productService.getProductsForCampaign(this.campaignId).pipe(
-            finalize(() => this.loadingService.loadingOff())
+            finalize(() => {
+                this.loadingService.loadingOff();
+                this.logger.info(`Finished getting all products for campaignId: ${this.campaignId}`);
+            })
         );
     }
 

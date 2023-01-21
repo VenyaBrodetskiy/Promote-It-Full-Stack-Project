@@ -13,7 +13,7 @@ export class ErrorService {
     ) { }
 
     public handle(message: string) {
-        this.logger.error(`Handling error: ${message}`);
+        this.logger.error(`Handling error: `, message);
         this.error$.next(message)
     }
 

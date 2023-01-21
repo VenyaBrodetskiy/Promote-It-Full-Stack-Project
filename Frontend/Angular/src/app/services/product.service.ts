@@ -41,7 +41,7 @@ export class ProductService {
     }
 
     public create(body: INewProduct): Observable<HttpResponse<number>> {
-        this.logger.info(`Creating new product: ${body}`);
+        this.logger.info(`Creating new product: `, body);
         return this.http.post<number>(`${Endpoints.donateNewProduct}`, body, { observe: 'response' })
             .pipe(
                 catchError(error => {
