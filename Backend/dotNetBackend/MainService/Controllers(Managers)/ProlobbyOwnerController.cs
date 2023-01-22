@@ -85,6 +85,8 @@ namespace MainService.Controllers
 
             try
             {
+                if (_timerService.timer.Enabled == true) return Ok("Timer is already started");
+
                 _timerService.StartPeriodicalCheck(seconds);
 
                 return Ok("Started periodical checking twitter");

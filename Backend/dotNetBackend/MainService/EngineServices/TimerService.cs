@@ -5,30 +5,30 @@ namespace MainService.EngineServices
 {
     public class TimerService
     {
-        private readonly Timer _timer;
+        public readonly Timer timer;
         private readonly TwitterEngineService _twitterEngine;
         private readonly ILogger<TimerService> _logger;
 
         public TimerService(TwitterEngineService twitterEngine, ILogger<TimerService> logger)
         {
-            _timer = new Timer(100000);
+            timer = new Timer(100000);
             _twitterEngine = twitterEngine;
             _logger = logger;
         }
 
         public void StartPeriodicalCheck(int seconds)
         {
-            _logger.LogInformation("Starting periodical twitter check each {minutes}", seconds/60);
+            _logger.LogInformation("Starting periodical twitter check each {minutes} minute(s)", (double)seconds/60);
 
             double interval = TimeSpan.FromSeconds(seconds).TotalMilliseconds;
-            _timer.Interval = interval;
-            _timer.Enabled = true;
-            _timer.Elapsed += OnTimerEvent;
+            timer.Interval = interval;
+            timer.Enabled = true;
+            timer.Elapsed += OnTimerEvent;
         }
 
         public void StopPeriodicalCheck()
         {
-            _timer.Enabled = false;
+            timer.Enabled = false;
             _logger.LogInformation("Stopped periodical twitter check");
         }
 

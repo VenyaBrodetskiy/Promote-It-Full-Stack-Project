@@ -17,6 +17,10 @@ namespace BlazorWASM.Pages
 
         public bool ShowError { get; set; }
         public string Error { get; set; } = "";
+        public bool ShowSuccess { get; set; }
+        public string? Success { get; set; }
+
+        public int defaultInterval = 300; // 5 minutes
 
         protected override async Task OnInitializedAsync()
         {
@@ -41,6 +45,55 @@ namespace BlazorWASM.Pages
                 ShowError = true;
                 logger.LogError(ex.Message);
             }
+        }
+
+        private async Task OnLaunch()
+        {
+            try
+            {
+                ShowSuccess = false;
+
+                logger.LogInformation("Sending request to {endpoint}", Endpoints.StartTwitterChecking);
+
+                var response = await http.PutAsync($"{Endpoints.StartTwitterChecking}/{defaultInterval}", null);
+                response.EnsureSuccessStatusCode();
+                
+                Success = await response.Content.ReadAsStringAsync();
+                ShowSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+                ShowError = true;
+                logger.LogError(ex.Message);
+            }
+        }
+
+        private async Task OnStop()
+        {
+            try
+            {
+                ShowSuccess = false;
+
+                logger.LogInformation("Sending request to {endpoint}", Endpoints.StopTwitterChecking);
+
+                var response = await http.PostAsync(Endpoints.StopTwitterChecking, null);
+                response.EnsureSuccessStatusCode();
+
+                Success = await response.Content.ReadAsStringAsync();
+                ShowSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+                ShowError = true;
+                logger.LogError(ex.Message);
+            }
+        }
+
+        private async Task OnCloseSuccess()
+        {
+            ShowSuccess = false;
         }
     }
 }

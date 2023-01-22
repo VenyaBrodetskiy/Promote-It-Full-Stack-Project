@@ -4,6 +4,8 @@
     {
         // C# server
         public static string AllTweets { get; } = "https://localhost:7121/api/ProlobbyOwner/GetAllTweets";
+        public static string StartTwitterChecking { get; } = "https://localhost:7121/api/ProlobbyOwner/StartTwitterChecking";
+        public static string StopTwitterChecking { get; } = "https://localhost:7121/api/ProlobbyOwner/StopTwitterChecking";
 
         // NodeJs server
         public static string Login { get; } = "http://localhost:6060/api/auth/login";
