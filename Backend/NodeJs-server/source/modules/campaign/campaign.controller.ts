@@ -5,7 +5,8 @@ import CampaignService from "./campaign.service";
 import LoggerService from "../../core/logger.service";
 import { ResponseHelper } from "../../core/helpers/response.helper";
 import { RequestHelper } from "../../core/helpers/request.helpers";
-
+import { validate } from 'class-validator';
+import { CampaignDTO } from "../../common/validationclasses";
 class CampaignController {
 
     constructor() { }
@@ -19,6 +20,7 @@ class CampaignController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
@@ -32,6 +34,7 @@ class CampaignController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
@@ -45,6 +48,7 @@ class CampaignController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
@@ -62,6 +66,7 @@ class CampaignController {
                         return res.status(200).json(result);
                     })
                     .catch((error: systemError) => {
+                        LoggerService.error(`${req.method} ${req.originalUrl}`);
                         return ResponseHelper.handleError(res, error);
                     })
             }
@@ -74,10 +79,18 @@ class CampaignController {
         }
     }
 
-    public addCampaign(req: Request, res: Response, next: NextFunction) {
+    public async addCampaign(req: Request, res: Response, next: NextFunction) {
 
-        // TODO: (very low priority) add validation, that landing page is working one 
         LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const campaignDTO = new CampaignDTO();
+        Object.assign(campaignDTO, req.body);
+
+        const errors = await validate(campaignDTO);
+        if (errors.length > 0) {
+            LoggerService.error(`Validation error for ${req.method} ${req.originalUrl}`);
+            return res.status(422).json({ errors });
+        }
 
         const body: campaign = req.body;
         const inputCampaign: campaign = {
