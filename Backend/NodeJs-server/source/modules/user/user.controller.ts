@@ -7,6 +7,8 @@ import UserService from "./user.service";
 import ErrorService from "../../core/error.service";
 import LoggerService from "../../core/logger.service";
 import { ResponseHelper } from "../../core/helpers/response.helper";
+import { validate } from 'class-validator';
+import { BusinessOwnerDto, NonProfitOrganizationDTO, SocialActivistDTO } from "../../common/validationclasses";
 
 class UserController {
 
@@ -21,6 +23,7 @@ class UserController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
@@ -34,6 +37,7 @@ class UserController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
@@ -47,13 +51,23 @@ class UserController {
                 return res.status(200).json(result);
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error);
             })
     }
 
-    public addBusinessOwner(req: Request, res: Response, next: NextFunction) {
+    public async addBusinessOwner(req: Request, res: Response, next: NextFunction) {
 
         LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const businessOwnerDto = new BusinessOwnerDto();
+        Object.assign(businessOwnerDto, req.body);
+
+        const errors = await validate(businessOwnerDto);
+        if (errors.length > 0) {
+            LoggerService.error(`Validation error for ${req.method} ${req.originalUrl}`);
+            return res.status(422).json({ errors });
+        }
 
         const body: businessOwner = req.body;
         const hashedPasword: string = bcrypt.hashSync(body.password as string);
@@ -84,9 +98,18 @@ class UserController {
             }) 
     }
 
-    public addSocialActivist(req: Request, res: Response, next: NextFunction) {
+    public async addSocialActivist(req: Request, res: Response, next: NextFunction) {
 
         LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const socialActivistDTO = new SocialActivistDTO();
+        Object.assign(socialActivistDTO, req.body);
+
+        const errors = await validate(socialActivistDTO);
+        if (errors.length > 0) {
+            LoggerService.error(`Validation error for ${req.method} ${req.originalUrl}`);
+            return res.status(422).json({ errors });
+        }
 
         const body: socialActivist = req.body;
         const hashedPasword: string = bcrypt.hashSync(body.password as string);
@@ -118,9 +141,18 @@ class UserController {
             })
     }
 
-    public addNonProfitOrganization(req: Request, res: Response, next: NextFunction) {
+    public async addNonProfitOrganization(req: Request, res: Response, next: NextFunction) {
 
         LoggerService.info(`${req.method} ${req.originalUrl}`);
+
+        const nonProfitOrganizationDTO = new NonProfitOrganizationDTO();
+        Object.assign(nonProfitOrganizationDTO, req.body);
+
+        const errors = await validate(nonProfitOrganizationDTO);
+        if (errors.length > 0) {
+            LoggerService.error(`Validation error for ${req.method} ${req.originalUrl}`);
+            return res.status(422).json({ errors });
+        }
 
         const body: nonProfitOrganization = req.body;
         const hashedPasword: string = bcrypt.hashSync(body.password as string);

@@ -40,6 +40,7 @@ class AuthenticationController {
                 // TODO: handle error
             })
             .catch((error: systemError) => {
+                LoggerService.error(`${req.method} ${req.originalUrl}`);
                 return ResponseHelper.handleError(res, error, true);
             })
     }
