@@ -100,7 +100,8 @@ builder.Services.AddScoped<TransactionValidationService>();
 builder.Services.AddScoped<BusinessOwnerService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<DonationValidationService>();
-builder.Services.AddScoped<TwitterEngineService>();
+builder.Services.AddSingleton<TwitterEngineService>();
+builder.Services.AddSingleton<TimerService>();
 
 var app = builder.Build();
 

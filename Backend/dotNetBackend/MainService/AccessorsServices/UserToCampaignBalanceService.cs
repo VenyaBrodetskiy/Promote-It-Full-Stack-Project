@@ -5,15 +5,22 @@ using dotNetBackend.Models;
 using dotNetBackend.DTO;
 using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace dotNetBackend.Services
 {
     public class UserToCampaignBalanceService
     {
         private readonly MasaProjectDbContext _db;
-        public UserToCampaignBalanceService(MasaProjectDbContext db)
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<UserToCampaignBalanceService> _logger;
+
+        public UserToCampaignBalanceService(MasaProjectDbContext db, HttpClient httpClient, ILogger<UserToCampaignBalanceService> logger)
         {
             _db = db;
+            _httpClient = httpClient;
+            _logger = logger;
         }
 
         public async Task<List<UserToCampaignBalanceDTO>> GetUserBalances(int UserId)
@@ -29,8 +36,10 @@ namespace dotNetBackend.Services
 
                 return await result.ToListAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
+
                 throw;
             }
         }
@@ -52,8 +61,9 @@ namespace dotNetBackend.Services
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
@@ -84,43 +94,29 @@ namespace dotNetBackend.Services
 
                 return ToDto(newLine, userTwitterHandle, campaignHashtag);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
 
-        public async Task<UserToCampaignBalanceDTO> ChangeBalance(UserToCampaignTwitterInfo userToCampaign)
+        public async Task<string> ChangeBalance(UserToCampaignTwitterInfo userToCampaign)
         {
             try
             {
-                var mutatedLine = await _db.UserToCampaignBalances
-                .Where(row => row.UserId == userToCampaign.UserId && row.CampaignId == userToCampaign.CampaignId)
-                .FirstOrDefaultAsync();
+                // removed direct access to DB
+                // now here I send request to Accessor Layer service 
+                _logger.LogInformation("Sending request to {accessor}", Endpoints.AccessorGetSocialActivists);
 
-                if (userToCampaign.CurrentTweetCount - mutatedLine.PreviousTweetCount > 0)
-                {
-                    mutatedLine.Balance += userToCampaign.CurrentTweetCount - mutatedLine.PreviousTweetCount;
-                }
-                else
-                {
-                    mutatedLine.Balance = userToCampaign.CurrentTweetCount;
-                    // TODO: (low) add log about prev balance
-                }
-                mutatedLine.PreviousTweetCount = userToCampaign.CurrentTweetCount;
-                mutatedLine.UpdateDate = DateTime.Now;
-                mutatedLine.UpdateUserId = userToCampaign.UserId;
+                var result = await _httpClient.PutAsJsonAsync(Endpoints.AccessorChangeBalance, userToCampaign);
+                result.EnsureSuccessStatusCode();
 
-                await _db.SaveChangesAsync();
-
-                var userTwitterHandle = await _db.SocialActivists.Where(user => user.UserId == userToCampaign.UserId).Select(user => user.TwitterHandle).FirstOrDefaultAsync();
-                var campaignHashtag = await _db.Campaigns.Where(c => c.Id == userToCampaign.CampaignId).Select(c => c.Hashtag).FirstOrDefaultAsync();
-
-                return ToDto(mutatedLine, userTwitterHandle, campaignHashtag);
+                return await result.Content.ReadAsStringAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
@@ -154,9 +150,10 @@ namespace dotNetBackend.Services
 
                 return userToCampaign.Balance;
             }
-            catch (Exception)
-            {
-                throw;
+            catch (Exception ex) 
+            { 
+                _logger.LogError(ex.Message); 
+                throw; 
             }
         }
 

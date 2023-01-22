@@ -10,7 +10,10 @@
     {
         public static string TwitterCreateNewPost { get; } = "https://localhost:7128/create-tweet/";
         public static string TwitterEngineGetAllTweets { get; } = "https://localhost:7109/get-all-tweets";
+        public static string TwitterEngineUpdateBalances { get; } = "https://localhost:7109/update-all-balances";
         public static string AccessorGetSocialActivists { get; } = "https://localhost:7170/get-all-social-activists";
+        public static string AccessorChangeBalance { get; } = "https://localhost:7170/change-balance-user-to-campaign";
+
     }
 
     public static class TokenClaims

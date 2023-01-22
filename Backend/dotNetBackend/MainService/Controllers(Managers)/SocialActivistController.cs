@@ -69,6 +69,7 @@ namespace dotNetBackend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return Problem(ex.Message);
             }
 
@@ -101,7 +102,7 @@ namespace dotNetBackend.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message);
                 return Problem(ex.Message);
             }
 
@@ -132,6 +133,7 @@ namespace dotNetBackend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return Problem(ex.Message);
             }
         }
@@ -161,13 +163,14 @@ namespace dotNetBackend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return Problem(ex.Message);
             }
         }
 
         [HttpPost]
         [Authorize(Policy = Policies.SocialActivist)]
-        public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction(TransactionRequest transactionRequest)
+        public async Task<ActionResult<UserToCampaignBalanceDTO>> CreateTransaction([FromBody] TransactionRequest transactionRequest)
         {
             _logger.LogInformation("{Method} {Path}", HttpContext.Request.Method, HttpContext.Request.Path);
 
@@ -207,6 +210,7 @@ namespace dotNetBackend.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return Problem(ex.Message);
             }
 
@@ -299,7 +303,7 @@ namespace dotNetBackend.Controllers
                     _logger.LogInformation("User {userToCampaign.UserId} doesn't have balance for Campaign {userToCampaign.CampaignId}", userToCampaign.UserId, userToCampaign.CampaignId);
                     
                     var result = await _userToCampaignService.AddNewBalance(userToCampaign);
-                    _logger.LogInformation("Created new line in UserToCampaignBalance: {userTwitter}", result.TwitterHandle);
+                    _logger.LogInformation("Created new line in UserToCampaignBalance: {userTwitter}", userToCampaign.UserId);
 
                     return Ok(result);
                 }
@@ -308,14 +312,14 @@ namespace dotNetBackend.Controllers
                     _logger.LogInformation("User {userToCampaign.UserId} already has balance for Campaign {userToCampaign.CampaignId}", userToCampaign.UserId, userToCampaign.CampaignId);
 
                     var result = await _userToCampaignService.ChangeBalance(userToCampaign);
-                    _logger.LogInformation("Updated user balance: {userTwitter}", result.TwitterHandle);
+                    _logger.LogInformation("Updated user balance: {userTwitter}", userToCampaign.UserId);
 
                     return Ok(result);
                 }
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }

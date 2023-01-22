@@ -19,7 +19,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// for debug only
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,7 +92,8 @@ app.MapGet("/getTweetsByHashtag/{hashtag:regex(#[a-zA-Z0-9_])}",
                         QuoteCount = t.PublicMetrics.QuoteCount,
                         ReplyCount = t.PublicMetrics.ReplyCount,
                         RetweetCount = t.PublicMetrics.RetweetCount,
-                    }
+                    },
+                    Url = t.Entities.Urls?.First().ExpandedUrl
                 }).ToList();
 
                 result.Authors = searchResponse.Includes.Users.Select(u => new AuthorDTO()

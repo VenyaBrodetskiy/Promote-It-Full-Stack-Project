@@ -13,6 +13,8 @@
         public string Id { get; set; }
         public string Text { get; set; }
         public PublicMetricsDTO PublicMetrics { get; set; }
+        public string? Url { get; set; }
+
     }
 
     public record PublicMetricsDTO

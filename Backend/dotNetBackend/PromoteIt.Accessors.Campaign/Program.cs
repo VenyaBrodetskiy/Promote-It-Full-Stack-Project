@@ -24,7 +24,7 @@ internal class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // for debug only
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

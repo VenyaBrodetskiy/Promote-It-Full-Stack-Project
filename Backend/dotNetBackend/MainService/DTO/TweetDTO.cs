@@ -7,5 +7,6 @@
         public string? Link { get; set; }
         public int Retweets { get; set; }
         public string? Body { get; set; }
+        public string? Hashtag { get; set; }
     }
 }

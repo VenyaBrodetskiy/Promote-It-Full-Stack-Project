@@ -4,6 +4,7 @@
 using dotNetBackend.Common;
 using dotNetBackend.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PromoteIt.Accessors.SocialActivist.Models;
 
@@ -25,7 +26,7 @@ internal class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // for debug only
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -57,6 +58,49 @@ internal class Program
         })
         .WithName("Get All Social Activists")
         .WithOpenApi();
+
+        app.MapPut("/change-balance-user-to-campaign", 
+            async (UserToCampaignTwitterInfo userToCampaign, 
+                MasaProjectDbContext db, HttpContext httpContext ) =>
+            {
+                app.Logger.LogInformation("{Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
+
+                try
+                {
+                    var mutatedLine = await db.UserToCampaignBalances
+                        .Where(row => row.UserId == userToCampaign.UserId && row.CampaignId == userToCampaign.CampaignId)
+                        .FirstAsync();
+
+                    if (userToCampaign.CurrentTweetCount - mutatedLine.PreviousTweetCount > 0)
+                    {
+                        app.Logger.LogInformation("\nTweets + Retweets increase from previous check, increasing balance.\n" +
+                            "Old Balance: {old}\n" +
+                            "New Balance: {new}", mutatedLine.Balance, mutatedLine.Balance + userToCampaign.CurrentTweetCount - mutatedLine.PreviousTweetCount);
+                        mutatedLine.Balance += userToCampaign.CurrentTweetCount - mutatedLine.PreviousTweetCount;
+                    }
+                    else
+                    {
+                        app.Logger.LogInformation("\nTweets + Retweets didn't increase from previous check, keep current balance.\n" +
+                            "Old Balance: {old}\n" +
+                            "New Balance: {new}", mutatedLine.Balance, mutatedLine.Balance);
+                    }
+                    mutatedLine.PreviousTweetCount = userToCampaign.CurrentTweetCount;
+                    mutatedLine.UpdateDate = DateTime.Now;
+                    mutatedLine.UpdateUserId = userToCampaign.UserId;
+
+                    await db.SaveChangesAsync();
+
+                    return Results.Ok("Changed user balance");
+
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogError(ex.Message);
+                    return Results.Problem(ex.Message);
+                }
+            })
+       .WithName("Change Social activist balance to 1 campaign")
+       .WithOpenApi();
 
         app.Run();
     }

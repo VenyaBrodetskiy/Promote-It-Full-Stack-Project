@@ -1,14 +1,9 @@
-﻿using System.Text.Json.Serialization;
-
-namespace dotNetBackend.DTO
+﻿namespace PromoteIt.Accessors.SocialActivist.Models
 {
     public record UserToCampaignTwitterInfo
     {
-        [JsonRequired]
         public int UserId { get; set; }
-        [JsonRequired]
         public int CampaignId { get; set; }
-        [JsonRequired]
         public int CurrentTweetCount { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace dotNetBackend.DTO
 {
@@ -16,10 +17,11 @@ namespace dotNetBackend.DTO
 
     public record TransactionRequest
     {
+        [JsonRequired]
         public int ProductId { get; set; }
-
+        [JsonRequired]
         public int CampaignId { get; set; }
-
+        [JsonRequired]
         public int StateId { get; set; }
     }
 
@@ -34,9 +36,9 @@ namespace dotNetBackend.DTO
 
     public record TransactionChangeState
     {
-        [Required(ErrorMessage = "Transaction ID is requred param")]
+        [JsonRequired]
         public int Id { get; set; }
-        [Range(1, 2, ErrorMessage = "Can change only ordered and shipped products")]
+        [JsonRequired, Range(1, 2, ErrorMessage = "Can change only ordered and shipped products")]
         public int StateId { get; set; }
     }
 }

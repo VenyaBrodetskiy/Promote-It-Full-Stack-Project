@@ -22,7 +22,6 @@ namespace MainService.EngineServices
         public async Task<List<TweetDTO>?> GetAllTweets()
         {
             // send response to engine service
-
             try
             {
                 _logger.LogInformation("Redirecting to twitter engine microservice: {engine}", Endpoints.TwitterEngineGetAllTweets);
@@ -46,6 +45,25 @@ namespace MainService.EngineServices
             }
         }
 
+        public async Task<string> ChangeUserBalancesForAllCampaigns()
+        {
+            try
+            {
+                _logger.LogInformation("Redirecting to twitter engine microservice: {engine}", Endpoints.TwitterEngineUpdateBalances);
 
+                var response = await _httpClient.PutAsync(Endpoints.TwitterEngineUpdateBalances, null);
+
+                _logger.LogInformation("twitterEngine returned response");
+
+                response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+        }
     }
 }

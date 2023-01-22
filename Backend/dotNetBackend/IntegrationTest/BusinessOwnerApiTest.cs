@@ -13,7 +13,7 @@ namespace IntegrationTest
     {
         private readonly CommonContext context;
         private readonly string tokenFor10Years = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjEsImlhdCI6MTY3MzgxMDgxMSwiZXhwIjoxOTg5Mzg2ODExfQ.1kB9dRcMU-IiRf9A2CAodxOShQOE8F13E4WcrAKxzH0";
-        private int UserId = 4;
+        //private int UserId = 4;
         private readonly string baseUrl = "/api/BusinessOwner";
 
         public BusinessOwnerApiTest(CommonContext context)
