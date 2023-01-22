@@ -38,7 +38,6 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { CampaignSaPageComponent } from './pages/campaign-sa-page/campaign-sa-page.component';
 
-
 const routes: Routes = [
     { path: '', component: AppComponent, canActivate: [AuthGuard] },
     { path: States.login, component: LoginPageComponent },
