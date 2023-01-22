@@ -10,6 +10,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { NGXLogger } from 'ngx-logger';
 import { Subject, takeUntil } from 'rxjs';
 import { ErrorService } from 'src/app/services/error.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'bo-sign-up-page',
@@ -54,8 +55,11 @@ export class SignUpPageComponent {
         UserType.NonprofitOrganization
     ];
 
+    public phoneRegex = new RegExp('^\\+[0-9]{10,15}$');
+    public websiteRegex = new RegExp('^(www\\.)?([a-zA-Z0-9]+\\.)+[a-zA-Z]{2,}$');
     public JSON = JSON;
     private unsubscribe$ = new Subject();
+    public signupForm;
 
     constructor(
         private userService: UserService,
@@ -64,7 +68,13 @@ export class SignUpPageComponent {
         private successService: SuccessService,
         private loadingService: LoadingService,
         private logger: NGXLogger
-    ) { }
+    ) {
+        this.signupForm = new FormGroup({
+        login: new FormControl(null, [Validators.required]),
+            password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+                name: new FormControl(null, [Validators.required]),
+    });
+    }
 
     public onSignUpBusinessOwner() {
         this.loadingService.loadingOn();

@@ -3,102 +3,204 @@
         <div class="mb-3 col-6 display-4">
             Sign Up
         </div>
-        <div class="mb-3 col-6">
-            <label for="login" class="form-label">Login</label>
-            <input type="text" class="form-control" id="login"
-                placeholder="Login" [(ngModel)]="user.login" required/>
-        </div>
 
-        <div class="mb-3 col-6">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password"
-                placeholder="Password" [(ngModel)]="user.password" />
-        </div>
-        <div class="mb-3 col-6">
-            <label for="userTypeSelect" class="form-label">Choose type of user</label>
-            <select class="form-select" id="userTypeSelect" name="userTypeSelect" [(ngModel)]="userTypeSelected"
-                [attr.aria-label]="userTypeSelected">
-                <option *ngFor="let userType of userTypes" [value]="userType" [innerText]="UserType[userType]"></option>
-            </select>
-        </div>
-
-        <div [ngSwitch]="userTypeSelected" class="mb-3 col-6">
-            <div *ngSwitchCase="UserType.BusinessOwner">
-                <!-- For Business Owner -->
-                <div class="mb-3">
-                    <label for="twitterHandle" class="form-label">Twitter Handle</label>
-                    <input type="text" class="form-control" id="twitterHandle"
-                        placeholder="@mytwitter" [(ngModel)]="businessOwner.twitterHandle" />
-                </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name"
-                        placeholder="Alon" [(ngModel)]="businessOwner.name" />
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email"
-                        placeholder="mymail@example.com" [(ngModel)]="businessOwner.email" />
-                </div>
-
-                <div class="mt-3">
-                    <button class="btn btn-primary col-12" type="submit"
-                        (click)="onSignUpBusinessOwner()">Sign Up</button>
-                </div>
-
-            </div>
-            <div *ngSwitchCase="UserType.SocialActivist">
-                <!-- For Social Activist -->
-                <div class="mb-3">
-                    <label for="twitterHandle" class="form-label">Twitter Handle</label>
-                    <input type="text" class="form-control" id="twitterHandle"
-                        placeholder="@ElonMask" [(ngModel)]="socialActivist.twitterHandle" />
-                    <div class="invalid-feedback">Some text</div>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email"
-                        placeholder="ibought@twitter.com" [(ngModel)]="socialActivist.email" />
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address"
-                        placeholder="119313 San-Francisco" [(ngModel)]="socialActivist.address" />
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="text" class="form-control" id="phone"
-                        placeholder="+972533215080" [(ngModel)]="socialActivist.phoneNumber" />
-                </div>
-
-                <div class="mt-3">
-                    <button class="btn btn-primary col-12"
-                        (click)="onSignUpSocialActivist()">Sign Up</button>
+            <div class="mb-3 col-6">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control" id="login"
+                    placeholder="Login" [(ngModel)]="user.login" required #login="ngModel"
+                    [class.is-invalid]="login.invalid && login.touched"/>
+                <div *ngIf="login.invalid && login.touched" class="invalid-feedback" required>
+                Login is required.
                 </div>
             </div>
-            <div *ngSwitchCase="UserType.NonprofitOrganization">
-                <!-- For Non profit -->
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name"
-                        placeholder="Alon" [(ngModel)]="nonProfitOrg.name" />
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email"
-                        placeholder="mymail@example.com" [(ngModel)]="nonProfitOrg.email" />
-                </div>
-                <div class="mb-3">
-                    <label for="website" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="website"
-                        placeholder="google.com" [(ngModel)]="nonProfitOrg.website"/>
-                </div>
 
-                <div class="mt-3">
-                    <button class="btn btn-primary col-12"
-                        (click)="onSignUpNonProfit()">Sign Up</button>
+            <div class="mb-3 col-6">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password"
+                    placeholder="Password" [(ngModel)]="user.password"
+                    [ngModelOptions]="{updateOn: 'blur'}" #password="ngModel"
+                    required minlength="8"
+                    [class.is-invalid]="password.invalid && password.touched" />
+                <div *ngIf="password.errors?.required && password.touched" class="invalid-feedback">
+                    Password is required.
+                </div>
+                <div *ngIf="password.errors?.minlength && password.touched" class="invalid-feedback">
+                    Password must be at least 8 characters long.
                 </div>
             </div>
-        </div>
+
+            <div class="mb-3 col-6">
+                <label for="userTypeSelect" class="form-label">Choose type of user</label>
+                <select class="form-select" id="userTypeSelect" name="userTypeSelect" [(ngModel)]="userTypeSelected"
+                    [attr.aria-label]="userTypeSelected">
+                    <option *ngFor="let userType of userTypes" [value]="userType" [innerText]="UserType[userType]"></option>
+                </select>
+            </div>
+
+            <div [ngSwitch]="userTypeSelected" class="mb-3 col-6">
+                <div *ngSwitchCase="UserType.BusinessOwner">
+                    <!-- For Business Owner -->
+                    <div class="mb-3">
+                        <label for="twitterHandle" class="form-label">Twitter Handle</label>
+                        <input type="text" class="form-control" id="twitterHandle"
+                            placeholder="@mytwitter" [(ngModel)]="businessOwner.twitterHandle"
+                            [ngModelOptions]="{updateOn: 'blur'}" #twitterHandle="ngModel"
+                            pattern="^@[A-Za-z0-9_]{1,15}$" required
+                            [class.is-invalid]="twitterHandle.invalid && twitterHandle.touched" />
+                        <div *ngIf="twitterHandle.errors?.required && twitterHandle.touched" class="invalid-feedback">
+                            Twitter Handle is required.
+                        </div>
+                        <div *ngIf="twitterHandle.errors?.pattern && twitterHandle.touched" class="invalid-feedback">
+                            Twitter Handle must start with '@' and contains alphanumeric characters only, with a maximum of 15 characters.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Organization name</label>
+                        <input type="text" class="form-control" id="name"
+                            placeholder="Greenpeace" [(ngModel)]="businessOwner.name"
+                            [ngModelOptions]="{updateOn: 'blur'}" #name="ngModel"
+                            required
+                            [class.is-invalid]="name.invalid && name.touched" />
+                        <div *ngIf="name.errors?.required && name.touched" class="invalid-feedback">
+                            Name is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email"
+                            placeholder="mymail@example.com" [(ngModel)]="businessOwner.email"
+                            [ngModelOptions]="{updateOn: 'blur'}" #email="ngModel"
+                            required email
+                            [class.is-invalid]="email.invalid && email.touched" />
+                        <div *ngIf="email.errors?.required && email.touched" class="invalid-feedback">
+                            Email is required.
+                        </div>
+                        <div *ngIf="email.errors?.email && email.touched" class="invalid-feedback">
+                            Email must be valid.
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button
+                            *ngIf="!login.invalid && !password.invalid && !twitterHandle.invalid && !name.invalid && !email.invalid"
+                            class="btn btn-primary col-12" type="submit"
+                            (click)="onSignUpBusinessOwner()">Sign Up</button>
+                    </div>
+                </div>
+
+
+                <div *ngSwitchCase="UserType.SocialActivist">
+                    <!-- For Social Activist -->
+                    <div class="mb-3">
+                        <label for="twitterHandle" class="form-label">Twitter Handle</label>
+                        <input type="text" class="form-control" id="twitterHandle"
+                            placeholder="@ElonMask" [(ngModel)]="socialActivist.twitterHandle"
+                        [ngModelOptions]="{updateOn: 'blur'}" #twitterHandle="ngModel"
+                        pattern="^@[A-Za-z0-9_]{1,15}$" required
+                        [class.is-invalid]="twitterHandle.invalid && twitterHandle.touched" />
+                        <div *ngIf="twitterHandle.errors?.required && twitterHandle.touched" class="invalid-feedback">
+                            Twitter Handle is required.
+                        </div>
+                        <div *ngIf="twitterHandle.errors?.pattern && twitterHandle.touched" class="invalid-feedback">
+                            Twitter Handle must start with '@' and contains alphanumeric characters only, with a maximum of 15 characters.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email"
+                            placeholder="ibought@twitter.com" [(ngModel)]="socialActivist.email"
+                            [ngModelOptions]="{updateOn: 'blur'}" #email="ngModel"
+                            required email
+                            [class.is-invalid]="email.invalid && email.touched" />
+                        <div *ngIf="email.errors?.required && email.touched" class="invalid-feedback">
+                            Email is required.
+                        </div>
+                        <div *ngIf="email.errors?.email && email.touched" class="invalid-feedback">
+                            Email must be valid.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address"
+                            placeholder="119313 San-Francisco" [(ngModel)]="socialActivist.address"
+                            [ngModelOptions]="{updateOn: 'blur'}" #address="ngModel"
+                            required
+                            [class.is-invalid]="address.invalid && address.touched" />
+                        <div *ngIf="address.errors?.required && address.touched" class="invalid-feedback">
+                            Address is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone"
+                            placeholder="+972533215080" [(ngModel)]="socialActivist.phoneNumber"
+                            [ngModelOptions]="{updateOn: 'blur'}" #phone="ngModel"
+                            [pattern]="phoneRegex" required
+                            [class.is-invalid]="phone.invalid && phone.touched" />
+                        <div *ngIf="phone.errors?.required && phone.touched" class="invalid-feedback">
+                            Phone is required.
+                        </div>
+                        <div *ngIf="phone.errors?.pattern && phone.touched" class="invalid-feedback">
+                            Phone must be in the format of '+1234567890'
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button
+                            *ngIf="!login.invalid && !password.invalid && !email.invalid && !address.invalid && !phone.invalid"
+                            class="btn btn-primary col-12"
+                            (click)="onSignUpSocialActivist()">Sign Up</button>
+                    </div>
+                </div>
+
+
+                <div *ngSwitchCase="UserType.NonprofitOrganization">
+                    <!-- For Non profit -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Organization name</label>
+                        <input type="text" class="form-control" id="name"
+                            placeholder="Greenpeace" [(ngModel)]="nonProfitOrg.name"
+                            [ngModelOptions]="{updateOn: 'blur'}" #name="ngModel"
+                            required
+                            [class.is-invalid]="name.invalid && name.touched" />
+                        <div *ngIf="name.errors?.required && name.touched" class="invalid-feedback">
+                            Name is required.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email"
+                            placeholder="mymail@example.com" [(ngModel)]="nonProfitOrg.email"
+                            [ngModelOptions]="{updateOn: 'blur'}" #email="ngModel"
+                            required email
+                            [class.is-invalid]="email.invalid && email.touched" />
+                        <div *ngIf="email.errors?.required && email.touched" class="invalid-feedback">
+                            Email is required.
+                        </div>
+                        <div *ngIf="email.errors?.email && email.touched" class="invalid-feedback">
+                            Email must be valid.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="website" class="form-label">Website</label>
+                        <input type="text" class="form-control" id="website"
+                            placeholder="google.com" [(ngModel)]="nonProfitOrg.website"
+                            [ngModelOptions]="{updateOn: 'blur'}" #website="ngModel"
+                            [pattern]="websiteRegex"
+                            [class.is-invalid]="website.invalid && website.touched" />
+                        <div *ngIf="website.errors?.pattern && website.touched" class="invalid-feedback">
+                            Website must be in the format of 'example.com' or 'www.example.com'
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button
+                            *ngIf="!login.invalid && !password.invalid && !name.invalid && !email.invalid && !website.invalid"
+                            class="btn btn-primary col-12"
+                            (click)="onSignUpNonProfit()"
+                        >Sign Up</button>
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
