@@ -1,4 +1,7 @@
-﻿using dotNetBackend.DTO;
+﻿using ApprovalTests;
+using ApprovalTests.Core;
+using ApprovalTests.Reporters;
+using dotNetBackend.DTO;
 using dotNetBackend.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +11,7 @@ using System.Net.Http.Json;
 
 namespace IntegrationTest
 {
-   
+    [UseReporter(typeof(VisualStudioReporter))]
     public class BusinessOwnerApiTest : IClassFixture<CommonContext>
     {
         private readonly CommonContext context;
@@ -38,6 +41,13 @@ namespace IntegrationTest
             response.EnsureSuccessStatusCode();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var text = await response.Content.ReadAsStringAsync();
+            Approvals.RegisterDefaultNamerCreation(() =>
+                new Test(url.Trim('/'))
+            );
+            Approvals.Verify(text);
+
         }
 
         [Theory]
@@ -65,5 +75,18 @@ namespace IntegrationTest
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(stateId, transactionState);
         }
+    }
+
+    public class Test : IApprovalNamer
+    {
+        private readonly string _name;
+
+        public Test(string name)
+        {
+            _name = name;
+        }
+        public string SourcePath => "..\\..\\..\\mytestsfolder";
+
+        public string Name => _name;
     }
 }

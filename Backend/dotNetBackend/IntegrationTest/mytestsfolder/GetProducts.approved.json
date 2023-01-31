@@ -1,0 +1,202 @@
+﻿[
+  {
+    "id": 1,
+    "title": "Dove shampoo",
+    "price": 6
+  },
+  {
+    "id": 2,
+    "title": "Dove soap",
+    "price": 5
+  },
+  {
+    "id": 3,
+    "title": "Domestos gel",
+    "price": 5
+  },
+  {
+    "id": 4,
+    "title": "Hellmann's mayo",
+    "price": 4
+  },
+  {
+    "id": 8,
+    "title": "Vodka",
+    "price": 5
+  },
+  {
+    "id": 9,
+    "title": "Bottle of vodka",
+    "price": 4
+  },
+  {
+    "id": 10,
+    "title": "CheckCors",
+    "price": 3
+  },
+  {
+    "id": 11,
+    "title": "FinalTestProduct",
+    "price": 5
+  },
+  {
+    "id": 12,
+    "title": "Laptop",
+    "price": 4
+  },
+  {
+    "id": 13,
+    "title": "iPhone",
+    "price": 100
+  },
+  {
+    "id": 14,
+    "title": "Some amazing product",
+    "price": 1400
+  },
+  {
+    "id": 15,
+    "title": "Chair",
+    "price": 50
+  },
+  {
+    "id": 16,
+    "title": "Table",
+    "price": 4
+  },
+  {
+    "id": 17,
+    "title": "Pillow",
+    "price": 0
+  },
+  {
+    "id": 18,
+    "title": "Mirror",
+    "price": 4
+  },
+  {
+    "id": 19,
+    "title": "Cup",
+    "price": 0
+  },
+  {
+    "id": 20,
+    "title": "Stewpan",
+    "price": 1
+  },
+  {
+    "id": 21,
+    "title": "Christmas tree",
+    "price": 1
+  },
+  {
+    "id": 22,
+    "title": "Bed sheets",
+    "price": 0
+  },
+  {
+    "id": 23,
+    "title": "Photo album",
+    "price": 0
+  },
+  {
+    "id": 24,
+    "title": "Headphones",
+    "price": 0
+  },
+  {
+    "id": 25,
+    "title": "Ladder",
+    "price": 7
+  },
+  {
+    "id": 26,
+    "title": "Dictionary",
+    "price": 7
+  },
+  {
+    "id": 27,
+    "title": "Towel",
+    "price": 7
+  },
+  {
+    "id": 28,
+    "title": "Teapot",
+    "price": 15
+  },
+  {
+    "id": 29,
+    "title": "Ring",
+    "price": 7
+  },
+  {
+    "id": 30,
+    "title": "Necklace",
+    "price": 25
+  },
+  {
+    "id": 31,
+    "title": "Backpack",
+    "price": 1
+  },
+  {
+    "id": 32,
+    "title": "Bicycle",
+    "price": 90
+  },
+  {
+    "id": 33,
+    "title": "Roller-skaters",
+    "price": 8
+  },
+  {
+    "id": 34,
+    "title": "Skateboard",
+    "price": 7
+  },
+  {
+    "id": 35,
+    "title": "Snowboard",
+    "price": 15
+  },
+  {
+    "id": 36,
+    "title": "Ski",
+    "price": 1
+  },
+  {
+    "id": 37,
+    "title": "Cream",
+    "price": 3
+  },
+  {
+    "id": 38,
+    "title": "Sunglasses",
+    "price": 15
+  },
+  {
+    "id": 39,
+    "title": "Football",
+    "price": 15
+  },
+  {
+    "id": 40,
+    "title": "Basketball",
+    "price": 6
+  },
+  {
+    "id": 41,
+    "title": "Tennis racquet",
+    "price": 7
+  },
+  {
+    "id": 42,
+    "title": "Slippers",
+    "price": 1
+  },
+  {
+    "id": 43,
+    "title": "Sneakers",
+    "price": 2
+  }
+]

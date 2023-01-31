@@ -215,77 +215,75 @@ namespace dotNetBackend.Controllers
             }
 
             _logger.LogInformation("Creating transaction...");
-            using (var dbContextTransaction = _db.Database.BeginTransaction())
+            using var dbContextTransaction = _db.Database.BeginTransaction();
+            try
             {
+                // 2. create transaction
+                var id = await _transactionService.CreateTransaction(transactionInfo);
+                _logger.LogInformation("2/4 Transaction: New transaction added - OK");
+
+                // 3. change balance
+                var newBalance = await _userToCampaignService.DecreaseBalance(transactionInfo);
+                _logger.LogInformation("3/4 Transaction: Balance decreased - OK");
+
+                // 4. change N of products (if user donates product, don't need to change N of products)
+                if (transactionInfo.StateId == (int)TransactionStates.Ordered)
+                {
+                    var newNumOfProducts = await _productToCampaignService.DecreaseNumOfProducts(transactionInfo);
+                    _logger.LogInformation("4/4 Transaction: Number of products decreased - OK");
+                }
+                else
+                {
+                    _logger.LogInformation("4/4 Transaction: Number of products didn't change, because product was donated - OK");
+                }
+
+                dbContextTransaction.Commit();
+
+                string socialActivistTwitterHandle = (await _socialActivistService.Get(transactionInfo.UserId))!.TwitterHandle;
+                string businessOwnerTwitterHandle = await _productService.GetOwnerByProductId(transactionInfo.ProductId);
+
+                // try to make twitter post
+                // if fail, send back transaction info + information, that twitter post failed
+                HttpStatusCode twitterStatus;
                 try
                 {
-                    // 2. create transaction
-                    var id = await _transactionService.CreateTransaction(transactionInfo);
-                    _logger.LogInformation("2/4 Transaction: New transaction added - OK");
+                    _logger.LogInformation("Calling twitter accessor to create tweet");
+                    var response = await _httpClient.PostAsync(
+                    Endpoints.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
+                    null);
+                    response.EnsureSuccessStatusCode();
+                    twitterStatus = response.StatusCode;
+                    _logger.LogInformation("Tweet was posted sucessfully");
 
-                    // 3. change balance
-                    var newBalance = await _userToCampaignService.DecreaseBalance(transactionInfo);
-                    _logger.LogInformation("3/4 Transaction: Balance decreased - OK");
-
-                    // 4. change N of products (if user donates product, don't need to change N of products)
-                    if (transactionInfo.StateId == (int)TransactionStates.Ordered)
-                    {
-                        var newNumOfProducts = await _productToCampaignService.DecreaseNumOfProducts(transactionInfo);
-                        _logger.LogInformation("4/4 Transaction: Number of products decreased - OK");
-                    }
-                    else
-                    {
-                        _logger.LogInformation("4/4 Transaction: Number of products didn't change, because product was donated - OK");
-                    }
-
-                    dbContextTransaction.Commit();
-
-                    string socialActivistTwitterHandle = (await _socialActivistService.Get(transactionInfo.UserId))!.TwitterHandle;
-                    string businessOwnerTwitterHandle = await _productService.GetOwnerByProductId(transactionInfo.ProductId);
-                    
-                    // try to make twitter post
-                    // if fail, send back transaction info + information, that twitter post failed
-                    HttpStatusCode twitterStatus;
-                    try
-                    {
-                        _logger.LogInformation("Calling twitter accessor to create tweet");
-                        var response = await _httpClient.PostAsync(
-                        Endpoints.TwitterCreateNewPost + $"{socialActivistTwitterHandle}/{businessOwnerTwitterHandle}",
-                        null);
-                        response.EnsureSuccessStatusCode();
-                        twitterStatus = response.StatusCode;
-                        _logger.LogInformation("Tweet was posted sucessfully");
-
-                    }
-                    catch (Exception ex)
-                    {
-                        twitterStatus = HttpStatusCode.ServiceUnavailable;
-                        _logger.LogWarning("transaction OK, but tweet wasn't posted");
-                        _logger.LogError(ex.Message);
-                    }
-
-                    return Ok(new TransactionResponse
-                    {
-                        TransactionId = id,
-                        NewBalance = newBalance,
-                        TwitterPostStatus = twitterStatus
-                    });
-
-                }
-                catch (ValidationException ex)
-                {
-                    _logger.LogError("Transaction failed. Rolling back all changes...");
-                    dbContextTransaction.Rollback();
-
-                    return BadRequest(ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Transaction failed. Rolling back all changes...");
-                    dbContextTransaction.Rollback();
-
-                    return Problem(ex.Message);
+                    twitterStatus = HttpStatusCode.ServiceUnavailable;
+                    _logger.LogWarning("transaction OK, but tweet wasn't posted");
+                    _logger.LogError(ex, "there was a problem");
                 }
+
+                return Ok(new TransactionResponse
+                {
+                    TransactionId = id,
+                    NewBalance = newBalance,
+                    TwitterPostStatus = twitterStatus
+                });
+
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogError("Transaction failed. Rolling back all changes...");
+                dbContextTransaction.Rollback();
+
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Transaction failed. Rolling back all changes...");
+                dbContextTransaction.Rollback();
+
+                return Problem(ex.Message);
             }
         }
 
