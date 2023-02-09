@@ -1,4 +1,5 @@
-﻿using dotNetBackend.Common;
+﻿using AutoServiceRegistrator;
+using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using MainService.Controllers;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MainService.EngineServices
 {
+    [SingletonService]
     public class TwitterEngineService
     {
         private readonly HttpClient _httpClient;

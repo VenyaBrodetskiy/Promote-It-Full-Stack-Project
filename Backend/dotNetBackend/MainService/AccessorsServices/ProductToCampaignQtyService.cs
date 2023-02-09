@@ -3,9 +3,11 @@ using dotNetBackend.Models;
 using dotNetBackend.DTO;
 using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.Services
 {
+    [ScopedService]
     public class ProductToCampaignQtyService
     {
         private readonly MasaProjectDbContext _db;

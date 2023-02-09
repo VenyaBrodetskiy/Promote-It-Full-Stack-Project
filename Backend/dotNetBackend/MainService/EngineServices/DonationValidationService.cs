@@ -3,9 +3,11 @@ using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 using dotNetBackend.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.EngineServices
 {
+    [ScopedService]
     public class DonationValidationService
     {
         private readonly ILogger _logger;

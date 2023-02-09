@@ -1,8 +1,10 @@
-﻿using System.Timers;
+﻿using AutoServiceRegistrator;
+using System.Timers;
 using Timer = System.Timers.Timer;
 
 namespace MainService.EngineServices
 {
+    [SingletonService]
     public class TimerService
     {
         public readonly Timer timer;
