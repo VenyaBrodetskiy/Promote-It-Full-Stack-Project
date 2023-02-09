@@ -1,4 +1,5 @@
-﻿using dotNetBackend.AccessorsServices;
+﻿using AutoServiceRegistrator;
+using dotNetBackend.AccessorsServices;
 using dotNetBackend.Common;
 using dotNetBackend.EngineServices;
 using dotNetBackend.Services;
@@ -82,16 +83,8 @@ namespace MainService
 
         public static IServiceCollection AddConfiguredServices(this IServiceCollection services)
         {
-            services.AddScoped<SocialActivistService>();
-            services.AddScoped<UserToCampaignBalanceService>();
-            services.AddScoped<ProductToCampaignQtyService>();
-            services.AddScoped<TransactionService>();
-            services.AddScoped<TransactionValidationService>();
-            services.AddScoped<BusinessOwnerService>();
-            services.AddScoped<ProductService>();
-            services.AddScoped<DonationValidationService>();
-            services.AddSingleton<TwitterEngineService>();
-            services.AddSingleton<TimerService>();
+            services.RegisterScoped();
+            services.RegisterSingletons();
 
             return services;
         }

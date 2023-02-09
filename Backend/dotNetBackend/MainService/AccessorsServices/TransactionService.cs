@@ -4,10 +4,11 @@ using dotNetBackend.DTO;
 using dotNetBackend.Models;
 using System.Net;
 using System.ComponentModel.DataAnnotations;
-
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.AccessorsServices
 {
+    [ScopedService]
     public class TransactionService
     {
         private readonly MasaProjectDbContext _db;

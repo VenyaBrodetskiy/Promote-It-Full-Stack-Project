@@ -2,9 +2,11 @@
 using dotNetBackend.Models;
 using dotNetBackend.DTO;
 using dotNetBackend.Common;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.Services
 {
+    [ScopedService]
     public class BusinessOwnerService
     {
         private readonly MasaProjectDbContext _db;

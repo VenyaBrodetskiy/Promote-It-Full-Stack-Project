@@ -7,9 +7,11 @@ using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Net.Http.Json;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.Services
 {
+    [ScopedService]
     public class UserToCampaignBalanceService
     {
         private readonly MasaProjectDbContext _db;

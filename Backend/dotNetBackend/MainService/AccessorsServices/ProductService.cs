@@ -3,9 +3,11 @@ using dotNetBackend.Common;
 using dotNetBackend.DTO;
 using dotNetBackend.Models;
 using System.ComponentModel.DataAnnotations;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.AccessorsServices
 {
+    [ScopedService]
     public class ProductService
     {
         private readonly MasaProjectDbContext _db;

@@ -4,9 +4,11 @@ using dotNetBackend.DTO;
 using dotNetBackend.Common;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.Services
 {
+    [ScopedService]
     public class SocialActivistService
     {
         private readonly MasaProjectDbContext _db;

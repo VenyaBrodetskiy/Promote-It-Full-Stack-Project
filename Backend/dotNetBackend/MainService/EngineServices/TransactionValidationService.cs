@@ -1,9 +1,11 @@
 ﻿using dotNetBackend.DTO;
 using dotNetBackend.Common;
 using System.ComponentModel.DataAnnotations;
+using AutoServiceRegistrator;
 
 namespace dotNetBackend.EngineServices
 {
+    [ScopedService]
     public class TransactionValidationService
     {
         private readonly ILogger _logger;

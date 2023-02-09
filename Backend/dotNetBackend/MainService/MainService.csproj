@@ -20,4 +20,8 @@
 	  <InternalsVisibleTo Include="IntegrationTest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AutoServiceRegistrator\AutoServiceRegistrator.csproj" />
+  </ItemGroup>
+
 </Project>
