@@ -1,3 +1,4 @@
+using dotenv.net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PromoteIt.Accessors.Twitter;
@@ -5,6 +6,9 @@ using PromoteIt.Accessors.Twitter.Models;
 using System.Net.Http;
 using Tweetinvi.Models.V2;
 using Tweetinvi.Parameters;
+
+
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 

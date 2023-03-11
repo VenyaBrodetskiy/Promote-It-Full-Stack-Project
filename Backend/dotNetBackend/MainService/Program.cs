@@ -12,11 +12,14 @@ using Microsoft.OpenApi.Models;
 using dotNetBackend.Common;
 using MainService.EngineServices;
 using MainService;
+using dotenv.net;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        DotEnv.Load();
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -28,7 +31,8 @@ internal class Program
 
         builder.Services.AddDbContext<MasaProjectDbContext>(options =>
         {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(Environment.GetEnvironmentVariable("DefaultConnection"));
 
         });
 
@@ -37,7 +41,8 @@ internal class Program
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                string TOKEN_SECRET = builder.Configuration.GetValue<string>("JwtSigningSecret")!;
+                //string TOKEN_SECRET = builder.Configuration.GetValue<string>("JwtSigningSecret")!;
+                var TOKEN_SECRET = Environment.GetEnvironmentVariable("JwtSigningSecret")!;
                 var signingKey = Encoding.UTF8.GetBytes(TOKEN_SECRET);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
