@@ -87,7 +87,7 @@ The system's goal is to promote social campaigns. The means to do so:
 - I'd like to donate a product to my chosen campaign so that I can promote it (
     - I can earn money, buy a product and donate it to a campaign, so the campaign now has more products attached to it
 
-![Screenshot of UI for SA](/Assets/***.jpg)
+![Screenshot of UI for SA](/Assets/sa_balance.jpg)
 
 ### As business owner,
 
@@ -97,7 +97,9 @@ The system's goal is to promote social campaigns. The means to do so:
 - I'd like to get the list of users and products that I need to ship so I can supply them
 - I'd like to inform the system that I sent a product to a user so that the system can finish the transaction
 
-![Screenshot of UI for BO](/Assets/***.jpg)
+![Screenshot of UI for BO](/Assets/bo_donate_campaign.jpg)
+![Screenshot of UI for BO](/Assets/bo_new_product.jpg)
+![Screenshot of UI for BO](/Assets/bo_active_campaigns.jpg)
 
 ### As non-profit organization,
 
@@ -106,7 +108,7 @@ The system's goal is to promote social campaigns. The means to do so:
 - I'd like to create a campaign
     - I'll provide a link (URL) to the campaign landing page and the campaign hashtag
 
-![Screenshot of UI for NPO](/Assets/***.jpg)
+![Screenshot of UI for NPO](/Assets/np_create_campaign.jpg)
 
 ### As prolobby owner,
 
