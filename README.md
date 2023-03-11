@@ -121,7 +121,7 @@ The system's goal is to promote social campaigns. The means to do so:
     - Users
     - Tweets
 
-![Screenshot of UI for PO](/Assets/***.jpg)
+![Screenshot of UI for PO](/Assets/po_report_campaigns.jpg)
 
 ## Contact
 
