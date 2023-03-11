@@ -97,7 +97,6 @@ The system's goal is to promote social campaigns. The means to do so:
 - I'd like to get the list of users and products that I need to ship so I can supply them
 - I'd like to inform the system that I sent a product to a user so that the system can finish the transaction
 
-![Screenshot of UI for BO](/Assets/bo_donate_campaign.jpg)
 ![Screenshot of UI for BO](/Assets/bo_new_product.jpg)
 ![Screenshot of UI for BO](/Assets/bo_active_campaigns.jpg)
 
