@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using dotNetBackend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace IntegrationTest
 {
@@ -15,7 +16,9 @@ namespace IntegrationTest
             httpClient = new HttpClient();
 
             var optionsBuilder = new DbContextOptionsBuilder<MasaProjectDbContext>();
-            optionsBuilder.UseSqlServer("Server=tcp:masaproject.database.windows.net,1433;Initial Catalog=MasaProject;Persist Security Info=False;User ID=MasaProject;Password=MilaVenya2611;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+
+            var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
             db = new MasaProjectDbContext(optionsBuilder.Options);
         }
 
