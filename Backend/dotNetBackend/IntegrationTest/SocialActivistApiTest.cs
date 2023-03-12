@@ -15,7 +15,7 @@ namespace IntegrationTest
     public class SocialActivistApiTest : IClassFixture<CommonContext>
     {
         private readonly CommonContext context;
-        private readonly string tokenFor10Years = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJUeXBlSWQiOjIsImlhdCI6MTY3MzcyNjg5MCwiZXhwIjoxOTg5MzAyODkwfQ.OkbwcrQBELJuwcBd8-qRGDfel9TQPpin_kSnODVf1aU";
+        private readonly string tokenFor10Years = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsInVzZXJUeXBlSWQiOjIsImlhdCI6MTY3ODU3OTc1NSwiZXhwIjoxOTk0MTU1NzU1fQ.tM2Fo3BnhsgjbPCvtyR5BbUOpNHmpkg-4l5i2KCPUu8";
         private int UserId = 3;
         private readonly string baseUrl = "/api/SocialActivist";
         public SocialActivistApiTest(CommonContext context)

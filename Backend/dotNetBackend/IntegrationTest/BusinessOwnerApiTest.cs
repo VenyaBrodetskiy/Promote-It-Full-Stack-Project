@@ -15,7 +15,7 @@ namespace IntegrationTest
     public class BusinessOwnerApiTest : IClassFixture<CommonContext>
     {
         private readonly CommonContext context;
-        private readonly string tokenFor10Years = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjEsImlhdCI6MTY3MzgxMDgxMSwiZXhwIjoxOTg5Mzg2ODExfQ.1kB9dRcMU-IiRf9A2CAodxOShQOE8F13E4WcrAKxzH0";
+        private readonly string tokenFor10Years = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJUeXBlSWQiOjEsImlhdCI6MTY3ODU3OTc5MCwiZXhwIjoxOTk0MTU1NzkwfQ.gwcS99aIQkRFJ0PeYB7cWjXzX5-czfvu3in84zf15-c";
         //private int UserId = 4;
         private readonly string baseUrl = "/api/BusinessOwner";
 
