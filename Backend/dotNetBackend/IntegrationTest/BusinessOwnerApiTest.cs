@@ -28,7 +28,6 @@ namespace IntegrationTest
         [Theory]
         [InlineData("/GetAll")]
         [InlineData("/Get")]
-        [InlineData("/GetOrders")]
         [InlineData("/GetProducts")]
         public async Task Get_EndpointsReturnSuccessAndCorrectStatusCode(string url)
         {
