@@ -11,7 +11,7 @@ namespace BlazorWASM.Pages
         private HttpClient http { get; set; } = default!;
 
         [Inject]
-        private ILogger<Campaigns> logger { get; set; }
+        private ILogger<Campaigns> logger { get; set; } = default!;
 
         private Campaign[]? campaigns;
 

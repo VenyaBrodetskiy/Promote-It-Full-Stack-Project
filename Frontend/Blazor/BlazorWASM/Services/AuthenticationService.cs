@@ -43,7 +43,7 @@ namespace BlazorWASM.Services
                 var token = await response.Content.ReadFromJsonAsync<AuthToken>();
                 
                 _logger.LogInformation("Saving token to Local Storage");
-                await _localStorage.SetItemAsync("token", token.Token);
+                await _localStorage.SetItemAsync("token", token!.Token);
                 
                 _logger.LogInformation("Notify User Authentication");
                 _authStateProvider.NotifyUserAuthentication();

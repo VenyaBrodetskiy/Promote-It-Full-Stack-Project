@@ -13,7 +13,7 @@ namespace BlazorWASM.AuthProviders
             var jsonBytes = ParseBase64WithoutPadding(payload);
 
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+            claims.AddRange(keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!)));
             return claims;
         }
         private static byte[] ParseBase64WithoutPadding(string base64)
