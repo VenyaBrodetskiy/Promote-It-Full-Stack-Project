@@ -1,7 +1,6 @@
 ﻿using BlazorWASM.Constants;
 using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace BlazorWASM.Pages
@@ -12,12 +11,26 @@ namespace BlazorWASM.Pages
         private HttpClient http { get; set; } = default!;
 
         [Inject]
-        private ILogger<Users> logger { get; set; }
+        private ILogger<Users> logger { get; set; } = default!;
 
         private BusinessOwner[]? boUsers;
         private NonProfitUser[]? npUsers;
         private SocialActivist[]? saUsers;
 
+        public int CurrentPageBO { get; set; } = 1;
+        public int CurrentPageNP { get; set; } = 1;
+        public int CurrentPageSA { get; set; } = 1;
+        public int TotalPagesBO { get; set; } = 1;
+        public int TotalPagesNP { get; set; } = 1;
+        public int TotalPagesSA { get; set; } = 1;
+        public enum UserType
+        {
+            BusinessOwner,
+            NonProfit,
+            SocialActivist
+        }
+
+        public int ItemsPerPage { get; set; } = 5;
         public bool ShowError { get; set; }
         public string Error { get; set; } = "";
 
@@ -28,26 +41,11 @@ namespace BlazorWASM.Pages
                 logger.LogInformation("Component Initialized");
                 ShowError = false;
 
-                logger.LogInformation("Sending request to {endpoint}", Endpoints.BusinessOwners);
-                var responseBO = await http.GetAsync(Endpoints.BusinessOwners);
-                responseBO.EnsureSuccessStatusCode();
-                boUsers = await responseBO.Content.ReadFromJsonAsync<BusinessOwner[]>();
+                await FetchData<BusinessOwner>(UserType.BusinessOwner, CurrentPageBO, Endpoints.BusinessOwners);
 
-                logger.LogInformation("Sending request to {endpoint}", Endpoints.NonProfit);
-                var responseNP = await http.GetAsync(Endpoints.NonProfit);
-                responseNP.EnsureSuccessStatusCode();
-                npUsers = await responseNP.Content.ReadFromJsonAsync<NonProfitUser[]>();
+                await FetchData<NonProfitUser>(UserType.NonProfit, CurrentPageNP, Endpoints.NonProfit);
 
-                logger.LogInformation("Sending request to {endpoint}", Endpoints.SocialActivists);
-                var responseSA = await http.GetAsync(Endpoints.SocialActivists);
-                responseSA.EnsureSuccessStatusCode();
-                saUsers = await responseSA.Content.ReadFromJsonAsync<SocialActivist[]>();
-
-                // testing sample data
-                // boUsers = await http.GetFromJsonAsync<BusinessOwners[]>("/sample-data/BusinessOwners.json");
-                // npUsers = await http.GetFromJsonAsync<NonProfitUser[]>("/sample-data/NonProfitUsers.json");
-                // saUsers = await http.GetFromJsonAsync<SocialActivist[]>("/sample-data/SocialActivists.json");
-
+                await FetchData<SocialActivist>(UserType.SocialActivist, CurrentPageSA, Endpoints.SocialActivists);
             }
             catch (Exception ex)
             {
@@ -57,5 +55,53 @@ namespace BlazorWASM.Pages
             }
         }
 
+        public async Task ChangePage(UserType userType, int targetPage)
+        {
+            switch (userType)
+            {
+                case UserType.BusinessOwner:
+                    CurrentPageBO = targetPage;
+                    await FetchData<BusinessOwner>(userType, targetPage, Endpoints.BusinessOwners);
+                    break;
+                case UserType.NonProfit:
+                    CurrentPageNP = targetPage;
+                    await FetchData<NonProfitUser>(userType, targetPage, Endpoints.NonProfit);
+                    break;
+                case UserType.SocialActivist:
+                    CurrentPageSA = targetPage;
+                    await FetchData<SocialActivist>(userType, targetPage, Endpoints.SocialActivists);
+                    break;
+            }
+        }
+
+        public async Task FetchData<T>(UserType userType, int page, string endpoint) where T : class
+        {
+            var skip = (page - 1) * ItemsPerPage;
+
+            logger.LogInformation("Sending request to {endpoint}", endpoint);
+            var response = await http.GetAsync(endpoint);
+            response.EnsureSuccessStatusCode();
+            var users = await response.Content.ReadFromJsonAsync<T[]>();
+
+            var totalPages = (int)Math.Ceiling((double)users!.Length / ItemsPerPage);
+
+            users = users.Skip(skip).Take(ItemsPerPage).ToArray();
+
+            switch (userType)
+            {
+                case UserType.BusinessOwner:
+                    boUsers = users as BusinessOwner[];
+                    TotalPagesBO = totalPages;
+                    break;
+                case UserType.NonProfit:
+                    npUsers = users as NonProfitUser[];
+                    TotalPagesNP = totalPages;
+                    break;
+                case UserType.SocialActivist:
+                    saUsers = users as SocialActivist[];
+                    TotalPagesSA = totalPages;
+                    break;
+            }
+        }
     }
 }

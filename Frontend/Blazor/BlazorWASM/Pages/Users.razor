@@ -1,14 +1,13 @@
 ﻿@attribute [Route(Page.Users)]
 @attribute [Authorize(Roles = Roles.ProlobbyOwner)]
 
-
 <PageTitle>Users</PageTitle>
 
 @if (boUsers == null || npUsers == null || saUsers == null)
 {
-    <h4 class="display-4 border-4 border-bottom text-primary">Users</h4>
-    <div class="">
-            <Loading />
+    <h2 class="display-4 border-bottom text-primary py-3">Users</h2>
+    <div class="d-flex justify-content-center align-items-center py-5">
+        <Loading />
     </div>
 }
 
@@ -23,9 +22,9 @@
 }
 else
 {
-    <h4 class="display-4 border-4 border-bottom text-primary">Business owners</h4>
+    <h4 class="display-4 border-4 border-bottom text-primary py-3">Business owners</h4>
 
-    <div class="d-flex align-items-center border-bottom justify-content-between">
+    <div class="d-flex align-items-center border-bottom justify-content-between bg-light py-3">
         <div class="m-1 mx-3 fs-5 fw-bold">
             id
         </div>
@@ -42,7 +41,7 @@ else
 
     @foreach (var boUser in boUsers)
     {
-        <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="d-flex align-items-center border-bottom justify-content-between py-2">
             <div class="m-1 mx-3 text-break">
                 @boUser.Id
             </div>
@@ -58,6 +57,19 @@ else
         </div>
     }
 
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(CurrentPageBO == 1 ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.BusinessOwner, CurrentPageBO - 1)">Previous</button>
+            </li>
+            <li class="page-item">
+                <span class="page-link">@($"{CurrentPageBO} / {TotalPagesBO}")</span>
+            </li>
+            <li class="page-item @(CurrentPageBO == TotalPagesBO ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.BusinessOwner, CurrentPageBO + 1)">Next</button>
+            </li>
+        </ul>
+    </nav>
 }
 
 @if (npUsers == null)
@@ -71,9 +83,9 @@ else
 }
 else
 {
-    <h4 class="mt-5 display-4 border-4 border-bottom text-primary">Non profit organizations</h4>
+    <h4 class="mt-5 display-4 border-4 border-bottom text-primary py-3">Non profit organizations</h4>
 
-    <div class="d-flex align-items-center border-bottom justify-content-between">
+    <div class="d-flex align-items-center border-bottom justify-content-between bg-light py-3">
         <div class="m-1 mx-3 fs-5 fw-bold">
             id
         </div>
@@ -90,7 +102,7 @@ else
 
     @foreach (var npUser in npUsers)
     {
-        <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="d-flex align-items-center border-bottom justify-content-between py-2">
             <div class="m-1 mx-3 text-break">
                 @npUser.Id
             </div>
@@ -106,6 +118,19 @@ else
         </div>
     }
 
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(CurrentPageNP == 1 ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.NonProfit, CurrentPageNP - 1)">Previous</button>
+            </li>
+            <li class="page-item">
+                <span class="page-link">@($"{CurrentPageNP} / {TotalPagesNP}")</span>
+            </li>
+            <li class="page-item @(CurrentPageNP == TotalPagesNP ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.NonProfit, CurrentPageNP + 1)">Next</button>
+            </li>
+        </ul>
+    </nav>
 }
 
 @if (saUsers == null)
@@ -119,9 +144,9 @@ else
 }
 else
 {
-    <h4 class="mt-5 display-4 border-4 border-bottom text-primary">Bloggers</h4>
+    <h4 class="mt-5 display-4 border-4 border-bottom text-primary py-3">Bloggers</h4>
 
-    <div class="d-flex align-items-center border-bottom justify-content-between">
+    <div class="d-flex align-items-center border-bottom justify-content-between bg-light py-3">
         <div class="m-1 mx-3 fs-5 fw-bold">
             id
         </div>
@@ -141,7 +166,7 @@ else
 
     @foreach (var saUser in saUsers)
     {
-        <div class="d-flex align-items-center border-bottom justify-content-between">
+        <div class="d-flex align-items-center border-bottom justify-content-between py-2">
             <div class="m-1 mx-3 text-break">
                 @saUser.Id
             </div>
@@ -159,5 +184,18 @@ else
             </div>
         </div>
     }
-
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(CurrentPageSA == 1 ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.SocialActivist, CurrentPageSA - 1)">Previous</button>
+            </li>
+            <li class="page-item">
+                <span class="page-link">@($"{CurrentPageSA} / {TotalPagesSA}")</span>
+            </li>
+            <li class="page-item @(CurrentPageSA == TotalPagesSA ? "disabled" : "")">
+                <button class="page-link" @onclick="() => ChangePage(UserType.SocialActivist, CurrentPageSA + 1)">Next</button>
+            </li>
+        </ul>
+    </nav>
 }
+

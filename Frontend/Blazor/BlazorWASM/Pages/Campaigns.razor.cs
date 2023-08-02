@@ -1,7 +1,6 @@
 ﻿using BlazorWASM.Constants;
 using BlazorWASM.Entities;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
 namespace BlazorWASM.Pages

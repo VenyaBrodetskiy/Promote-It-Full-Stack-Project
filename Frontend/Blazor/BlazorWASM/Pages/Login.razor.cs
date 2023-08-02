@@ -3,9 +3,7 @@ using BlazorWASM.Entities;
 using BlazorWASM.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Linq.Expressions;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlazorWASM.Pages
 {
@@ -18,7 +16,7 @@ namespace BlazorWASM.Pages
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public ILogger<Login> logger { get; set; }
+        public ILogger<Login> Logger { get; set; }
 
         [CascadingParameter]
         public Task<AuthenticationState> AuthState { get; set; }
@@ -38,24 +36,24 @@ namespace BlazorWASM.Pages
             {
                 loading = true;
                 ShowAuthError = false;
-                logger.LogInformation("Login user started...");
+                Logger.LogInformation("Login user started...");
 
                 var result = await AuthenticationService.LoginUser(_user);
 
-                logger.LogInformation("Asking for AuthState");
+                Logger.LogInformation("Asking for AuthState");
 
                 var authState = await AuthState;
                 var role = authState.User.FindFirst(ClaimTypes.Role);
                 if (role != null && role.Value == Roles.ProlobbyOwner)
                 {
-                    logger.LogInformation("Role is {Role}. Navigating to {Page}", Roles.ProlobbyOwner, Page.Home);
+                    Logger.LogInformation("Role is {Role}. Navigating to {Page}", Roles.ProlobbyOwner, Page.Home);
                     NavigationManager.NavigateTo(Page.Home);
                 }
                 else
                 {
                     Error = "It seems that you are not a ProLobby owner. Please change account";
                     ShowAuthError = true;
-                    logger.LogWarning(Error);
+                    Logger.LogWarning(Error);
 
                     StateHasChanged();
                 }
@@ -66,7 +64,7 @@ namespace BlazorWASM.Pages
                 Error = ex.Message;
                 ShowAuthError = true;
                 loading = false;
-                logger.LogError("Couldn't log in, Exception message: {message}", Error);
+                Logger.LogError("Couldn't log in, Exception message: {message}", Error);
             }
         }
     }
